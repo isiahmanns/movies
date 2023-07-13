@@ -1,10 +1,3 @@
-//
-//  MoviesTests.swift
-//  MoviesTests
-//
-//  Created by Isiah Manns on 7/2/23.
-//
-
 import XCTest
 @testable import Movies
 
