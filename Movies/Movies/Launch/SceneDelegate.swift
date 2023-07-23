@@ -11,9 +11,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let windowScene = (scene as? UIWindowScene) else { return }
 
+        let viewModel = ViewModel(api: DefaultMoviesAPI.shared, imageLoader: .shared)
+        let listViewController = ListViewController(viewModel: viewModel)
+        viewModel.delegate = listViewController
+        let navigationController = UINavigationController(rootViewController: listViewController)
+
         let window = UIWindow(windowScene: windowScene)
-        let rootViewController = ViewController()
-        let navigationController = UINavigationController(rootViewController: rootViewController)
         window.rootViewController = navigationController
         window.makeKeyAndVisible()
         self.window = window
