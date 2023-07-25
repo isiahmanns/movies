@@ -3,6 +3,7 @@ import UIKit
 class ListViewController: UIViewController {
     let collectionView: UICollectionView
     let viewModel: ViewModel
+    var currentPage: Int = 0
 
     init(viewModel: ViewModel) {
         self.viewModel = viewModel
@@ -56,7 +57,11 @@ class ListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        viewModel.fetchNowPlayingMovies()
+        do {
+            try viewModel.fetchNowPlayingMovies()
+        } catch {
+            print(error)
+        }
     }
 }
 
@@ -77,7 +82,15 @@ extension ListViewController: UICollectionViewDelegateFlowLayout {
 }
 
 extension ListViewController: UICollectionViewDelegate {
-
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if scrollView.contentOffset.y + scrollView.bounds.height - scrollView.safeAreaInsets.bottom >= scrollView.contentSize.height {
+            do {
+                try viewModel.fetchNowPlayingMovies(page: currentPage + 1)
+            } catch {
+                print(error)
+            }
+        }
+    }
 }
 
 extension ListViewController: UICollectionViewDataSource {
@@ -91,9 +104,11 @@ extension ListViewController: UICollectionViewDataSource {
 
         let imageTask = Task<Void, Error> {
             do {
-                let image = try await viewModel.loadImage(filePath: movie.posterPath)
-                try Task.checkCancellation()
-                cell.configure(image)
+                if let posterPath = movie.posterPath {
+                    let image = try await viewModel.loadImage(filePath: posterPath)
+                    try Task.checkCancellation()
+                    cell.configure(image)
+                }
             } catch {
                 print(error)
                 throw error
@@ -110,9 +125,10 @@ extension ListViewController: UICollectionViewDataSource {
 }
 
 extension ListViewController: ViewModelDelegate {
-    func insertItems(at indexPaths: [IndexPath]) {
+    func insertItems(at indexPaths: [IndexPath], for page: Int) {
         collectionView.performBatchUpdates {
             collectionView.insertItems(at: indexPaths)
         }
+        currentPage = page
     }
 }
