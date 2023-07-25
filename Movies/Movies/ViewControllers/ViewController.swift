@@ -23,6 +23,10 @@ class ListViewController: UIViewController {
 
     private func setupNavigation() {
         navigationItem.title = "Now Playing"
+        let scrollEdgeAppearance = UINavigationBarAppearance()
+        scrollEdgeAppearance.titleTextAttributes = [.foregroundColor: UIColor.systemGray6]
+        scrollEdgeAppearance.backgroundColor = .systemIndigo
+        navigationItem.scrollEdgeAppearance = scrollEdgeAppearance
     }
 
     private func setupCollectionView() {
