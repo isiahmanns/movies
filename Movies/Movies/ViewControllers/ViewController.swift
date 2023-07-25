@@ -61,10 +61,11 @@ extension ListViewController: UICollectionViewDelegateFlowLayout {
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
         let layout = collectionViewLayout as! UICollectionViewFlowLayout
+        let itemsPerRow: CGFloat = 3
         let itemWidth = (collectionView.frame.width
-                            - layout.minimumInteritemSpacing * 2
+                            - layout.minimumInteritemSpacing * (itemsPerRow - 1)
                             - layout.sectionInset.left
-                            - layout.sectionInset.right) / 3
+                            - layout.sectionInset.right) / itemsPerRow
         let itemHeight = (3 * itemWidth) / 2 + (MovieCell.Metrics.labelHeight + MovieCell.Metrics.stackViewSpacing)
         return .init(width: itemWidth, height: itemHeight)
     }
