@@ -26,7 +26,7 @@ class MovieCell: UICollectionViewCell {
 
         stackView.axis = .vertical
         stackView.alignment = .fill
-        stackView.spacing = 8
+        stackView.spacing = Metrics.stackViewSpacing
 
         contentView.addSubview(stackView)
         stackView.translatesAutoresizingMaskIntoConstraints = false
