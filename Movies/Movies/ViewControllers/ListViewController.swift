@@ -61,6 +61,10 @@ extension ListViewController: UICollectionViewDelegate {
 }
 
 extension ListViewController: UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        fatalError("Implement via subclass.")
+
+    }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         fatalError("Implement via subclass.")
     }

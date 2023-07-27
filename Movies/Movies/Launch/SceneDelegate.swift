@@ -11,12 +11,23 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let windowScene = (scene as? UIWindowScene) else { return }
 
-        let viewModel = NowPlayingMovieListViewModel(api: DefaultMoviesAPI.shared, imageLoader: .shared)
-        let listViewController = NowPlayingMovieListViewController(navigationTitle: "Now Playing", viewModel: viewModel)
-        let navigationController = UINavigationController(rootViewController: listViewController)
+        let tabViewController = UITabBarController()
+
+        let nowPlayingMovieListViewModel = NowPlayingMovieListViewModel(api: DefaultMoviesAPI.shared, imageLoader: .shared)
+        let nowPlayingMovieListViewController = NowPlayingMovieListViewController(viewModel: nowPlayingMovieListViewModel)
+        let nowPlayingMovieListNavigationController = UINavigationController(rootViewController: nowPlayingMovieListViewController)
+
+        let upcomingMovieListViewModel = UpcomingMovieListViewModel(api: DefaultMoviesAPI.shared, imageLoader: .shared)
+        let upcomingMovieListViewController = UpcomingMovieListViewController(viewModel: upcomingMovieListViewModel)
+        let upcomingMovieListNavigationController = UINavigationController(rootViewController: upcomingMovieListViewController)
+
+        tabViewController.viewControllers = [
+            nowPlayingMovieListNavigationController,
+            upcomingMovieListNavigationController,
+        ]
 
         let window = UIWindow(windowScene: windowScene)
-        window.rootViewController = navigationController
+        window.rootViewController = tabViewController
         window.makeKeyAndVisible()
         self.window = window
     }

@@ -1,11 +1,11 @@
 import UIKit
 
-class NowPlayingMovieListViewController: ListViewController {
-    private let viewModel: NowPlayingMovieListViewModel
+class UpcomingMovieListViewController: ListViewController {
+    private let viewModel: UpcomingMovieListViewModel
 
-    init(viewModel: NowPlayingMovieListViewModel) {
+    init(viewModel: UpcomingMovieListViewModel) {
         self.viewModel = viewModel
-        super.init(navigationTitle: "Now Playing")
+        super.init(navigationTitle: "Upcoming")
         setupViewModel()
         setupCollectionView()
         setupTabBar()
@@ -20,7 +20,7 @@ class NowPlayingMovieListViewController: ListViewController {
     }
 
     private func setupTabBar() {
-        tabBarItem = .init(title: "", image: .init(systemName: "popcorn"), tag: 0)
+        tabBarItem = .init(title: "", image: .init(systemName: "calendar"), tag: 1)
     }
 
     required init?(coder: NSCoder) {
@@ -29,10 +29,10 @@ class NowPlayingMovieListViewController: ListViewController {
 }
 
 // MARK: - UICollectionViewDelegateFlowLayout
-extension NowPlayingMovieListViewController {
+extension UpcomingMovieListViewController {
     override func collectionView(_ collectionView: UICollectionView,
-                        layout collectionViewLayout: UICollectionViewLayout,
-                        sizeForItemAt indexPath: IndexPath) -> CGSize {
+                                 layout collectionViewLayout: UICollectionViewLayout,
+                                 sizeForItemAt indexPath: IndexPath) -> CGSize {
         let layout = collectionViewLayout as! UICollectionViewFlowLayout
         let itemsPerRow: CGFloat = 3
         let itemWidth = (collectionView.frame.width
@@ -46,7 +46,7 @@ extension NowPlayingMovieListViewController {
 }
 
 // MARK: - UICollectionViewDelegate
-extension NowPlayingMovieListViewController {
+extension UpcomingMovieListViewController {
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let scrollDistance = scrollView.contentOffset.y + scrollView.bounds.height - scrollView.safeAreaInsets.bottom
         if  scrollDistance >= scrollView.contentSize.height {
@@ -60,7 +60,7 @@ extension NowPlayingMovieListViewController {
 }
 
 // MARK: - UICollectionViewDataSource
-extension NowPlayingMovieListViewController {
+extension UpcomingMovieListViewController {
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         viewModel.items[0].count
     }
@@ -92,7 +92,7 @@ extension NowPlayingMovieListViewController {
 }
 
 // MARK: - Life Cycle
-extension NowPlayingMovieListViewController {
+extension UpcomingMovieListViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
