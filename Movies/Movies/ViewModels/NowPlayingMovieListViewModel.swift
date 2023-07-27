@@ -17,13 +17,12 @@ class NowPlayingMovieListViewModel: ViewModel<Movie, MovieListReponse> {
         [items[0] + newItems]
     }
 
-    override func updateList(from oldItems: [[Movie]]) async {
+    override func indexPathsToUpdate(from oldItems: [[Movie]], to newItems: [[Movie]]) -> [IndexPath] {
         let startIdx = oldItems[0].count
-        let endIdx = items[0].count - 1
-        let indexPaths = (startIdx...endIdx).map { idx in
+        let endIdx = newItems[0].count - 1
+        return (startIdx...endIdx).map { idx in
             IndexPath(item: idx, section: 0)
         }
-        await delegate?.insertItems(at: indexPaths)
     }
 
     override func loadImage(filePath: String) async throws -> UIImage? {

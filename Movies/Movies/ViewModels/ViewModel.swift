@@ -29,8 +29,11 @@ class ViewModel<Item, Response: ListResponse> where Response.Item == Item {
                 currentPage = listResponse.page
 
                 let oldItems = items
-                items = appendNewItems(listResponse.items)
-                await updateList(from: oldItems)
+                let newItems = appendNewItems(listResponse.items)
+                let indexPaths = indexPathsToUpdate(from: oldItems, to: newItems)
+                await delegate?.insertItems(at: indexPaths) {
+                    items = newItems
+                }
             } catch {
                 print(error)
                 throw error
@@ -47,7 +50,7 @@ class ViewModel<Item, Response: ListResponse> where Response.Item == Item {
         fatalError("Implement via subclass.")
     }
 
-    func updateList(from oldItems: [[Item]]) async {
+    func indexPathsToUpdate(from oldItems: [[Item]], to newItems: [[Item]]) -> [IndexPath] {
         fatalError("Implement via subclass.")
     }
 

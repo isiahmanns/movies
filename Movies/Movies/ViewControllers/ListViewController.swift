@@ -75,8 +75,9 @@ extension ListViewController: UICollectionViewDataSource {
 }
 
 extension ListViewController: ViewModelDelegate {
-    func insertItems(at indexPaths: [IndexPath]) {
+    func insertItems(at indexPaths: [IndexPath], updateData: () -> Void) {
         collectionView.performBatchUpdates {
+            updateData()
             collectionView.insertItems(at: indexPaths)
         }
     }
