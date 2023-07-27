@@ -3,7 +3,7 @@ import UIKit
 
 class ViewModel<Item, Response: ListResponse> where Response.Item == Item {
     private(set) var items: [[Item]] = [[]]
-    weak var delegate: ViewModelDelegate?
+    weak var delegate: ListViewDelegate?
 
     private var totalPages: Int? = nil
     private var currentPage: Int = 0
