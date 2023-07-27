@@ -2,10 +2,9 @@ import UIKit
 
 class ListViewController: UIViewController {
     let collectionView: UICollectionView
-    let viewModel: ViewModel
-    var currentPage: Int = 0
+    let viewModel: NowPlayingMovieListViewModel
 
-    init(viewModel: ViewModel) {
+    init(viewModel: NowPlayingMovieListViewModel) {
         self.viewModel = viewModel
 
         let layout = UICollectionViewFlowLayout()
@@ -58,7 +57,7 @@ class ListViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         do {
-            try viewModel.fetchNowPlayingMovies()
+            try viewModel.fetchItems()
         } catch {
             print(error)
         }
@@ -85,7 +84,7 @@ extension ListViewController: UICollectionViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if scrollView.contentOffset.y + scrollView.bounds.height - scrollView.safeAreaInsets.bottom >= scrollView.contentSize.height {
             do {
-                try viewModel.fetchNowPlayingMovies(page: currentPage + 1)
+                try viewModel.getNextPage()
             } catch {
                 print(error)
             }
@@ -95,12 +94,12 @@ extension ListViewController: UICollectionViewDelegate {
 
 extension ListViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        viewModel.movies.count
+        viewModel.items[0].count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieCell.reuseId, for: indexPath) as! MovieCell
-        let movie = viewModel.movies[indexPath.item]
+        let movie = viewModel.items[0][indexPath.item]
 
         let imageTask = Task<Void, Error> {
             do {
@@ -125,10 +124,9 @@ extension ListViewController: UICollectionViewDataSource {
 }
 
 extension ListViewController: ViewModelDelegate {
-    func insertItems(at indexPaths: [IndexPath], for page: Int) {
+    func insertItems(at indexPaths: [IndexPath]) {
         collectionView.performBatchUpdates {
             collectionView.insertItems(at: indexPaths)
         }
-        currentPage = page
     }
 }

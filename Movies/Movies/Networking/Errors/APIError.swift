@@ -3,4 +3,5 @@ enum APIError: Error {
     case invalidURL
     case invalidPageNumber
     case prematurePageRequest
+    case existingTaskInProgress
 }

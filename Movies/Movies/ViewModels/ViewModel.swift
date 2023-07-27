@@ -1,22 +1,17 @@
 import Foundation
 import UIKit
 
-class ViewModel {
-    var movies: [Movie] = []
-    private let api: MoviesAPI
-    private let imageLoader: ImageLoader
+class ViewModel<Item, Response: ListResponse> where Response.Item == Item {
+    private(set) var items: [[Item]] = [[]]
     weak var delegate: ViewModelDelegate?
 
     private var totalPages: Int? = nil
-    private var activeTask: Task<Void, Never>? = nil
+    private var currentPage: Int = 0
+    private var activeTask: Task<Void, Error>? = nil
 
-    init(api: MoviesAPI, imageLoader: ImageLoader) {
-        self.api = api
-        self.imageLoader = imageLoader
-    }
-
-    func fetchNowPlayingMovies(page: Int? = nil) throws {
-        guard activeTask == nil else { return }
+    func fetchItems(page: Int? = nil) throws {
+        guard activeTask == nil
+        else { throw APIError.existingTaskInProgress }
 
         if let page, let totalPages {
             guard (1...totalPages).contains(page)
@@ -29,29 +24,34 @@ class ViewModel {
         let task = Task {
             defer { activeTask = nil }
             do {
-                let movieListResponse = try await api.fetchNowPlayingMovies(page: page)
-                totalPages = movieListResponse.totalPages
+                let listResponse = try await fetchItems(page: page)
+                totalPages = listResponse.totalPages
+                currentPage = listResponse.page
 
-                let startIdx = movies.count
-                movies.append(contentsOf: movieListResponse.movies)
-                let endIdx = movies.count - 1
-
-                let indexPaths = (startIdx...endIdx)
-                    .map { idx in
-                        IndexPath(item: idx, section: 0)
-                    }
-
-                let page = movieListResponse.page
-                await delegate?.insertItems(at: indexPaths, for: page)
+                let oldItems = items
+                items = appendNewItems(listResponse.items)
+                await updateList(from: oldItems)
             } catch {
                 print(error)
+                throw error
             }
         }
         activeTask = task
     }
 
-    func loadImage(filePath: String) async throws -> UIImage? {
-        let url = Endpoint.image(size: PosterSize.w154, filePath: filePath).url
-        return try await imageLoader.loadImage(url: url.absoluteString)
+    func fetchItems(page: Int?) async throws -> Response {
+        fatalError("Implement via subclass.")
+    }
+
+    func appendNewItems(_ newItems: [Item]) -> [[Item]] {
+        fatalError("Implement via subclass.")
+    }
+
+    func updateList(from oldItems: [[Item]]) async {
+        fatalError("Implement via subclass.")
+    }
+
+    func getNextPage() throws {
+        try fetchItems(page: currentPage + 1)
     }
 }

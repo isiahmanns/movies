@@ -16,7 +16,7 @@ struct DefaultMoviesAPI: MoviesAPI {
         self.networkRequester = networkRequester
     }
 
-    func fetchNowPlayingMovies(page: Int? = nil) async throws -> MovieListReponse {
+    func fetchNowPlayingMovies(page: Int?) async throws -> MovieListReponse {
         let endpoint = Endpoint.nowPlaying(page: page)
         let data = try await networkRequester.fetchData(url: endpoint.url)
         return try jsonDecoder.decode(MovieListReponse.self, from: data)
