@@ -26,7 +26,7 @@ class NowPlayingMovieListViewModel: ViewModel<Movie, MovieListReponse> {
         await delegate?.insertItems(at: indexPaths)
     }
 
-    func loadImage(filePath: String) async throws -> UIImage? {
+    override func loadImage(filePath: String) async throws -> UIImage? {
         let url = Endpoint.image(size: PosterSize.w154, filePath: filePath).url
         return try await imageLoader.loadImage(url: url.absoluteString)
     }

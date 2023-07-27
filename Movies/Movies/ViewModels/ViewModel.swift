@@ -54,4 +54,8 @@ class ViewModel<Item, Response: ListResponse> where Response.Item == Item {
     func getNextPage() throws {
         try fetchItems(page: currentPage + 1)
     }
+
+    func loadImage(filePath: String) async throws -> UIImage? {
+        fatalError("Implement via subclass.")
+    }
 }

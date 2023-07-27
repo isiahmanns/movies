@@ -12,8 +12,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
 
         let viewModel = NowPlayingMovieListViewModel(api: DefaultMoviesAPI.shared, imageLoader: .shared)
-        let listViewController = ListViewController(viewModel: viewModel)
-        viewModel.delegate = listViewController
+        let listViewController = NowPlayingMovieListViewController(navigationTitle: "Now Playing", viewModel: viewModel)
         let navigationController = UINavigationController(rootViewController: listViewController)
 
         let window = UIWindow(windowScene: windowScene)
