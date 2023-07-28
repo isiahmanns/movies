@@ -14,12 +14,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let tabViewController = UITabBarController()
 
         let nowPlayingMovieListDataHandler = NowPlayingMovieListDataHandler(api: DefaultMoviesAPI.shared, imageLoader: ImageLoader.shared)
-        let nowPlayingMovieListViewModel = ViewModel<Movie, NowPlayingMovieListDataHandler>(dataHandler: nowPlayingMovieListDataHandler)
+        let nowPlayingMovieListViewModel = ListViewModel<Movie, NowPlayingMovieListDataHandler>(dataHandler: nowPlayingMovieListDataHandler)
         let nowPlayingMovieListViewController = NowPlayingMovieListViewController(viewModel: nowPlayingMovieListViewModel)
         let nowPlayingMovieListNavigationController = UINavigationController(rootViewController: nowPlayingMovieListViewController)
 
         let upcomingMovieListDataHandler = UpcomingMovieListDataHandler(api: DefaultMoviesAPI.shared, imageLoader: ImageLoader.shared)
-        let upcomingMovieListViewModel = ViewModel<Movie, UpcomingMovieListDataHandler>(dataHandler: upcomingMovieListDataHandler)
+        let upcomingMovieListViewModel = ListViewModel<Movie, UpcomingMovieListDataHandler>(dataHandler: upcomingMovieListDataHandler)
         let upcomingMovieListViewController = UpcomingMovieListViewController(viewModel: upcomingMovieListViewModel)
         let upcomingMovieListNavigationController = UINavigationController(rootViewController: upcomingMovieListViewController)
 
