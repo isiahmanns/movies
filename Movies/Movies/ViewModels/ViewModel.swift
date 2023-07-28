@@ -34,7 +34,13 @@ class ViewModel<Item, DataHandler: ViewModelDataHandler> where DataHandler.Item 
                 currentPage = listResponse.page
 
                 let newItems = dataHandler.appendNewItems(listResponse.items, to: items)
-                let indexPaths = dataHandler.indexPathsToUpdate(from: items, to: newItems)
+                precondition(newItems.countAll > items.countAll)
+
+                let newItemsIndexPaths = newItems.indexPaths
+                let oldItemsIndexPaths = items.indexPaths
+                precondition(Array(newItemsIndexPaths[0..<oldItemsIndexPaths.count]) == oldItemsIndexPaths)
+
+                let indexPaths = Array(Set(newItemsIndexPaths).subtracting(oldItemsIndexPaths))
                 await delegate?.insertItems(at: indexPaths) {
                     items = newItems
                 }
