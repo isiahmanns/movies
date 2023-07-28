@@ -3,7 +3,7 @@ import UIKit
 
 class ViewModel<Item, DataHandler: ViewModelDataHandler> where DataHandler.Item == Item {
     private(set) var items: [[Item]] = [[]]
-    let dataHandler: DataHandler
+    private let dataHandler: DataHandler
     weak var delegate: ListViewDelegate?
 
     init(dataHandler: DataHandler) {
