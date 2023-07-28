@@ -2,7 +2,7 @@ import Foundation
 import UIKit
 
 class ViewModel<Item, DataHandler: ViewModelDataHandler> where DataHandler.Item == Item {
-    private(set) var items: [[Item]] = [[]]
+    private(set) var items: [[Item]] = []
     private let dataHandler: DataHandler
     weak var delegate: ListViewDelegate?
 
@@ -49,7 +49,7 @@ class ViewModel<Item, DataHandler: ViewModelDataHandler> where DataHandler.Item 
         var instructions: [ListInstruction] = []
 
         let lastCommonSectionIdx = items.count - 1
-        if items[lastCommonSectionIdx].count < concatItems[lastCommonSectionIdx].count {
+        if lastCommonSectionIdx >= 0, items[lastCommonSectionIdx].count < concatItems[lastCommonSectionIdx].count {
             let concatItemsIndexPaths = concatItems.indexPaths(for: lastCommonSectionIdx)
             let currentItemsIndexPaths = items.indexPaths(for: lastCommonSectionIdx)
             let indexPaths = Array(Set(concatItemsIndexPaths).subtracting(currentItemsIndexPaths))

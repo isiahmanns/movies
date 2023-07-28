@@ -15,7 +15,7 @@ struct UpcomingMovieListDataHandler: ViewModelDataHandler {
                 pageItemsMap[releaseDate]!
             }
 
-        if currentItems[0].isEmpty {
+        if currentItems.isEmpty {
             return pageItemsGrouped
         } else if currentItems.last!.first!.releaseDate == pageItemsGrouped.first!.first!.releaseDate {
             return currentItems.prefix(currentItems.count - 1)

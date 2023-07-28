@@ -9,7 +9,7 @@ struct NowPlayingMovieListDataHandler: ViewModelDataHandler {
     }
 
     func concatenateItems(_ pageItems: [Movie], to oldItems: [[Movie]]) -> [[Movie]] {
-        [oldItems[0] + pageItems]
+        [(oldItems.first ?? []) + pageItems]
     }
 
     func loadImage(filePath: String) async throws -> UIImage? {
