@@ -1,7 +1,7 @@
 import Foundation
 import UIKit
 
-protocol ViewModelDataHandler {
+protocol ListViewModelDataHandler {
     associatedtype Item
     associatedtype Response: ListResponse where Response.Item == Item
 

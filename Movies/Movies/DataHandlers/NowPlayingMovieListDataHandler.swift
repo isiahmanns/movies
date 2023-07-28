@@ -1,6 +1,6 @@
 import UIKit
 
-struct NowPlayingMovieListDataHandler: ViewModelDataHandler {
+struct NowPlayingMovieListDataHandler: ListViewModelDataHandler {
     let api: MoviesAPI
     let imageLoader: ImageLoader
 

@@ -1,9 +1,9 @@
 import UIKit
 
 class NowPlayingMovieListViewController: ListViewController {
-    private let viewModel: ViewModel<Movie, NowPlayingMovieListDataHandler>
+    private let viewModel: ListViewModel<Movie, NowPlayingMovieListDataHandler>
 
-    init(viewModel: ViewModel<Movie, NowPlayingMovieListDataHandler>) {
+    init(viewModel: ListViewModel<Movie, NowPlayingMovieListDataHandler>) {
         self.viewModel = viewModel
         super.init(navigationTitle: "Now Playing")
         setupViewModel()
@@ -69,6 +69,11 @@ extension NowPlayingMovieListViewController: UICollectionViewDelegate {
                 print(error)
             }
         }
+    }
+
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let movie = viewModel.items[indexPath.section][indexPath.row]
+        //navigationController?.pushViewController(<#T##viewController: UIViewController##UIViewController#>, animated: true)
     }
 }
 

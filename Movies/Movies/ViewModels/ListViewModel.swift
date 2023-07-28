@@ -1,7 +1,7 @@
 import Foundation
 import UIKit
 
-class ViewModel<Item, DataHandler: ViewModelDataHandler> where DataHandler.Item == Item {
+class ListViewModel<Item, DataHandler: ListViewModelDataHandler> where DataHandler.Item == Item {
     private(set) var items: [[Item]] = []
     private let dataHandler: DataHandler
     weak var delegate: ListViewDelegate?
