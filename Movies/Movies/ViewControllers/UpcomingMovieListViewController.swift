@@ -19,6 +19,10 @@ class UpcomingMovieListViewController: ListViewController {
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.register(MovieCell.self, forCellWithReuseIdentifier: MovieCell.reuseId)
+        collectionView.register(SectionHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SectionHeader.reuseId)
+        collectionViewFlowLayout.sectionHeadersPinToVisibleBounds = true
+        collectionViewFlowLayout.headerReferenceSize = .init(width: collectionView.frame.width, height: SectionHeader.Metrics.height)
+        collectionViewFlowLayout.sectionInset = .init(top: 0, left: 10, bottom: 10, right: 10)
     }
 
     private func setupTabBar() {
@@ -98,5 +102,21 @@ extension UpcomingMovieListViewController: UICollectionViewDataSource {
 
         cell.configure(with: movie, imageTask: imageTask)
         return cell
+    }
+
+    func collectionView(_ collectionView: UICollectionView,
+                        viewForSupplementaryElementOfKind kind: String,
+                        at indexPath: IndexPath) -> UICollectionReusableView {
+        switch kind {
+        case UICollectionView.elementKindSectionHeader:
+            let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: SectionHeader.reuseId, for: indexPath) as! SectionHeader
+            let movie = viewModel.items[indexPath.section][indexPath.item]
+            let date = DateFormatter.ymd.date(from: movie.releaseDate)!
+            let formattedDate = DateFormatter.standard.string(from: date)
+            header.configureText(formattedDate)
+            return header
+        default:
+            fatalError()
+        }
     }
 }

@@ -6,4 +6,10 @@ enum DateFormatter {
         formatter.dateFormat = "yyyy-MM-dd"
         return formatter
     }()
+
+    static let standard: Foundation.DateFormatter = {
+        let formatter = Foundation.DateFormatter()
+        formatter.dateFormat = "M • d • yy"
+        return formatter
+    }()
 }
