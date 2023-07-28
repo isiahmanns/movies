@@ -1,9 +1,14 @@
 import Foundation
 import UIKit
 
-class ViewModel<Item, Response: ListResponse> where Response.Item == Item {
+class ViewModel<Item, DataHandler: ViewModelDataHandler> where DataHandler.Item == Item {
     private(set) var items: [[Item]] = [[]]
+    let dataHandler: DataHandler
     weak var delegate: ListViewDelegate?
+
+    init(dataHandler: DataHandler) {
+        self.dataHandler = dataHandler
+    }
 
     private var totalPages: Int? = nil
     private var currentPage: Int = 0
@@ -24,13 +29,12 @@ class ViewModel<Item, Response: ListResponse> where Response.Item == Item {
         let task = Task {
             defer { activeTask = nil }
             do {
-                let listResponse = try await fetchItems(page: page)
+                let listResponse = try await dataHandler.fetchItems(page: page)
                 totalPages = listResponse.totalPages
                 currentPage = listResponse.page
 
-                let oldItems = items
-                let newItems = appendNewItems(listResponse.items)
-                let indexPaths = indexPathsToUpdate(from: oldItems, to: newItems)
+                let newItems = dataHandler.appendNewItems(listResponse.items, to: items)
+                let indexPaths = dataHandler.indexPathsToUpdate(from: items, to: newItems)
                 await delegate?.insertItems(at: indexPaths) {
                     items = newItems
                 }
@@ -42,23 +46,11 @@ class ViewModel<Item, Response: ListResponse> where Response.Item == Item {
         activeTask = task
     }
 
-    func fetchItems(page: Int?) async throws -> Response {
-        fatalError("Implement via subclass.")
-    }
-
-    func appendNewItems(_ newItems: [Item]) -> [[Item]] {
-        fatalError("Implement via subclass.")
-    }
-
-    func indexPathsToUpdate(from oldItems: [[Item]], to newItems: [[Item]]) -> [IndexPath] {
-        fatalError("Implement via subclass.")
-    }
-
     func getNextPage() throws {
         try fetchItems(page: currentPage + 1)
     }
 
     func loadImage(filePath: String) async throws -> UIImage? {
-        fatalError("Implement via subclass.")
+        return try await dataHandler.loadImage(filePath: filePath)
     }
 }

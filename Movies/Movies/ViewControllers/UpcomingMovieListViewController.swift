@@ -1,9 +1,9 @@
 import UIKit
 
 class UpcomingMovieListViewController: ListViewController {
-    private let viewModel: UpcomingMovieListViewModel
+    private let viewModel: ViewModel<Movie, UpcomingMovieListDataHandler>
 
-    init(viewModel: UpcomingMovieListViewModel) {
+    init(viewModel: ViewModel<Movie, UpcomingMovieListDataHandler>) {
         self.viewModel = viewModel
         super.init(navigationTitle: "Upcoming")
         setupViewModel()

@@ -23,6 +23,7 @@ class ListViewController: UIViewController {
     }
 
     private func setupCollectionView() {
+        // TODO: - Do not enforce this in superclass
         collectionView.delegate = self
         collectionView.dataSource = self
     }

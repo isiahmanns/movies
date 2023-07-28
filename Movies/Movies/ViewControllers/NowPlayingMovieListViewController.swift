@@ -1,9 +1,9 @@
 import UIKit
 
 class NowPlayingMovieListViewController: ListViewController {
-    private let viewModel: NowPlayingMovieListViewModel
+    private let viewModel: ViewModel<Movie, NowPlayingMovieListDataHandler>
 
-    init(viewModel: NowPlayingMovieListViewModel) {
+    init(viewModel: ViewModel<Movie, NowPlayingMovieListDataHandler>) {
         self.viewModel = viewModel
         super.init(navigationTitle: "Now Playing")
         setupViewModel()
