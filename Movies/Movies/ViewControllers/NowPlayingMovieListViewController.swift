@@ -89,7 +89,7 @@ extension NowPlayingMovieListViewController: UICollectionViewDataSource {
                 if let posterPath = movie.posterPath {
                     let image = try await viewModel.loadImage(filePath: posterPath)
                     try Task.checkCancellation()
-                    cell.configure(image)
+                    cell.configureImage(image)
                 }
             } catch {
                 print(error)

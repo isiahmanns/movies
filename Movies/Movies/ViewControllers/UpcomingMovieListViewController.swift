@@ -44,8 +44,8 @@ extension UpcomingMovieListViewController {
 
 extension UpcomingMovieListViewController: UICollectionViewDelegateFlowLayout{
     func collectionView(_ collectionView: UICollectionView,
-                                 layout collectionViewLayout: UICollectionViewLayout,
-                                 sizeForItemAt indexPath: IndexPath) -> CGSize {
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        sizeForItemAt indexPath: IndexPath) -> CGSize {
         let layout = collectionViewLayout as! UICollectionViewFlowLayout
         let itemsPerRow: CGFloat = 3
         let itemWidth = (collectionView.frame.width
@@ -55,7 +55,6 @@ extension UpcomingMovieListViewController: UICollectionViewDelegateFlowLayout{
         let itemHeight = (3 * itemWidth) / 2 + (MovieCell.Metrics.labelHeight + MovieCell.Metrics.stackViewSpacing)
         return .init(width: itemWidth, height: itemHeight)
     }
-
 }
 
 extension UpcomingMovieListViewController: UICollectionViewDelegate {
@@ -89,7 +88,7 @@ extension UpcomingMovieListViewController: UICollectionViewDataSource {
                 if let posterPath = movie.posterPath {
                     let image = try await viewModel.loadImage(filePath: posterPath)
                     try Task.checkCancellation()
-                    cell.configure(image)
+                    cell.configureImage(image)
                 }
             } catch {
                 print(error)

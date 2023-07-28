@@ -79,7 +79,7 @@ extension MovieCell {
         self.imageTask = imageTask
     }
 
-    func configure(_ image: UIImage?) {
+    func configureImage(_ image: UIImage?) {
         imageView.image = image
     }
 }
