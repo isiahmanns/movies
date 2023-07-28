@@ -41,10 +41,17 @@ class ListViewController: UIViewController {
 }
 
 extension ListViewController: ListViewDelegate {
-    func insertItems(at indexPaths: [IndexPath], updateData: () -> Void) {
+    func performBatchUpdates(instructions: [ListInstruction], updateData: () -> Void) {
         collectionView.performBatchUpdates {
             updateData()
-            collectionView.insertItems(at: indexPaths)
+            instructions.forEach { instruction in
+                switch instruction {
+                case let .insertItems(at: indexPaths):
+                    collectionView.insertItems(at: indexPaths)
+                case let .insertSections(indexSet):
+                    collectionView.insertSections(indexSet)
+                }
+            }
         }
     }
 }

@@ -2,7 +2,7 @@ import Foundation
 import UIKit
 
 class ViewModel<Item, DataHandler: ViewModelDataHandler> where DataHandler.Item == Item {
-    private(set) var items: [[Item]] = []
+    private(set) var items: [[Item]] = [[]]
     private let dataHandler: DataHandler
     weak var delegate: ListViewDelegate?
 
@@ -33,23 +33,37 @@ class ViewModel<Item, DataHandler: ViewModelDataHandler> where DataHandler.Item 
                 totalPages = listResponse.totalPages
                 currentPage = listResponse.page
 
-                let newItems = dataHandler.concatenatePage(listResponse.items, to: items)
-                precondition(newItems.countAll > items.countAll)
-
-                let newItemsIndexPaths = newItems.indexPaths
-                let oldItemsIndexPaths = items.indexPaths
-                precondition(Array(newItemsIndexPaths[0..<oldItemsIndexPaths.count]) == oldItemsIndexPaths)
-
-                let indexPaths = Array(Set(newItemsIndexPaths).subtracting(oldItemsIndexPaths))
-                await delegate?.insertItems(at: indexPaths) {
-                    items = newItems
-                }
+                let concatItems = dataHandler.concatenateItems(listResponse.items, to: items)
+                precondition(concatItems.countAll > items.countAll)
+                precondition(Array(concatItems.indexPaths.prefix(items.countAll)) == items.indexPaths)
+                await updateList(with: concatItems)
             } catch {
                 print(error)
                 throw error
             }
         }
         activeTask = task
+    }
+
+    private func updateList(with concatItems: [[Item]]) async {
+        var instructions: [ListInstruction] = []
+
+        let lastCommonSectionIdx = items.count - 1
+        if items[lastCommonSectionIdx].count < concatItems[lastCommonSectionIdx].count {
+            let concatItemsIndexPaths = concatItems.indexPaths(for: lastCommonSectionIdx)
+            let currentItemsIndexPaths = items.indexPaths(for: lastCommonSectionIdx)
+            let indexPaths = Array(Set(concatItemsIndexPaths).subtracting(currentItemsIndexPaths))
+            instructions.append(.insertItems(at: indexPaths))
+        }
+
+        if items.count < concatItems.count {
+            let indexSet = IndexSet(integersIn: items.count..<concatItems.count)
+            instructions.append(.insertSections(indexSet))
+        }
+
+        await delegate?.performBatchUpdates(instructions: instructions) {
+            items = concatItems
+        }
     }
 
     func getNextPage() throws {

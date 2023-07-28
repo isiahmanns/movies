@@ -8,19 +8,19 @@ struct UpcomingMovieListDataHandler: ViewModelDataHandler {
         return try await api.fetchUpcomingMovies(page: page, sortBy: .primaryReleaseDateAsc)
     }
 
-    func concatenatePage(_ page: [Movie], to currentItems: [[Movie]]) -> [[Movie]] {
-        let pageItemsMap = Dictionary(grouping: page, by: \.releaseDate)
+    func concatenateItems(_ pageItems: [Movie], to currentItems: [[Movie]]) -> [[Movie]] {
+        let pageItemsMap = Dictionary(grouping: pageItems, by: \.releaseDate)
         let pageItemsGrouped = pageItemsMap.keys.sorted()
             .map { releaseDate in
                 pageItemsMap[releaseDate]!
             }
 
-        if currentItems.isEmpty {
+        if currentItems[0].isEmpty {
             return pageItemsGrouped
         } else if currentItems.last!.first!.releaseDate == pageItemsGrouped.first!.first!.releaseDate {
-            return currentItems[0..<currentItems.count - 1]
+            return currentItems.prefix(currentItems.count - 1)
             + [currentItems.last! + pageItemsGrouped.first!]
-            + pageItemsGrouped[1...]
+            + pageItemsGrouped.suffix(pageItemsGrouped.count - 1)
         } else {
             return currentItems + pageItemsGrouped
         }

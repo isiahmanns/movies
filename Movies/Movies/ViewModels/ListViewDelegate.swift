@@ -2,5 +2,10 @@ import Foundation
 
 @MainActor
 protocol ListViewDelegate: AnyObject {
-    func insertItems(at: [IndexPath], updateData: () -> Void)
+    func performBatchUpdates(instructions: [ListInstruction], updateData: () -> Void)
+}
+
+enum ListInstruction {
+    case insertItems(at: [IndexPath])
+    case insertSections(IndexSet)
 }

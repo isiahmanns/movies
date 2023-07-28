@@ -8,8 +8,8 @@ struct NowPlayingMovieListDataHandler: ViewModelDataHandler {
         return try await api.fetchNowPlayingMovies(page: page, sortBy: .popularityDesc)
     }
 
-    func concatenatePage(_ page: [Movie], to oldItems: [[Movie]]) -> [[Movie]] {
-        [oldItems.first ?? [] + page]
+    func concatenateItems(_ pageItems: [Movie], to oldItems: [[Movie]]) -> [[Movie]] {
+        [oldItems[0] + pageItems]
     }
 
     func loadImage(filePath: String) async throws -> UIImage? {

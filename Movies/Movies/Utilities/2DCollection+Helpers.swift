@@ -8,17 +8,21 @@ extension Collection where Element: Collection {
     }
 }
 
-extension Collection where Element: Collection {
+extension Collection where Element: Collection, Index == Int {
     var indexPaths: [IndexPath] {
-        var sectionIdx = 0
-
-        return
-            flatMap { section in
-                defer { sectionIdx += 1 }
-                return (0..<section.count)
+        return (0..<count)
+            .flatMap { sectionIdx in
+                return (0..<self[sectionIdx].count)
                     .map { itemIdx in
                         return IndexPath(indexes: [sectionIdx, itemIdx])
                     }
+            }
+    }
+
+    func indexPaths(for sectionIdx: Index) -> [IndexPath] {
+        (0..<self[sectionIdx].count)
+            .map { itemIdx in
+                IndexPath(indexes: [sectionIdx, itemIdx])
             }
     }
 }

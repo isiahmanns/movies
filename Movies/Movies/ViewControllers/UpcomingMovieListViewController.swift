@@ -82,7 +82,7 @@ extension UpcomingMovieListViewController: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieCell.reuseId, for: indexPath) as! MovieCell
-        let movie = viewModel.items[0][indexPath.item]
+        let movie = viewModel.items[indexPath.section][indexPath.item]
 
         let imageTask = Task<Void, Error> {
             do {
