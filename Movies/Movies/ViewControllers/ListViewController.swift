@@ -11,7 +11,6 @@ class ListViewController: UIViewController {
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         super.init(nibName: nil, bundle: nil)
         setupNavigation(title: navigationTitle)
-        setupCollectionView()
     }
 
     private func setupNavigation(title: String) {
@@ -20,12 +19,6 @@ class ListViewController: UIViewController {
         scrollEdgeAppearance.titleTextAttributes = [.foregroundColor: UIColor.systemGray6]
         scrollEdgeAppearance.backgroundColor = .systemIndigo
         navigationItem.scrollEdgeAppearance = scrollEdgeAppearance
-    }
-
-    private func setupCollectionView() {
-        // TODO: - Do not enforce this in superclass
-        collectionView.delegate = self
-        collectionView.dataSource = self
     }
 
     required init?(coder: NSCoder) {
@@ -44,34 +37,6 @@ class ListViewController: UIViewController {
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor)
         ])
-    }
-}
-
-extension ListViewController: UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView,
-                        layout collectionViewLayout: UICollectionViewLayout,
-                        sizeForItemAt indexPath: IndexPath) -> CGSize {
-        fatalError("Implement via subclass.")
-    }
-}
-
-extension ListViewController: UICollectionViewDelegate {
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        fatalError("Implement via subclass.")
-    }
-}
-
-extension ListViewController: UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        fatalError("Implement via subclass.")
-
-    }
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        fatalError("Implement via subclass.")
-    }
-
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        fatalError("Implement via subclass.")
     }
 }
 

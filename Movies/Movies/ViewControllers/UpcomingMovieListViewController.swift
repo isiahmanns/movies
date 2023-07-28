@@ -16,6 +16,8 @@ class UpcomingMovieListViewController: ListViewController {
     }
 
     private func setupCollectionView() {
+        collectionView.delegate = self
+        collectionView.dataSource = self
         collectionView.register(MovieCell.self, forCellWithReuseIdentifier: MovieCell.reuseId)
     }
 
@@ -28,9 +30,20 @@ class UpcomingMovieListViewController: ListViewController {
     }
 }
 
-// MARK: - UICollectionViewDelegateFlowLayout
 extension UpcomingMovieListViewController {
-    override func collectionView(_ collectionView: UICollectionView,
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        // Do any additional setup after loading the view.
+        do {
+            try viewModel.fetchItems()
+        } catch {
+            print(error)
+        }
+    }
+}
+
+extension UpcomingMovieListViewController: UICollectionViewDelegateFlowLayout{
+    func collectionView(_ collectionView: UICollectionView,
                                  layout collectionViewLayout: UICollectionViewLayout,
                                  sizeForItemAt indexPath: IndexPath) -> CGSize {
         let layout = collectionViewLayout as! UICollectionViewFlowLayout
@@ -45,9 +58,8 @@ extension UpcomingMovieListViewController {
 
 }
 
-// MARK: - UICollectionViewDelegate
-extension UpcomingMovieListViewController {
-    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+extension UpcomingMovieListViewController: UICollectionViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let scrollDistance = scrollView.contentOffset.y + scrollView.bounds.height - scrollView.safeAreaInsets.bottom
         if  scrollDistance >= scrollView.contentSize.height {
             do {
@@ -59,13 +71,12 @@ extension UpcomingMovieListViewController {
     }
 }
 
-// MARK: - UICollectionViewDataSource
-extension UpcomingMovieListViewController {
-    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+extension UpcomingMovieListViewController: UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         viewModel.items[0].count
     }
 
-    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieCell.reuseId, for: indexPath) as! MovieCell
         let movie = viewModel.items[0][indexPath.item]
 
@@ -88,18 +99,5 @@ extension UpcomingMovieListViewController {
 
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         1
-    }
-}
-
-// MARK: - Life Cycle
-extension UpcomingMovieListViewController {
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view.
-        do {
-            try viewModel.fetchItems()
-        } catch {
-            print(error)
-        }
     }
 }
