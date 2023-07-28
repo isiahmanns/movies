@@ -1,13 +1,14 @@
 import UIKit
 
 class ListViewController: UIViewController {
+    let collectionViewFlowLayout: UICollectionViewFlowLayout
     let collectionView: UICollectionView
 
     init(navigationTitle: String) {
         let layout = UICollectionViewFlowLayout()
         layout.minimumInteritemSpacing = 10
         layout.minimumLineSpacing = 10
-        layout.sectionInset = .init(top: 10, left: 10, bottom: 10, right: 10)
+        collectionViewFlowLayout = layout
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         super.init(nibName: nil, bundle: nil)
         setupNavigation(title: navigationTitle)

@@ -19,6 +19,7 @@ class NowPlayingMovieListViewController: ListViewController {
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.register(MovieCell.self, forCellWithReuseIdentifier: MovieCell.reuseId)
+        collectionViewFlowLayout.sectionInset = .init(top: 10, left: 10, bottom: 10, right: 10)
     }
 
     private func setupTabBar() {
