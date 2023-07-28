@@ -1,7 +1,7 @@
 import Foundation
 
 enum Endpoint {
-    case nowPlaying(page: Int?)
+    case discover(page: Int?, from: Date, to: Date, sortBy: SortCategory)
     case image(size: ImageSize, filePath: String)
 
     var url: URL {
@@ -33,10 +33,19 @@ enum Endpoint {
         ]
 
         switch self {
-        case let .nowPlaying(page):
+        case let .discover(page, primaryReleaseDateGTE, primaryReleaseDateLTE, sortBy):
             if let page {
                 queryItems.append(.init(name: "page", value: String(page)))
             }
+            queryItems.append(.init(name: "include_adult", value: "false"))
+            queryItems.append(.init(name: "include_video", value: "false"))
+            queryItems.append(.init(name: "language", value: "en-US"))
+            queryItems.append(.init(name: "region", value: "US"))
+            queryItems.append(.init(name: "with_origin_country", value: "US"))
+            queryItems.append(.init(name: "with_release_type", value: "3"))
+            queryItems.append(.init(name: "primary_release_date.gte", value: DateFormatter.ymd.string(from: primaryReleaseDateGTE)))
+            queryItems.append(.init(name: "primary_release_date.lte", value: DateFormatter.ymd.string(from: primaryReleaseDateLTE)))
+            queryItems.append(.init(name: "sort_by", value: sortBy.rawValue))
         default:
             break
         }
@@ -46,8 +55,8 @@ enum Endpoint {
 
     var path: String {
         switch self {
-        case .nowPlaying:
-            return "/3/movie/now_playing"
+        case .discover:
+            return "/3/discover/movie"
         case let .image(size, filePath):
             return "/t/p/\(size)/\(filePath)"
         }

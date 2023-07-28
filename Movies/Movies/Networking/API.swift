@@ -1,7 +1,11 @@
 import Foundation
 
 protocol MoviesAPI {
-    func fetchNowPlayingMovies(page: Int?) async throws -> MovieListReponse
+    func fetchNowPlayingMovies(page: Int?, sortBy: SortCategory) async throws -> MovieListReponse
+    func fetchMovies(page: Int?,
+                     from primaryReleaseDateGTE: Date,
+                     to primaryReleaseDateLTE: Date,
+                     sortBy: SortCategory) async throws -> MovieListReponse
 }
 
 struct DefaultMoviesAPI: MoviesAPI {
@@ -9,6 +13,7 @@ struct DefaultMoviesAPI: MoviesAPI {
 
     private let jsonDecoder: JSONDecoder
     private let networkRequester: NetworkRequester
+    private let now = Date.now
 
     private init(networkRequester: NetworkRequester) {
         jsonDecoder = JSONDecoder()
@@ -16,8 +21,17 @@ struct DefaultMoviesAPI: MoviesAPI {
         self.networkRequester = networkRequester
     }
 
-    func fetchNowPlayingMovies(page: Int?) async throws -> MovieListReponse {
-        let endpoint = Endpoint.nowPlaying(page: page)
+    func fetchNowPlayingMovies(page: Int?, sortBy: SortCategory) async throws -> MovieListReponse {
+        let toDate = now
+        let fromDate = now - 30.days
+        return try await fetchMovies(page: page, from: fromDate, to: toDate, sortBy: sortBy)
+    }
+
+    func fetchMovies(page: Int?,
+                     from primaryReleaseDateGTE: Date,
+                     to primaryReleaseDateLTE: Date,
+                     sortBy: SortCategory) async throws -> MovieListReponse {
+        let endpoint = Endpoint.discover(page: page, from: primaryReleaseDateGTE, to: primaryReleaseDateLTE, sortBy: sortBy)
         let data = try await networkRequester.fetchData(url: endpoint.url)
         return try jsonDecoder.decode(MovieListReponse.self, from: data)
     }

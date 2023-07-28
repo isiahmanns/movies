@@ -6,7 +6,7 @@ struct UpcomingMovieListDataHandler: ViewModelDataHandler {
     let imageLoader: ImageLoader
 
     func fetchItems(page: Int?) async throws -> MovieListReponse {
-        return try await api.fetchNowPlayingMovies(page: page)
+        return try await api.fetchNowPlayingMovies(page: page, sortBy: .popularityDesc)
     }
 
     func appendNewItems(_ newItems: [Movie], to oldItems: [[Movie]]) -> [[Movie]] {
