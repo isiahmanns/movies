@@ -4,6 +4,6 @@ struct Movie: Decodable {
     let id: Int
     let overview: String
     let posterPath: String?
-    let releaseDate: String?
+    let releaseDate: String
     let title: String
 }

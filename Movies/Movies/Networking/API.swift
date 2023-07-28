@@ -2,6 +2,7 @@ import Foundation
 
 protocol MoviesAPI {
     func fetchNowPlayingMovies(page: Int?, sortBy: SortCategory) async throws -> MovieListReponse
+    func fetchUpcomingMovies(page: Int?, sortBy: SortCategory) async throws -> MovieListReponse
     func fetchMovies(page: Int?,
                      from primaryReleaseDateGTE: Date,
                      to primaryReleaseDateLTE: Date,
@@ -22,8 +23,14 @@ struct DefaultMoviesAPI: MoviesAPI {
     }
 
     func fetchNowPlayingMovies(page: Int?, sortBy: SortCategory) async throws -> MovieListReponse {
-        let toDate = now
         let fromDate = now - 30.days
+        let toDate = now
+        return try await fetchMovies(page: page, from: fromDate, to: toDate, sortBy: sortBy)
+    }
+
+    func fetchUpcomingMovies(page: Int?, sortBy: SortCategory) async throws -> MovieListReponse {
+        let fromDate = now
+        let toDate = now + 90.days
         return try await fetchMovies(page: page, from: fromDate, to: toDate, sortBy: sortBy)
     }
 

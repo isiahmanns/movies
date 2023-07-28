@@ -72,8 +72,12 @@ extension UpcomingMovieListViewController: UICollectionViewDelegate {
 }
 
 extension UpcomingMovieListViewController: UICollectionViewDataSource {
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        viewModel.items.count
+    }
+
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        viewModel.items[0].count
+        viewModel.items[section].count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -95,9 +99,5 @@ extension UpcomingMovieListViewController: UICollectionViewDataSource {
 
         cell.configure(with: movie, imageTask: imageTask)
         return cell
-    }
-
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        1
     }
 }

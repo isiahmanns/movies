@@ -2,7 +2,7 @@ import Foundation
 import UIKit
 
 class ViewModel<Item, DataHandler: ViewModelDataHandler> where DataHandler.Item == Item {
-    private(set) var items: [[Item]] = [[]]
+    private(set) var items: [[Item]] = []
     private let dataHandler: DataHandler
     weak var delegate: ListViewDelegate?
 
@@ -33,7 +33,7 @@ class ViewModel<Item, DataHandler: ViewModelDataHandler> where DataHandler.Item 
                 totalPages = listResponse.totalPages
                 currentPage = listResponse.page
 
-                let newItems = dataHandler.appendNewItems(listResponse.items, to: items)
+                let newItems = dataHandler.concatenatePage(listResponse.items, to: items)
                 precondition(newItems.countAll > items.countAll)
 
                 let newItemsIndexPaths = newItems.indexPaths

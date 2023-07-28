@@ -72,8 +72,12 @@ extension NowPlayingMovieListViewController: UICollectionViewDelegate {
 }
 
 extension NowPlayingMovieListViewController: UICollectionViewDataSource {
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        1
+    }
+
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        viewModel.items[0].count
+        viewModel.items.first?.count ?? 0
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -95,9 +99,5 @@ extension NowPlayingMovieListViewController: UICollectionViewDataSource {
 
         cell.configure(with: movie, imageTask: imageTask)
         return cell
-    }
-
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        1
     }
 }

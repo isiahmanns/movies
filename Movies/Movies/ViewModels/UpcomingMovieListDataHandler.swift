@@ -1,16 +1,29 @@
 import UIKit
 
-// TODO: - Change this implementation to group data by date
 struct UpcomingMovieListDataHandler: ViewModelDataHandler {
     let api: MoviesAPI
     let imageLoader: ImageLoader
 
     func fetchItems(page: Int?) async throws -> MovieListReponse {
-        return try await api.fetchNowPlayingMovies(page: page, sortBy: .popularityDesc)
+        return try await api.fetchUpcomingMovies(page: page, sortBy: .primaryReleaseDateAsc)
     }
 
-    func appendNewItems(_ newItems: [Movie], to oldItems: [[Movie]]) -> [[Movie]] {
-        [oldItems[0] + newItems]
+    func concatenatePage(_ page: [Movie], to currentItems: [[Movie]]) -> [[Movie]] {
+        let pageItemsMap = Dictionary(grouping: page, by: \.releaseDate)
+        let pageItemsGrouped = pageItemsMap.keys.sorted()
+            .map { releaseDate in
+                pageItemsMap[releaseDate]!
+            }
+
+        if currentItems.isEmpty {
+            return pageItemsGrouped
+        } else if currentItems.last!.first!.releaseDate == pageItemsGrouped.first!.first!.releaseDate {
+            return currentItems[0..<currentItems.count - 1]
+            + [currentItems.last! + pageItemsGrouped.first!]
+            + pageItemsGrouped[1...]
+        } else {
+            return currentItems + pageItemsGrouped
+        }
     }
 
     func loadImage(filePath: String) async throws -> UIImage? {
