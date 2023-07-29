@@ -70,6 +70,13 @@ extension NowPlayingMovieListViewController: UICollectionViewDelegate {
             }
         }
     }
+
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let movie = viewModel.items[indexPath.section][indexPath.row]
+        let viewModel = MovieDetailViewModel(movie: movie, api: DefaultMoviesAPI.shared)
+        let viewController = MovieDetailViewController(viewModel: viewModel)
+        navigationController?.pushViewController(viewController, animated: true)
+    }
 }
 
 extension NowPlayingMovieListViewController: UICollectionViewDataSource {
