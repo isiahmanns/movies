@@ -48,7 +48,8 @@ class VerticalScrollingStackView: UIView {
 
     /// Adds a subview whose layout is managed by a UIStackView.
     ///
-    /// This view must provide `intrinsicContentSize` for the stack to calculate its size.
+    /// This stack consumes the view's `intrinsicContentSize` depending on the stack's configuration.
+    /// The view's size can also be configured with Auto Layout.
     ///
     /// - Parameters:
     ///   - view: The view to append to the stack.
