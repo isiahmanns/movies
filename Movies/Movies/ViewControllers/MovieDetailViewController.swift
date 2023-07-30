@@ -24,7 +24,6 @@ class MovieDetailViewController: UIViewController {
     private let homepageLink = UIImageView()
     // TODO: - Nav bar add buttom
     // TODO: - Score
-    // TODO: - Attributed strings to support bold text
     // TODO: - Hyperlink view
     // TODO: - Genre
     // TODO: - Cast
@@ -64,17 +63,22 @@ class MovieDetailViewController: UIViewController {
     }
 
     override func viewDidLoad() {
-        tagline.text = "tagline"
-        runtime.text = "runtime"
-        overview.text = "overview"
-        budget.text = "budget"
-        revenue.text = "revenue"
+        tagline.attributedText = "tagline".font(.italicLabelFont)
+
+        let date = DateFormatter.ymd.date(from: viewModel.movie.releaseDate)!
+        let formattedDate = DateFormatter.standard.string(from: date)
+        releaseDate.attributedText = "Release:".font(.boldLabelFont) + " \(formattedDate)"
+
+        runtime.attributedText = "Length:".font(.boldLabelFont) + " \("runtime")"
+
+        overview.attributedText = "Overview:".font(.boldLabelFont) + " \(viewModel.movie.overview)"
+        overview.numberOfLines = 0
+
+        budget.attributedText = "Budget:".font(.boldLabelFont) + " \("budget")"
+        revenue.attributedText = "Revenue:".font(.boldLabelFont) + " \("revenue")"
+
         homepageLink.image = .init(systemName: "house")
         homepageLink.contentMode = .left
-        overview.text = viewModel.movie.overview
-        overview.numberOfLines = 0
-        let date = DateFormatter.ymd.date(from: viewModel.movie.releaseDate)!
-        releaseDate.text = DateFormatter.standard.string(from: date)
     }
 
     override func viewWillAppear(_ animated: Bool) {

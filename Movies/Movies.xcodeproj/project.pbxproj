@@ -32,6 +32,8 @@
 		25C3E50E2A75BC9D00843F3E /* MovieDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25C3E50D2A75BC9D00843F3E /* MovieDetailViewController.swift */; };
 		25C3E5112A75BDA300843F3E /* VerticalScrollingStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25C3E5102A75BDA300843F3E /* VerticalScrollingStackView.swift */; };
 		25C3E5162A7638B900843F3E /* YouTubeiOSPlayerHelper in Frameworks */ = {isa = PBXBuildFile; productRef = 25C3E5152A7638B900843F3E /* YouTubeiOSPlayerHelper */; };
+		25C3E5182A76CF4F00843F3E /* NSAttributedString+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25C3E5172A76CF4F00843F3E /* NSAttributedString+Helpers.swift */; };
+		25C3E51A2A76CFA000843F3E /* Font.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25C3E5192A76CFA000843F3E /* Font.swift */; };
 		25D4E5F72A6572E300FE41A6 /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25D4E5F62A6572E300FE41A6 /* API.swift */; };
 		25E0195F2A51A5A0007BF235 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25E0195E2A51A5A0007BF235 /* AppDelegate.swift */; };
 		25E019612A51A5A0007BF235 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25E019602A51A5A0007BF235 /* SceneDelegate.swift */; };
@@ -86,6 +88,8 @@
 		25C2744F2A7437FD008BCA8E /* MovieDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetailViewModel.swift; sourceTree = "<group>"; };
 		25C3E50D2A75BC9D00843F3E /* MovieDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetailViewController.swift; sourceTree = "<group>"; };
 		25C3E5102A75BDA300843F3E /* VerticalScrollingStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalScrollingStackView.swift; sourceTree = "<group>"; };
+		25C3E5172A76CF4F00843F3E /* NSAttributedString+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSAttributedString+Helpers.swift"; sourceTree = "<group>"; };
+		25C3E5192A76CFA000843F3E /* Font.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Font.swift; sourceTree = "<group>"; };
 		25D4E5F62A6572E300FE41A6 /* API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
 		25E0195B2A51A5A0007BF235 /* Movies.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Movies.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		25E0195E2A51A5A0007BF235 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -185,6 +189,8 @@
 				25C274412A739920008BCA8E /* SortCategory.swift */,
 				25C274452A73A3B8008BCA8E /* DateFormatter.swift */,
 				25C274472A73AA85008BCA8E /* TimeInterval+Helpers.swift */,
+				25C3E5172A76CF4F00843F3E /* NSAttributedString+Helpers.swift */,
+				25C3E5192A76CFA000843F3E /* Font.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -429,6 +435,7 @@
 			files = (
 				25ACE6E72A6C74970043F22C /* Movie.swift in Sources */,
 				25C274362A71F1BF008BCA8E /* NowPlayingMovieListDataHandler.swift in Sources */,
+				25C3E51A2A76CFA000843F3E /* Font.swift in Sources */,
 				25C2744B2A73F2F7008BCA8E /* SectionHeader.swift in Sources */,
 				25ACE6E32A6C66A30043F22C /* ListViewModel.swift in Sources */,
 				25C2743E2A73371A008BCA8E /* ListViewDelegate.swift in Sources */,
@@ -445,6 +452,7 @@
 				25ACE6E92A6C795E0043F22C /* MovieListResponse.swift in Sources */,
 				25C274502A7437FD008BCA8E /* MovieDetailViewModel.swift in Sources */,
 				25C274482A73AA85008BCA8E /* TimeInterval+Helpers.swift in Sources */,
+				25C3E5182A76CF4F00843F3E /* NSAttributedString+Helpers.swift in Sources */,
 				25D4E5F72A6572E300FE41A6 /* API.swift in Sources */,
 				25C2743C2A72555B008BCA8E /* UpcomingMovieListDataHandler.swift in Sources */,
 				25C274382A723663008BCA8E /* NowPlayingMovieListViewController.swift in Sources */,
