@@ -20,10 +20,9 @@ class MovieDetailViewController: UIViewController {
     private let overview = UILabel()
     private let budget = UILabel()
     private let revenue = UILabel()
-    private let homepageLink = UIImageView()
+    private let movieLinkPillButton = MovieLinkPillButton()
     // TODO: - Nav bar add buttom
     // TODO: - Score
-    // TODO: - Hyperlink view
     // TODO: - Genre
     // TODO: - Cast
 
@@ -49,7 +48,7 @@ class MovieDetailViewController: UIViewController {
          overview,
          budget,
          revenue,
-         homepageLink
+         movieLinkPillButton
         ].forEach { view in
             verticalStackScrollView.addArrangedSubview(view)
         }
@@ -80,12 +79,13 @@ class MovieDetailViewController: UIViewController {
 
         budget.attributedText = "Budget:".font(.boldLabelFont) + " \("budget")"
         revenue.attributedText = "Revenue:".font(.boldLabelFont) + " \("revenue")"
-
-        homepageLink.image = .init(systemName: "house")
-        homepageLink.contentMode = .left
     }
 
     override func viewWillAppear(_ animated: Bool) {
         //TODO: - viewModel.fetchMovie(movieId)
+        Task {
+            try! await Task.sleep(for: .seconds(1))
+            movieLinkPillButton.configureURL("https://www.dc.com/theflash")
+        }
     }
 }
