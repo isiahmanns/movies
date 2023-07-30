@@ -1,7 +1,19 @@
 import UIKit
+import YouTubeiOSPlayerHelper
 
 class MovieDetailViewController: UIViewController {
     private let viewModel: MovieDetailViewModel
+
+    private lazy var youtubeTrailer: YTPlayerView = {
+        let youtubeTrailer = YTPlayerView()
+        youtubeTrailer.load(withVideoId: "yedPuhzfVGE")
+
+        NSLayoutConstraint.activate([
+            youtubeTrailer.heightAnchor.constraint(equalTo: youtubeTrailer.widthAnchor, multiplier: 9 / 16),
+        ])
+
+        return youtubeTrailer
+     }()
 
     private let tagline = UILabel()
     private let releaseDate = UILabel()
@@ -10,7 +22,10 @@ class MovieDetailViewController: UIViewController {
     private let budget = UILabel()
     private let revenue = UILabel()
     private let homepageLink = UIImageView()
+    // TODO: - Nav bar add buttom
     // TODO: - Score
+    // TODO: - Attributed strings to support bold text
+    // TODO: - Hyperlink view
     // TODO: - Genre
     // TODO: - Cast
 
@@ -29,11 +44,12 @@ class MovieDetailViewController: UIViewController {
     }
 
     override func loadView() {
-        let verticalScrollingStackView = VerticalScrollingStackView(spacing: 10,
-                                                                    alignment: .leading,
+        let verticalScrollingStackView = VerticalScrollingStackView(spacing: 14,
+                                                                    alignment: .fill,
                                                                     insetX: 20)
 
-        [tagline,
+        [youtubeTrailer,
+         tagline,
          releaseDate,
          runtime,
          overview,
@@ -54,6 +70,7 @@ class MovieDetailViewController: UIViewController {
         budget.text = "budget"
         revenue.text = "revenue"
         homepageLink.image = .init(systemName: "house")
+        homepageLink.contentMode = .left
         overview.text = viewModel.movie.overview
         overview.numberOfLines = 0
         let date = DateFormatter.ymd.date(from: viewModel.movie.releaseDate)!

@@ -31,6 +31,7 @@
 		25C274502A7437FD008BCA8E /* MovieDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25C2744F2A7437FD008BCA8E /* MovieDetailViewModel.swift */; };
 		25C3E50E2A75BC9D00843F3E /* MovieDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25C3E50D2A75BC9D00843F3E /* MovieDetailViewController.swift */; };
 		25C3E5112A75BDA300843F3E /* VerticalScrollingStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25C3E5102A75BDA300843F3E /* VerticalScrollingStackView.swift */; };
+		25C3E5162A7638B900843F3E /* YouTubeiOSPlayerHelper in Frameworks */ = {isa = PBXBuildFile; productRef = 25C3E5152A7638B900843F3E /* YouTubeiOSPlayerHelper */; };
 		25D4E5F72A6572E300FE41A6 /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25D4E5F62A6572E300FE41A6 /* API.swift */; };
 		25E0195F2A51A5A0007BF235 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25E0195E2A51A5A0007BF235 /* AppDelegate.swift */; };
 		25E019612A51A5A0007BF235 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25E019602A51A5A0007BF235 /* SceneDelegate.swift */; };
@@ -105,6 +106,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				25C3E5162A7638B900843F3E /* YouTubeiOSPlayerHelper in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -305,6 +307,9 @@
 			dependencies = (
 			);
 			name = Movies;
+			packageProductDependencies = (
+				25C3E5152A7638B900843F3E /* YouTubeiOSPlayerHelper */,
+			);
 			productName = Movies;
 			productReference = 25E0195B2A51A5A0007BF235 /* Movies.app */;
 			productType = "com.apple.product-type.application";
@@ -377,6 +382,9 @@
 				Base,
 			);
 			mainGroup = 25E019522A51A5A0007BF235;
+			packageReferences = (
+				25C3E5142A7638B900843F3E /* XCRemoteSwiftPackageReference "youtube-ios-player-helper" */,
+			);
 			productRefGroup = 25E0195C2A51A5A0007BF235 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -773,6 +781,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		25C3E5142A7638B900843F3E /* XCRemoteSwiftPackageReference "youtube-ios-player-helper" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/youtube/youtube-ios-player-helper";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		25C3E5152A7638B900843F3E /* YouTubeiOSPlayerHelper */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 25C3E5142A7638B900843F3E /* XCRemoteSwiftPackageReference "youtube-ios-player-helper" */;
+			productName = YouTubeiOSPlayerHelper;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 25E019532A51A5A0007BF235 /* Project object */;
 }

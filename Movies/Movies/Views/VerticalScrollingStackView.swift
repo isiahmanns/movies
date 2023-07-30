@@ -46,6 +46,12 @@ class VerticalScrollingStackView: UIView {
         ])
     }
 
+    /// Adds a subview whose layout is managed by a UIStackView.
+    ///
+    /// This view must provide `intrinsicContentSize` for the stack to calculate its size.
+    ///
+    /// - Parameters:
+    ///   - view: The view to append to the stack.
     func addArrangedSubview(_ view: UIView) {
         stackView.addArrangedSubview(view)
     }
