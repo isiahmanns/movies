@@ -4,14 +4,13 @@ import YouTubeiOSPlayerHelper
 class MovieDetailViewController: UIViewController {
     private let viewModel: MovieDetailViewModel
 
+    private let verticalStackScrollView = VerticalStackScrollView(spacing: 14,
+                                                                  alignment: .leading,
+                                                                  insetX: 20)
+
     private lazy var youtubeTrailer: YTPlayerView = {
         let youtubeTrailer = YTPlayerView()
         youtubeTrailer.load(withVideoId: "yedPuhzfVGE")
-
-        NSLayoutConstraint.activate([
-            youtubeTrailer.heightAnchor.constraint(equalTo: youtubeTrailer.widthAnchor, multiplier: 9 / 16),
-        ])
-
         return youtubeTrailer
      }()
 
@@ -43,10 +42,6 @@ class MovieDetailViewController: UIViewController {
     }
 
     override func loadView() {
-        let verticalScrollingStackView = VerticalScrollingStackView(spacing: 14,
-                                                                    alignment: .fill,
-                                                                    insetX: 20)
-
         [youtubeTrailer,
          tagline,
          releaseDate,
@@ -56,10 +51,19 @@ class MovieDetailViewController: UIViewController {
          revenue,
          homepageLink
         ].forEach { view in
-            verticalScrollingStackView.addArrangedSubview(view)
+            verticalStackScrollView.addArrangedSubview(view)
         }
 
-        view = verticalScrollingStackView
+        setupContraints()
+
+        view = verticalStackScrollView
+    }
+
+    private func setupContraints() {
+        NSLayoutConstraint.activate([
+            youtubeTrailer.widthAnchor.constraint(equalTo: verticalStackScrollView.contentLayoutGuide.widthAnchor),
+            youtubeTrailer.heightAnchor.constraint(equalTo: youtubeTrailer.widthAnchor, multiplier: 9 / 16),
+        ])
     }
 
     override func viewDidLoad() {

@@ -1,7 +1,7 @@
 import UIKit
 
 /// A container view that supports vertical scrolling through a stack of views. The scrollable space grows with the height of the stack.
-class VerticalScrollingStackView: UIView {
+class VerticalStackScrollView: UIScrollView {
     private let stackView = UIStackView(frame: .zero)
     private let spacing: CGFloat
     private let alignment: UIStackView.Alignment.Vertical
@@ -24,25 +24,18 @@ class VerticalScrollingStackView: UIView {
         stackView.spacing = spacing
         stackView.alignment = alignment.wrappedValue
 
-        let scrollView = UIScrollView(frame: .zero)
-        scrollView.addSubview(stackView)
+        addSubview(stackView)
         stackView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-            stackView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
-            stackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -insetX * 2),
+            stackView.topAnchor.constraint(equalTo: topAnchor),
+            stackView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            stackView.widthAnchor.constraint(equalTo: widthAnchor, constant: -insetX)
         ])
 
         backgroundColor = .white
-        addSubview(scrollView)
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            scrollView.topAnchor.constraint(equalTo: topAnchor),
-            scrollView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            scrollView.widthAnchor.constraint(equalTo: widthAnchor),
-            scrollView.heightAnchor.constraint(equalTo: heightAnchor),
-            scrollView.contentLayoutGuide.widthAnchor.constraint(equalTo: widthAnchor),
-            scrollView.contentLayoutGuide.heightAnchor.constraint(equalTo: stackView.heightAnchor),
+            contentLayoutGuide.widthAnchor.constraint(equalTo: stackView.widthAnchor),
+            contentLayoutGuide.heightAnchor.constraint(equalTo: stackView.heightAnchor),
         ])
     }
 
