@@ -41,8 +41,11 @@ class HorizontalStackScrollView: UIScrollView {
     ///
     /// - Parameters:
     ///   - view: The view to append to the stack.
-    func addArrangedSubview(_ view: UIView) {
-        stackView.addArrangedSubview(view)
+    func addArrangedSubviews(_ views: [UIView]) {
+        views.forEach { view in
+            stackView.addArrangedSubview(view)
+        }
+        invalidateIntrinsicContentSize()
     }
 
     func removeArrangedSubviews() {
@@ -50,5 +53,13 @@ class HorizontalStackScrollView: UIScrollView {
             stackView.removeArrangedSubview(view)
             view.removeFromSuperview()
         }
+        invalidateIntrinsicContentSize()
+    }
+}
+
+extension HorizontalStackScrollView {
+    override var intrinsicContentSize: CGSize {
+        stackView.layoutIfNeeded()
+        return stackView.frame.size
     }
 }

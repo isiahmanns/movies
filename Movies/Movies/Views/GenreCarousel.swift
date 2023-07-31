@@ -28,21 +28,15 @@ class GenreCarousel: UIStackView {
             addArrangedSubview(view)
         }
 
-        horizontalStackScrollView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            horizontalStackScrollView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            horizontalStackScrollView.trailingAnchor.constraint(equalTo: trailingAnchor),
-        ])
-
         setLoadingState()
     }
 
     private func setLoadingState() {
-        let genre = createPill(title: "...", color: .systemGray6)
-        horizontalStackScrollView.addArrangedSubview(genre)
+        let genrePill = createPill(title: "...", color: .systemGray6)
+        horizontalStackScrollView.addArrangedSubviews([genrePill])
     }
 
-    private func createGenrePill(_ genre: MovieGenre) -> Button {
+    private func createPill(_ genre: MovieGenre) -> Button {
         createPill(title: genre.displayName, color: genre.color)
     }
 
@@ -59,9 +53,9 @@ class GenreCarousel: UIStackView {
 
     func setGenres(_ genres: [MovieGenre]) {
         horizontalStackScrollView.removeArrangedSubviews()
-        genres.forEach { genre in
-            let button = createGenrePill(genre)
-            horizontalStackScrollView.addArrangedSubview(button)
+        let genrePills = genres.map { genre in
+            createPill(genre)
         }
+        horizontalStackScrollView.addArrangedSubviews(genrePills)
     }
 }
