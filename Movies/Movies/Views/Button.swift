@@ -9,7 +9,7 @@ class Button: UIButton {
         static let imagePadding: CGFloat = 8
     }
 
-    init(title: String, disabledTitle: String?, image: UIImage) {
+    init(title: String, disabledTitle: String? = nil, image: UIImage? = nil) {
         super.init(frame: .zero)
         setup(title: title, disabledTitle: disabledTitle, image: image)
     }
@@ -18,7 +18,7 @@ class Button: UIButton {
         fatalError("init(coder:) has not been implemented")
     }
 
-    private func setup(title: String, disabledTitle: String?, image: UIImage) {
+    private func setup(title: String, disabledTitle: String?, image: UIImage?) {
         configuration = .filled()
         configuration!.imagePadding = Metrics.imagePadding
         configuration!.contentInsets = NSDirectionalEdgeInsets(top: Metrics.insetY,

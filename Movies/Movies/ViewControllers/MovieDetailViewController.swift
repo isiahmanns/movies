@@ -20,10 +20,10 @@ class MovieDetailViewController: UIViewController {
     private let overview = UILabel()
     private let budget = UILabel()
     private let revenue = UILabel()
+    private let genreCarousel = GenreCarousel()
     private let movieLinkPillButton = MovieLinkPillButton()
     // TODO: - Nav bar add buttom
     // TODO: - Score
-    // TODO: - Genre
     // TODO: - Cast
 
     init(viewModel: MovieDetailViewModel) {
@@ -48,6 +48,7 @@ class MovieDetailViewController: UIViewController {
          overview,
          budget,
          revenue,
+         genreCarousel,
          movieLinkPillButton
         ].forEach { view in
             verticalStackScrollView.addArrangedSubview(view)
@@ -62,6 +63,10 @@ class MovieDetailViewController: UIViewController {
         NSLayoutConstraint.activate([
             youtubeTrailer.widthAnchor.constraint(equalTo: verticalStackScrollView.contentLayoutGuide.widthAnchor),
             youtubeTrailer.heightAnchor.constraint(equalTo: youtubeTrailer.widthAnchor, multiplier: 9 / 16),
+        ])
+
+        NSLayoutConstraint.activate([
+            genreCarousel.widthAnchor.constraint(equalTo: verticalStackScrollView.contentLayoutGuide.widthAnchor)
         ])
     }
 
@@ -86,6 +91,12 @@ class MovieDetailViewController: UIViewController {
         Task {
             try! await Task.sleep(for: .seconds(1))
             movieLinkPillButton.configureURL("https://www.dc.com/theflash")
+
+            genreCarousel.setGenres([
+                .comedy,
+                .action,
+                .horror
+            ])
         }
     }
 }
