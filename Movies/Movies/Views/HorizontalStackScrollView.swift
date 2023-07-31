@@ -26,14 +26,12 @@ class HorizontalStackScrollView: UIScrollView {
         NSLayoutConstraint.activate([
             stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
             stackView.topAnchor.constraint(equalTo: topAnchor),
-            stackView.heightAnchor.constraint(equalTo: heightAnchor),
+            stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            stackView.heightAnchor.constraint(equalTo: heightAnchor)
         ])
 
         backgroundColor = .white
-        NSLayoutConstraint.activate([
-            contentLayoutGuide.widthAnchor.constraint(equalTo: stackView.widthAnchor),
-            contentLayoutGuide.heightAnchor.constraint(equalTo: stackView.heightAnchor),
-        ])
     }
 
     /// Adds a subview whose layout is managed by a UIStackView.
@@ -50,6 +48,7 @@ class HorizontalStackScrollView: UIScrollView {
     func removeArrangedSubviews() {
         stackView.arrangedSubviews.forEach { view in
             stackView.removeArrangedSubview(view)
+            view.removeFromSuperview()
         }
     }
 }

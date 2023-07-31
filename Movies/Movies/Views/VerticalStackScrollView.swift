@@ -20,6 +20,10 @@ class VerticalStackScrollView: UIScrollView {
     }
 
     private func setupViews() {
+        NSLayoutConstraint.activate([
+            contentLayoutGuide.widthAnchor.constraint(equalTo: widthAnchor, constant: -insetX * 2)
+        ])
+
         stackView.axis = .vertical
         stackView.spacing = spacing
         stackView.alignment = alignment.wrappedValue
@@ -29,14 +33,11 @@ class VerticalStackScrollView: UIScrollView {
         NSLayoutConstraint.activate([
             stackView.topAnchor.constraint(equalTo: topAnchor),
             stackView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            stackView.widthAnchor.constraint(equalTo: widthAnchor, constant: -insetX)
+            stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            stackView.widthAnchor.constraint(equalTo: contentLayoutGuide.widthAnchor),
         ])
 
         backgroundColor = .white
-        NSLayoutConstraint.activate([
-            contentLayoutGuide.widthAnchor.constraint(equalTo: stackView.widthAnchor),
-            contentLayoutGuide.heightAnchor.constraint(equalTo: stackView.heightAnchor),
-        ])
     }
 
     /// Adds a subview whose layout is managed by a UIStackView.
