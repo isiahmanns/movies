@@ -11,6 +11,8 @@ class MovieDetailViewController: UIViewController {
     private lazy var youtubeTrailer: YTPlayerView = {
         let youtubeTrailer = YTPlayerView()
         youtubeTrailer.load(withVideoId: "yedPuhzfVGE")
+        youtubeTrailer.layer.cornerRadius = 20
+        youtubeTrailer.clipsToBounds = true
         return youtubeTrailer
      }()
 
