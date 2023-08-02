@@ -7,6 +7,8 @@ protocol MoviesAPI {
                      from primaryReleaseDateGTE: Date,
                      to primaryReleaseDateLTE: Date,
                      sortBy: SortCategory) async throws -> MovieListReponse
+    func fetchMovie(_ movieId: Int) async throws -> MovieDetailResponse
+    func fetchVideos(_ movieId: Int) async throws -> MovieVideosResponse
 }
 
 struct DefaultMoviesAPI: MoviesAPI {
@@ -41,5 +43,17 @@ struct DefaultMoviesAPI: MoviesAPI {
         let endpoint = Endpoint.discover(page: page, from: primaryReleaseDateGTE, to: primaryReleaseDateLTE, sortBy: sortBy)
         let data = try await networkRequester.fetchData(url: endpoint.url)
         return try jsonDecoder.decode(MovieListReponse.self, from: data)
+    }
+
+    func fetchMovie(_ movieId: Int) async throws -> MovieDetailResponse {
+        let endpoint = Endpoint.detail(movieId: movieId)
+        let data = try await networkRequester.fetchData(url: endpoint.url)
+        return try jsonDecoder.decode(MovieDetailResponse.self, from: data)
+    }
+
+    func fetchVideos(_ movieId: Int) async throws -> MovieVideosResponse {
+        let endpoint = Endpoint.videos(movieId: movieId)
+        let data = try await networkRequester.fetchData(url: endpoint.url)
+        return try jsonDecoder.decode(MovieVideosResponse.self, from: data)
     }
 }

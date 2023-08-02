@@ -89,3 +89,24 @@ extension Button {
         return self
     }
 }
+
+extension Button {
+    static func createPill(_ genre: MovieGenre) -> Button {
+        createPill(title: genre.displayName, color: genre.color)
+    }
+
+    static func createPill(title: String, color: UIColor) -> Button {
+        Button(title: title)
+            .backgroundColor(color)
+            .titleFont(.labelFont)
+            .titleColor(.black, forState: .normal)
+            .titleColor(.black, forState: .focused)
+            .titleColor(.black, forState: .selected)
+            .titleColor(.black, forState: .highlighted)
+            .cornerStyle(.capsule)
+    }
+
+    static func createPlaceholderPill() -> Button {
+        createPill(title: "...", color: .systemGray6)
+    }
+}

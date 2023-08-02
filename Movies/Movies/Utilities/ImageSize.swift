@@ -9,3 +9,9 @@ enum PosterSize: String, ImageSize {
     case w780
     case original
 }
+
+enum ProfileSizes: String, ImageSize {
+    case w45
+    case w185
+    case h632
+}

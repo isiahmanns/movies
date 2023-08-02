@@ -42,6 +42,9 @@ class CastCard: UIStackView {
         ])
 
         imageView.contentMode = .scaleAspectFit
+        imageView.clipsToBounds = true
+        let width = height * (2 / 3)
+        imageView.layer.cornerRadius = (width / 8)
     }
 
     func setImage(_ image: UIImage) {

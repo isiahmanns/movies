@@ -112,7 +112,7 @@ extension UpcomingMovieListViewController: UICollectionViewDataSource {
             let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: SectionHeader.reuseId, for: indexPath) as! SectionHeader
             let movie = viewModel.items[indexPath.section][indexPath.item]
             let date = DateFormatter.ymd.date(from: movie.releaseDate)!
-            let formattedDate = DateFormatter.standard.string(from: date)
+            let formattedDate = DateFormatter.header.string(from: date)
             header.configureText(formattedDate)
             return header
         default:

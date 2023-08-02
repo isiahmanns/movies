@@ -4,4 +4,6 @@ enum APIError: Error {
     case invalidPageNumber
     case prematurePageRequest
     case existingTaskInProgress
+    case imageLoadingError
+    case videoLoadingError
 }

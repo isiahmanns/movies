@@ -12,8 +12,7 @@ class CastCarousel: Carousel {
     }
 
     func setLoadingState() {
-        // TODO: - Create cast
-        //addArrangedSubviews([placeholderCard])
+        addItems([Button.createPlaceholderPill()])
     }
 
     func setCast(_ cast: [MovieActor]) {
@@ -26,10 +25,8 @@ class CastCarousel: Carousel {
         self.castCards = castCards
     }
 
-    func setCastImages(_ castImages: [UIImage]) {
-        (0..<castCards.count).forEach { idx in
-            let castCard = castCards[idx]
-            castCard.setImage(castImages[idx])
-        }
+    func setCastImage(_ castImage: UIImage, for idx: Int) {
+        precondition((0..<castCards.count).contains(idx))
+        castCards[idx].setImage(castImage)
     }
 }

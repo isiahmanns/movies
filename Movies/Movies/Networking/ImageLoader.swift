@@ -2,9 +2,9 @@ import UIKit
 
 actor ImageLoader {
     static let shared = ImageLoader(networkRequester: .shared, cacheSize: 45)
-    let networkRequester: NetworkRequester
-    let cache = NSCache<NSString, UIImage>()
-    var activeTasks = [String: Task<UIImage?, Error>]()
+    private let networkRequester: NetworkRequester
+    private let cache = NSCache<NSString, UIImage>()
+    private var activeTasks = [String: Task<UIImage?, Error>]()
 
     private init(networkRequester: NetworkRequester, cacheSize: Int) {
         self.networkRequester = networkRequester
