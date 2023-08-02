@@ -43,7 +43,7 @@ class MovieCell: UICollectionViewCell {
                                               constant: -(Metrics.labelHeight + Metrics.stackViewSpacing))
         ])
         imageView.contentMode = .scaleAspectFit
-        imageView.layer.cornerRadius = 10
+        imageView.layer.cornerRadius = contentView.frame.width / 8
         imageView.clipsToBounds = true
 
         titleLabelWrapper.translatesAutoresizingMaskIntoConstraints = false
