@@ -130,36 +130,54 @@ class MovieDetailViewController: UIViewController {
                 let movieDetailResponse = try await viewModel.fetchMovie()
 
                 scoreMeter.setValue(movieDetailResponse.voteAverage / 10)
-                tagline.attributedText = "\(movieDetailResponse.tagline)".font(.italicLabelFont)
-                runtime.attributedText = "Length: ".font(.boldLabelFont) + "\(movieDetailResponse.runtime) minutes"
-                budget.attributedText = "Budget: ".font(.boldLabelFont) + NumberFormatter.currency.string(from: movieDetailResponse.budget as NSNumber)!
-                revenue.attributedText = "Revenue: ".font(.boldLabelFont) + NumberFormatter.currency.string(from: movieDetailResponse.revenue as NSNumber)!
+
+                movieDetailResponse.tagline.isEmpty
+                ? tagline.isHidden = true
+                : (tagline.attributedText = "\(movieDetailResponse.tagline)".font(.italicLabelFont))
+
+                movieDetailResponse.runtime == 0
+                ? runtime.isHidden = true
+                : (runtime.attributedText = "Length: ".font(.boldLabelFont) + "\(movieDetailResponse.runtime) minutes")
+
+                movieDetailResponse.budget == 0
+                ? budget.isHidden = true
+                : (budget.attributedText = "Budget: ".font(.boldLabelFont) + NumberFormatter.currency.string(from: movieDetailResponse.budget as NSNumber)!)
+
+                movieDetailResponse.revenue == 0
+                ? revenue.isHidden = true
+                : (revenue.attributedText = "Revenue: ".font(.boldLabelFont) + NumberFormatter.currency.string(from: movieDetailResponse.revenue as NSNumber)!)
 
                 let genres = movieDetailResponse.genres
                     .map { genreObject in
                         MovieGenre(rawValue: genreObject.id)!
                     }
-                genreCarousel.setGenres(genres)
+                genres.isEmpty
+                ? genreCarousel.isHidden = true
+                : genreCarousel.setGenres(genres)
 
                 let cast = Array(movieDetailResponse.credits.cast.prefix(10))
-                castCarousel.setCast(cast)
+                if !cast.isEmpty {
+                    castCarousel.setCast(cast)
 
-                (0..<cast.count).forEach { idx in
-                    castCarousel.setCastImage(.posterLoading, for: idx)
+                    (0..<cast.count).forEach { idx in
+                        castCarousel.setCastImage(.posterLoading, for: idx)
 
-                    Task {
-                        // await Task { try! await Task.sleep(for: .seconds(2)) }.value
-                        do {
-                            guard let profilePath = cast[idx].profilePath,
-                                  let image = try await viewModel.loadImage(filePath: profilePath)
-                            else { throw APIError.imageLoadingError }
+                        Task {
+                            // await Task { try! await Task.sleep(for: .seconds(2)) }.value
+                            do {
+                                guard let profilePath = cast[idx].profilePath,
+                                      let image = try await viewModel.loadImage(filePath: profilePath)
+                                else { throw APIError.imageLoadingError }
 
-                            castCarousel.setCastImage(image, for: idx)
-                        } catch {
-                            print(error)
-                            castCarousel.setCastImage(.posterFailed, for: idx)
+                                castCarousel.setCastImage(image, for: idx)
+                            } catch {
+                                print(error)
+                                castCarousel.setCastImage(.posterFailed, for: idx)
+                            }
                         }
                     }
+                } else {
+                    castCarousel.isHidden = true
                 }
 
                 movieLinkPillButton.configureURL(movieDetailResponse.homepage)

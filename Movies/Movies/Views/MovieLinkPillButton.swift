@@ -1,7 +1,7 @@
 import UIKit
 
 class MovieLinkPillButton: Button {
-    private var url: String = ""
+    private var url: URL?
 
     init() {
         super.init(title: "Homepage",
@@ -28,13 +28,14 @@ class MovieLinkPillButton: Button {
     }
 
     @objc private func openURL() {
-        if let url = URL(string: url) {
+        if let url {
             UIApplication.shared.open(url)
         }
     }
 
     func configureURL(_ url: String?) {
-        if let url {
+        if let urlString = url,
+           let url = URL(string: urlString) {
             self.url = url
             isEnabled = true
         } else {
