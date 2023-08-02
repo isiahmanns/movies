@@ -1,4 +1,5 @@
 import UIKit
+import SwiftUI
 import YouTubeiOSPlayerHelper
 
 class MovieDetailViewController: UIViewController {
@@ -22,8 +23,8 @@ class MovieDetailViewController: UIViewController {
     private let revenue = UILabel()
     private let genreCarousel = GenreCarousel()
     private let movieLinkPillButton = MovieLinkPillButton()
+    private let scoreMeter = ScoreMeter()
     // TODO: - Nav bar add buttom
-    // TODO: - Score
     // TODO: - Cast
 
     init(viewModel: MovieDetailViewModel) {
@@ -42,6 +43,7 @@ class MovieDetailViewController: UIViewController {
 
     override func loadView() {
         [youtubeTrailer,
+         scoreMeter,
          tagline,
          releaseDate,
          runtime,
@@ -97,6 +99,8 @@ class MovieDetailViewController: UIViewController {
                 .action,
                 .horror
             ])
+
+            scoreMeter.setValue(0.98)
         }
     }
 }
