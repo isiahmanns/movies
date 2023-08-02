@@ -8,8 +8,8 @@ class CastCard: UIStackView {
 
     init(height: CGFloat = 200, movieActor: MovieActor) {
         self.height = height
-        characterLabel.text = movieActor.character
-        actorLabel.text = movieActor.name
+        characterLabel.text = movieActor.character.isEmpty ? "TBA" : movieActor.character
+        actorLabel.text = movieActor.name.isEmpty ? "-" : movieActor.name
         super.init(frame: .zero)
         setupViews()
     }
