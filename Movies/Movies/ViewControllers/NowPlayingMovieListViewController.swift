@@ -93,15 +93,21 @@ extension NowPlayingMovieListViewController: UICollectionViewDataSource {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieCell.reuseId, for: indexPath) as! MovieCell
         let movie = viewModel.items[0][indexPath.item]
 
+        cell.configureImage(.posterLoading)
+
         let imageTask = Task<Void, Error> {
+            // await Task { try! await Task.sleep(for: .seconds(2)) }.value
             do {
-                if let posterPath = movie.posterPath {
-                    let image = try await viewModel.loadImage(filePath: posterPath)
-                    try Task.checkCancellation()
-                    cell.configureImage(image)
-                }
+                guard let posterPath = movie.posterPath,
+                      let image = try await viewModel.loadImage(filePath: posterPath)
+                else { throw APIError.imageLoadingError }
+
+                try Task.checkCancellation()
+                cell.configureImage(image)
             } catch {
                 print(error)
+                try Task.checkCancellation()
+                cell.configureImage(.posterFailed)
                 throw error
             }
         }

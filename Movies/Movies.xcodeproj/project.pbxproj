@@ -15,6 +15,8 @@
 		257B41712A7A11550054CB05 /* MovieDetailResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 257B41702A7A11550054CB05 /* MovieDetailResponse.swift */; };
 		257B41732A7A3E470054CB05 /* MovieVideosResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 257B41722A7A3E470054CB05 /* MovieVideosResponse.swift */; };
 		257B41772A7A45970054CB05 /* NumberFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 257B41762A7A45970054CB05 /* NumberFormatter.swift */; };
+		257B41792A7A86840054CB05 /* UIImage+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 257B41782A7A86840054CB05 /* UIImage+Helpers.swift */; };
+        257B417B2A7A8DCF0054CB05 /* YoutubeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 257B417A2A7A8DCF0054CB05 /* YoutubeView.swift */; };
 		25ACE6E32A6C66A30043F22C /* ListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25ACE6E22A6C66A30043F22C /* ListViewModel.swift */; };
 		25ACE6E52A6C72900043F22C /* MovieCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25ACE6E42A6C72900043F22C /* MovieCell.swift */; };
 		25ACE6E72A6C74970043F22C /* Movie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25ACE6E62A6C74970043F22C /* Movie.swift */; };
@@ -84,6 +86,8 @@
 		257B41702A7A11550054CB05 /* MovieDetailResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetailResponse.swift; sourceTree = "<group>"; };
 		257B41722A7A3E470054CB05 /* MovieVideosResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieVideosResponse.swift; sourceTree = "<group>"; };
 		257B41762A7A45970054CB05 /* NumberFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberFormatter.swift; sourceTree = "<group>"; };
+		257B41782A7A86840054CB05 /* UIImage+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Helpers.swift"; sourceTree = "<group>"; };
+        257B417A2A7A8DCF0054CB05 /* YoutubeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YoutubeView.swift; sourceTree = "<group>"; };
 		25ACE6E12A6C55440043F22C /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		25ACE6E22A6C66A30043F22C /* ListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListViewModel.swift; sourceTree = "<group>"; };
 		25ACE6E42A6C72900043F22C /* MovieCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieCell.swift; sourceTree = "<group>"; };
@@ -221,6 +225,7 @@
 				25C3E5192A76CFA000843F3E /* Font.swift */,
 				25C3E5232A7767F900843F3E /* MovieGenre.swift */,
 				257B41762A7A45970054CB05 /* NumberFormatter.swift */,
+				257B41782A7A86840054CB05 /* UIImage+Helpers.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -276,6 +281,7 @@
 				257B41682A79F7A30054CB05 /* Carousel.swift */,
 				257B416A2A79FEA70054CB05 /* CastCarousel.swift */,
 				257B416C2A7A03D60054CB05 /* CastCard.swift */,
+				257B417A2A7A8DCF0054CB05 /* YoutubeView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -473,6 +479,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				25ACE6E72A6C74970043F22C /* Movie.swift in Sources */,
+				257B417B2A7A8DCF0054CB05 /* YoutubeView.swift in Sources */,
 				25C274362A71F1BF008BCA8E /* NowPlayingMovieListDataHandler.swift in Sources */,
 				25C3E51A2A76CFA000843F3E /* Font.swift in Sources */,
 				25C3E51E2A77126000843F3E /* Button.swift in Sources */,
@@ -511,6 +518,7 @@
 				25E019612A51A5A0007BF235 /* SceneDelegate.swift in Sources */,
 				25ACE6F52A6D6F530043F22C /* APIError.swift in Sources */,
 				25ACE6FB2A6D8FBD0043F22C /* ImageSize.swift in Sources */,
+				257B41792A7A86840054CB05 /* UIImage+Helpers.swift in Sources */,
 				257B41692A79F7A30054CB05 /* Carousel.swift in Sources */,
 				25C3E50E2A75BC9D00843F3E /* MovieDetailViewController.swift in Sources */,
 				25C3E5112A75BDA300843F3E /* VerticalStackScrollView.swift in Sources */,

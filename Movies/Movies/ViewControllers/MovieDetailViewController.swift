@@ -9,12 +9,7 @@ class MovieDetailViewController: UIViewController {
                                                                   alignment: .leading,
                                                                   insetX: Metrics.insetX)
 
-    private lazy var youtubeTrailer: YTPlayerView = {
-        let youtubeTrailer = YTPlayerView()
-        youtubeTrailer.clipsToBounds = true
-        return youtubeTrailer
-     }()
-
+    private lazy var youtubeView = YoutubeView()
     private let tagline = UILabel()
     private let releaseDate = UILabel()
     private let runtime = UILabel()
@@ -48,7 +43,7 @@ class MovieDetailViewController: UIViewController {
     override func loadView() {
         setLoadingState()
 
-        [youtubeTrailer,
+        [youtubeView,
          scoreMeter,
          tagline,
          releaseDate,
@@ -70,8 +65,8 @@ class MovieDetailViewController: UIViewController {
 
     private func setupContraints() {
         NSLayoutConstraint.activate([
-            youtubeTrailer.widthAnchor.constraint(equalTo: verticalStackScrollView.contentLayoutGuide.widthAnchor),
-            youtubeTrailer.heightAnchor.constraint(equalTo: youtubeTrailer.widthAnchor, multiplier: 9 / 16),
+            youtubeView.widthAnchor.constraint(equalTo: verticalStackScrollView.contentLayoutGuide.widthAnchor),
+            youtubeView.heightAnchor.constraint(equalTo: youtubeView.widthAnchor, multiplier: 9 / 16),
         ])
 
         NSLayoutConstraint.activate([
@@ -100,13 +95,14 @@ class MovieDetailViewController: UIViewController {
 
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        youtubeTrailer.layer.cornerRadius = youtubeTrailer.frame.height / 8
+        youtubeView.layer.cornerRadius = youtubeView.frame.height / 8
     }
 
     override func viewWillAppear(_ animated: Bool) {
+        youtubeView.state = .loadInProgress
         Task {
             do {
-                //try! await Task.sleep(for: .seconds(2))
+                // await Task { try! await Task.sleep(for: .seconds(2)) }.value
                 let movieVideoResponse = try await viewModel.fetchMovieVideos()
                 let videos = movieVideoResponse.results
                 let filteredVideos = videos
@@ -120,15 +116,17 @@ class MovieDetailViewController: UIViewController {
                 guard let video = filteredVideos.first
                 else { throw APIError.videoLoadingError }
 
-                youtubeTrailer.load(withVideoId: video.key)
+                youtubeView.load(withVideoId: video.key)
+                youtubeView.state = .loadCompleted
             } catch {
                 print(error)
+                youtubeView.state = .loadFailed
             }
         }
 
         Task {
             do {
-                //try! await Task.sleep(for: .seconds(2))
+                // await Task { try! await Task.sleep(for: .seconds(2)) }.value
                 let movieDetailResponse = try await viewModel.fetchMovie()
 
                 scoreMeter.setValue(movieDetailResponse.voteAverage / 10)
@@ -147,17 +145,19 @@ class MovieDetailViewController: UIViewController {
                 castCarousel.setCast(cast)
 
                 (0..<cast.count).forEach { idx in
+                    castCarousel.setCastImage(.posterLoading, for: idx)
+
                     Task {
+                        // await Task { try! await Task.sleep(for: .seconds(2)) }.value
                         do {
                             guard let profilePath = cast[idx].profilePath,
                                   let image = try await viewModel.loadImage(filePath: profilePath)
-                            else {
-                                throw APIError.imageLoadingError
-                            }
+                            else { throw APIError.imageLoadingError }
 
                             castCarousel.setCastImage(image, for: idx)
                         } catch {
                             print(error)
+                            castCarousel.setCastImage(.posterFailed, for: idx)
                         }
                     }
                 }
