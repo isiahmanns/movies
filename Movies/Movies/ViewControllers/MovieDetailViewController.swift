@@ -22,10 +22,10 @@ class MovieDetailViewController: UIViewController {
     private let budget = UILabel()
     private let revenue = UILabel()
     private let genreCarousel = GenreCarousel()
+    private let castCarousel = CastCarousel()
     private let movieLinkPillButton = MovieLinkPillButton()
     private let scoreMeter = ScoreMeter()
     // TODO: - Nav bar add buttom
-    // TODO: - Cast
 
     init(viewModel: MovieDetailViewModel) {
         self.viewModel = viewModel
@@ -51,6 +51,7 @@ class MovieDetailViewController: UIViewController {
          budget,
          revenue,
          genreCarousel,
+         castCarousel,
          movieLinkPillButton
         ].forEach { view in
             verticalStackScrollView.addArrangedSubview(view)
@@ -73,6 +74,8 @@ class MovieDetailViewController: UIViewController {
     }
 
     override func viewDidLoad() {
+        castCarousel.setLoadingState()
+
         tagline.attributedText = "tagline".font(.italicLabelFont)
 
         let date = DateFormatter.ymd.date(from: viewModel.movie.releaseDate)!
@@ -101,6 +104,38 @@ class MovieDetailViewController: UIViewController {
             ])
 
             scoreMeter.setValue(0.98)
+
+            let cast = [
+                MovieActor(character: "James Bond", name: "Daniel Craig", profilePath: ""),
+                MovieActor(character: "James Bond", name: "Daniel Craig", profilePath: ""),
+                MovieActor(character: "James Bond", name: "Daniel Craig", profilePath: ""),
+                MovieActor(character: "James Bond", name: "Daniel Craig", profilePath: ""),
+                MovieActor(character: "James Bond", name: "Daniel Craig", profilePath: ""),
+                MovieActor(character: "James Bond", name: "Daniel Craig", profilePath: ""),
+            ]
+            castCarousel.setCast(cast)
+
+            let castImages = await Task<[UIImage], Never> {
+                return [
+                    UIColor.brown.imageWithColor(width: 200, height: 300),
+                    UIColor.yellow.imageWithColor(width: 200, height: 300),
+                    UIColor.green.imageWithColor(width: 200, height: 300),
+                    UIColor.white.imageWithColor(width: 200, height: 300),
+                    UIColor.purple.imageWithColor(width: 200, height: 300),
+                    UIColor.orange.imageWithColor(width: 200, height: 300),
+                ]
+            }.value
+            castCarousel.setCastImages(castImages)
+        }
+    }
+}
+
+extension UIColor {
+    func imageWithColor(width: Int, height: Int) -> UIImage {
+        let size = CGSize(width: width, height: height)
+        return UIGraphicsImageRenderer(size: size).image { rendererContext in
+            self.setFill()
+            rendererContext.fill(CGRect(origin: .zero, size: size))
         }
     }
 }

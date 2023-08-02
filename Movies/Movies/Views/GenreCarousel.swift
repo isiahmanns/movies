@@ -1,39 +1,25 @@
 import UIKit
 
-class GenreCarousel: UIStackView {
-    private let label: UILabel = {
-        let label = UILabel()
-        label.attributedText = "Genre(s):".font(.boldLabelFont)
-        return label
-    }()
-    private let horizontalStackScrollView = HorizontalStackScrollView(spacing: 10)
-
+class GenreCarousel: Carousel {
     init() {
-        super.init(frame: .zero)
-        setupViews()
+        super.init(title: "Genre")
     }
 
     required init(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    private func setupViews() {
-        axis = .vertical
-        alignment = .leading
-        spacing = 10
-
-        [label,
-         horizontalStackScrollView
-        ].forEach { view in
-            addArrangedSubview(view)
+    func setGenres(_ genres: [MovieGenre]) {
+        removeItems()
+        let genrePills = genres.map { genre in
+            createPill(genre)
         }
-
-        setLoadingState()
+        addItems(genrePills)
     }
 
-    private func setLoadingState() {
+    func setLoadingState() {
         let genrePill = createPill(title: "...", color: .systemGray6)
-        horizontalStackScrollView.addArrangedSubviews([genrePill])
+        addItems([genrePill])
     }
 
     private func createPill(_ genre: MovieGenre) -> Button {
@@ -49,13 +35,5 @@ class GenreCarousel: UIStackView {
             .titleColor(.black, forState: .selected)
             .titleColor(.black, forState: .highlighted)
             .cornerStyle(.capsule)
-    }
-
-    func setGenres(_ genres: [MovieGenre]) {
-        horizontalStackScrollView.removeArrangedSubviews()
-        let genrePills = genres.map { genre in
-            createPill(genre)
-        }
-        horizontalStackScrollView.addArrangedSubviews(genrePills)
     }
 }
