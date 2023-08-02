@@ -73,7 +73,7 @@ extension NowPlayingMovieListViewController: UICollectionViewDelegate {
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let movie = viewModel.items[indexPath.section][indexPath.row]
-        // TODO: - Bump singleton up to parent
+        // TODO: - Inject singleton from parent
         let viewModel = MovieDetailViewModel(movie: movie, api: DefaultMoviesAPI.shared, imageLoader: ImageLoader.shared)
         let viewController = MovieDetailViewController(viewModel: viewModel)
         navigationController?.pushViewController(viewController, animated: true)

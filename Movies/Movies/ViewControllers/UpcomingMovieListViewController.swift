@@ -72,6 +72,14 @@ extension UpcomingMovieListViewController: UICollectionViewDelegate {
             }
         }
     }
+
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let movie = viewModel.items[indexPath.section][indexPath.row]
+        // TODO: - Inject singleton from parent
+        let viewModel = MovieDetailViewModel(movie: movie, api: DefaultMoviesAPI.shared, imageLoader: ImageLoader.shared)
+        let viewController = MovieDetailViewController(viewModel: viewModel)
+        navigationController?.pushViewController(viewController, animated: true)
+    }
 }
 
 extension UpcomingMovieListViewController: UICollectionViewDataSource {
@@ -87,15 +95,21 @@ extension UpcomingMovieListViewController: UICollectionViewDataSource {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieCell.reuseId, for: indexPath) as! MovieCell
         let movie = viewModel.items[indexPath.section][indexPath.item]
 
+        cell.configureImage(.posterLoading)
+
         let imageTask = Task<Void, Error> {
+            // await Task { try! await Task.sleep(for: .seconds(2)) }.value
             do {
-                if let posterPath = movie.posterPath {
-                    let image = try await viewModel.loadImage(filePath: posterPath)
-                    try Task.checkCancellation()
-                    cell.configureImage(image)
-                }
+                guard let posterPath = movie.posterPath,
+                      let image = try await viewModel.loadImage(filePath: posterPath)
+                else { throw APIError.imageLoadingError }
+
+                try Task.checkCancellation()
+                cell.configureImage(image)
             } catch {
                 print(error)
+                try Task.checkCancellation()
+                cell.configureImage(.posterFailed)
                 throw error
             }
         }
