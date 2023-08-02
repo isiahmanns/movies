@@ -18,7 +18,7 @@ class HorizontalStackScrollView: UIScrollView {
     private func setupViews() {
         stackView.axis = .horizontal
         stackView.spacing = spacing
-        stackView.alignment = .top
+        stackView.alignment = .center
         stackView.distribution = .fillProportionally
 
         addSubview(stackView)

@@ -17,7 +17,7 @@ class MovieDetailViewController: UIViewController {
     private let budget = UILabel()
     private let revenue = UILabel()
     private let genreCarousel = GenreCarousel()
-    private let castCarousel = CastCarousel()
+    private let castCarousel: CastCarousel
     private let movieLinkPillButton = MovieLinkPillButton()
     private let scoreMeter = ScoreMeter()
     // TODO: - Nav bar add buttom
@@ -28,6 +28,7 @@ class MovieDetailViewController: UIViewController {
 
     init(viewModel: MovieDetailViewModel) {
         self.viewModel = viewModel
+        self.castCarousel = CastCarousel(movieId: viewModel.movie.id)
         super.init(nibName: nil, bundle: nil)
         setupNavigation(title: viewModel.movie.title)
     }

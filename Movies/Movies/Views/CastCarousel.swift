@@ -2,8 +2,10 @@ import UIKit
 
 class CastCarousel: Carousel {
     private var castCards: [CastCard] = []
+    private var movieId: Int
 
-    init() {
+    init(movieId: Int) {
+        self.movieId = movieId
         super.init(title: "Cast")
     }
 
@@ -21,7 +23,15 @@ class CastCarousel: Carousel {
         let castCards = cast.map { movieActor in
             CastCard(movieActor: movieActor)
         }
-        addItems(castCards)
+
+        let viewMoreButton = Button.createPill(title: "View more", color: .systemGray6)
+            .action {
+                let endpoint = Endpoint.cast(movieId: self.movieId)
+                UIApplication.shared.open(endpoint.url)
+            }
+
+        addItems(castCards + [viewMoreButton])
+
         self.castCards = castCards
     }
 

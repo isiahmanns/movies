@@ -5,6 +5,7 @@ enum Endpoint {
     case detail(movieId: Int)
     case videos(movieId: Int)
     case image(size: ImageSize, filePath: String)
+    case cast(movieId: Int)
 
     var url: URL {
         var urlComponents = URLComponents()
@@ -20,6 +21,8 @@ enum Endpoint {
         switch self {
         case .image:
             return "image.tmdb.org"
+        case .cast:
+            return "themoviedb.org"
         default:
             return "api.themoviedb.org"
         }
@@ -67,6 +70,8 @@ enum Endpoint {
             return "/t/p/\(size)/\(filePath)"
         case let .videos(movieId):
             return "/3/movie/\(movieId)/videos"
+        case let .cast(movieId):
+            return "/movie/\(movieId)/cast"
         }
     }
 }
