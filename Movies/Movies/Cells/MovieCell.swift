@@ -1,15 +1,13 @@
 import UIKit
 
 class MovieCell: UICollectionViewCell {
-    static let reuseId = "MovieCell"
-
     private var imageTask: Task<Void, Error>? = nil
-    private let imageView = UIImageView()
-    private let titleLabel = UILabel()
-    private let titleLabelWrapper = UIView()
+    let imageView = UIImageView()
+    let titleLabel = UILabel()
+    let titleLabelWrapper = UIView()
+    let stackView = UIStackView()
 
     enum Metrics {
-        static let labelHeight: CGFloat = 42
         static let stackViewSpacing: CGFloat = 8
     }
 
@@ -19,10 +17,11 @@ class MovieCell: UICollectionViewCell {
     }
 
     private func setupViews() {
-        let stackView = UIStackView(arrangedSubviews: [
-            imageView,
-            titleLabelWrapper,
-        ])
+        [imageView,
+         titleLabelWrapper
+        ].forEach { view in
+            stackView.addArrangedSubview(view)
+        }
 
         stackView.axis = .vertical
         stackView.alignment = .fill
@@ -37,19 +36,9 @@ class MovieCell: UICollectionViewCell {
             stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
         ])
 
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            imageView.heightAnchor.constraint(equalTo: stackView.heightAnchor,
-                                              constant: -(Metrics.labelHeight + Metrics.stackViewSpacing))
-        ])
         imageView.contentMode = .scaleAspectFit
-        imageView.layer.cornerRadius = contentView.frame.width / 8
+        imageView.layer.cornerRadius = min(contentView.frame.height, contentView.frame.width) / 8
         imageView.clipsToBounds = true
-
-        titleLabelWrapper.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            titleLabelWrapper.heightAnchor.constraint(equalToConstant: Metrics.labelHeight)
-        ])
 
         titleLabelWrapper.addSubview(titleLabel)
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -74,8 +63,12 @@ class MovieCell: UICollectionViewCell {
 }
 
 extension MovieCell {
-    func configure(with movie: Movie, imageTask: Task<Void, Error>) {
+    func configure(with movie: Movie, image: UIImage?) {
         titleLabel.text = movie.title
+        configureImage(image)
+    }
+
+    func configureImageTask(_ imageTask: Task<Void, Error>) {
         self.imageTask = imageTask
     }
 

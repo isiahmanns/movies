@@ -1,5 +1,6 @@
-import UIKit
+import CoreData
 import SwiftUI
+import UIKit
 import YouTubeiOSPlayerHelper
 
 class MovieDetailViewController: UIViewController {
@@ -20,7 +21,14 @@ class MovieDetailViewController: UIViewController {
     private let castCarousel: CastCarousel
     private let movieLinkPillButton = MovieLinkPillButton()
     private let scoreMeter = ScoreMeter()
-    // TODO: - Nav bar add buttom
+    private lazy var saveButton = UIBarButtonItem(title: nil,
+                                                  image: UIImage(systemName: "bookmark"),
+                                                  target: self,
+                                                  action: #selector(saveMovie))
+    private lazy var unsaveButton = UIBarButtonItem(title: nil,
+                                                  image: UIImage(systemName: "bookmark.fill"),
+                                                  target: self,
+                                                  action: #selector(unsaveMovie))
 
     enum Metrics {
         static var insetX: CGFloat = 20
@@ -100,6 +108,12 @@ class MovieDetailViewController: UIViewController {
     }
 
     override func viewWillAppear(_ animated: Bool) {
+        navigationItem.rightBarButtonItem = viewModel.isMovieSaved()
+        ? unsaveButton
+        : saveButton
+    }
+
+    override func viewDidLoad() {
         youtubeView.state = .loadInProgress
         Task {
             do {
@@ -187,4 +201,18 @@ class MovieDetailViewController: UIViewController {
             }
         }
     }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        viewModel.saveCoreDataContext()
+    }
+
+    @objc func saveMovie() {
+        viewModel.markMovieSaved()
+        navigationItem.rightBarButtonItem = unsaveButton
+    }
+
+    @objc func unsaveMovie() {
+        viewModel.markMovieDeleted()
+        navigationItem.rightBarButtonItem = saveButton
+     }
 }

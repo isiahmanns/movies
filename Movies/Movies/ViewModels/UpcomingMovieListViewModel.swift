@@ -10,10 +10,12 @@ class UpcomingMovieListViewModel {
     private var activeTask: Task<Void, Error>? = nil
 
     private var api: MoviesAPI
+    private var coreDataStore: CoreDataStore
     private var imageLoader: ImageLoader
 
-    init(api: MoviesAPI, imageLoader: ImageLoader) {
+    init(api: MoviesAPI, coreDataStore: CoreDataStore, imageLoader: ImageLoader) {
         self.api = api
+        self.coreDataStore = coreDataStore
         self.imageLoader = imageLoader
     }
 
@@ -88,9 +90,11 @@ class UpcomingMovieListViewModel {
     }
 
     func showMovieDetailView(for movie: Movie) {
-        let movieDetailViewModel = MovieDetailViewModel(movie: movie, api: api, imageLoader: imageLoader)
+        let movieDetailViewModel = MovieDetailViewModel(movie: movie,
+                                                        api: api,
+                                                        coreDataStore: coreDataStore,
+                                                        imageLoader: imageLoader)
         let movieDetailViewController = MovieDetailViewController(viewModel: movieDetailViewModel)
-        let rootViewController = (delegate as! UIViewController)
-        rootViewController.navigationController?.pushViewController(movieDetailViewController, animated: true)
+        delegate?.navigationController?.pushViewController(movieDetailViewController, animated: true)
     }
 }

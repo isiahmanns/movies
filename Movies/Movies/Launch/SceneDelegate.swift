@@ -7,6 +7,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     enum Dependencies {
         static let api = DefaultMoviesAPI.shared
         static let imageLoader = ImageLoader.shared
+        static let coreDataStore = CoreDataStore.shared
     }
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
@@ -17,17 +18,28 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         let tabViewController = UITabBarController()
 
-        let nowPlayingMovieListViewModel = NowPlayingMovieListViewModel(api: Dependencies.api, imageLoader: ImageLoader.shared)
+        let nowPlayingMovieListViewModel = NowPlayingMovieListViewModel(api: Dependencies.api,
+                                                                        coreDataStore: Dependencies.coreDataStore,
+                                                                        imageLoader: ImageLoader.shared)
         let nowPlayingMovieListViewController = NowPlayingMovieListViewController(viewModel: nowPlayingMovieListViewModel)
         let nowPlayingMovieListNavigationController = UINavigationController(rootViewController: nowPlayingMovieListViewController)
 
-        let upcomingMovieListViewModel = UpcomingMovieListViewModel(api: Dependencies.api, imageLoader: Dependencies.imageLoader)
+        let upcomingMovieListViewModel = UpcomingMovieListViewModel(api: Dependencies.api,
+                                                                    coreDataStore: Dependencies.coreDataStore,
+                                                                    imageLoader: Dependencies.imageLoader)
         let upcomingMovieListViewController = UpcomingMovieListViewController(viewModel: upcomingMovieListViewModel)
         let upcomingMovieListNavigationController = UINavigationController(rootViewController: upcomingMovieListViewController)
+
+        let savedMoviesListViewModel = SavedMoviesListViewModel(api: Dependencies.api,
+                                                                coreDataStore: Dependencies.coreDataStore,
+                                                                imageLoader: Dependencies.imageLoader)
+        let savedMoviesListViewController = SavedMoviesListViewController(viewModel: savedMoviesListViewModel)
+        let savedMoviesListNavigationController = UINavigationController(rootViewController: savedMoviesListViewController)
 
         tabViewController.viewControllers = [
             nowPlayingMovieListNavigationController,
             upcomingMovieListNavigationController,
+            savedMoviesListNavigationController
         ]
 
         let window = UIWindow(windowScene: windowScene)

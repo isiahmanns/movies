@@ -27,17 +27,7 @@ class ListViewController: UIViewController {
     }
 
     override func loadView() {
-        view = UIView()
-        view.backgroundColor = .systemIndigo
-
-        view.addSubview(collectionView)
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor)
-        ])
+        view = collectionView
     }
 }
 

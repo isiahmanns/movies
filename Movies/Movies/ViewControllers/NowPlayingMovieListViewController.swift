@@ -18,7 +18,7 @@ class NowPlayingMovieListViewController: ListViewController {
     private func setupCollectionView() {
         collectionView.delegate = self
         collectionView.dataSource = self
-        collectionView.register(MovieCell.self, forCellWithReuseIdentifier: MovieCell.reuseId)
+        collectionView.register(MoviePosterCell.self, forCellWithReuseIdentifier: CellReuseId.moviePosterCell)
         collectionViewFlowLayout.sectionInset = .init(top: 10, left: 10, bottom: 10, right: 10)
     }
 
@@ -53,7 +53,7 @@ extension NowPlayingMovieListViewController: UICollectionViewDelegateFlowLayout 
                          - layout.minimumInteritemSpacing * (itemsPerRow - 1)
                          - layout.sectionInset.left
                          - layout.sectionInset.right) / itemsPerRow
-        let itemHeight = (3 * itemWidth) / 2 + (MovieCell.Metrics.labelHeight + MovieCell.Metrics.stackViewSpacing)
+        let itemHeight = (3 * itemWidth) / 2 + (MoviePosterCell.Metrics.labelHeight + MoviePosterCell.Metrics.stackViewSpacing)
         return .init(width: itemWidth, height: itemHeight)
     }
 
@@ -87,10 +87,10 @@ extension NowPlayingMovieListViewController: UICollectionViewDataSource {
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieCell.reuseId, for: indexPath) as! MovieCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CellReuseId.moviePosterCell, for: indexPath) as! MoviePosterCell
         let movie = viewModel.movies[indexPath.item]
 
-        cell.configureImage(.posterLoading)
+        cell.configure(with: movie, image: .posterLoading)
 
         let imageTask = Task<Void, Error> {
             // await Task { try! await Task.sleep(for: .seconds(2)) }.value
@@ -109,7 +109,7 @@ extension NowPlayingMovieListViewController: UICollectionViewDataSource {
             }
         }
 
-        cell.configure(with: movie, imageTask: imageTask)
+        cell.configureImageTask(imageTask)
         return cell
     }
 }

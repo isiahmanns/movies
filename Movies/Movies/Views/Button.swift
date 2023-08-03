@@ -5,7 +5,7 @@ class Button: UIButton {
 
     enum Metrics {
         static let insetX: CGFloat = 14
-        static let insetY: CGFloat = 8
+        static let insetY: CGFloat = 10
         static let imagePadding: CGFloat = 8
     }
 
@@ -86,6 +86,11 @@ extension Button {
     @discardableResult
     func action(_ actionHandler: @escaping () -> Void) -> Self {
         self.action = actionHandler
+        return self
+    }
+
+    func image(_ image: UIImage, forState state: UIControl.State = .normal) -> Self {
+        setImage(image, for: state)
         return self
     }
 }

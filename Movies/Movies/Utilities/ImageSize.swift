@@ -15,3 +15,9 @@ enum ProfileSizes: String, ImageSize {
     case w185
     case h632
 }
+
+enum BackdropSizes: String, ImageSize {
+    case w300
+    case w780
+    case w1280
+}

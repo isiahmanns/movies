@@ -1,7 +1,7 @@
 import Foundation
 
 @MainActor
-protocol ListViewDelegate: AnyObject {
+protocol ListViewDelegate: ListViewController {
     func performBatchUpdates(instructions: [ListInstruction], updateData: () -> Void)
 }
 
