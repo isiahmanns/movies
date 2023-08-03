@@ -4,6 +4,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
 
+    enum Dependencies {
+        static let api = DefaultMoviesAPI.shared
+        static let imageLoader = ImageLoader.shared
+    }
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
@@ -13,13 +17,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         let tabViewController = UITabBarController()
 
-        let nowPlayingMovieListDataHandler = NowPlayingMovieListDataHandler(api: DefaultMoviesAPI.shared, imageLoader: ImageLoader.shared)
-        let nowPlayingMovieListViewModel = ListViewModel<Movie, NowPlayingMovieListDataHandler>(dataHandler: nowPlayingMovieListDataHandler)
+        let nowPlayingMovieListViewModel = NowPlayingMovieListViewModel(api: Dependencies.api, imageLoader: ImageLoader.shared)
         let nowPlayingMovieListViewController = NowPlayingMovieListViewController(viewModel: nowPlayingMovieListViewModel)
         let nowPlayingMovieListNavigationController = UINavigationController(rootViewController: nowPlayingMovieListViewController)
 
-        let upcomingMovieListDataHandler = UpcomingMovieListDataHandler(api: DefaultMoviesAPI.shared, imageLoader: ImageLoader.shared)
-        let upcomingMovieListViewModel = ListViewModel<Movie, UpcomingMovieListDataHandler>(dataHandler: upcomingMovieListDataHandler)
+        let upcomingMovieListViewModel = UpcomingMovieListViewModel(api: Dependencies.api, imageLoader: Dependencies.imageLoader)
         let upcomingMovieListViewController = UpcomingMovieListViewController(viewModel: upcomingMovieListViewModel)
         let upcomingMovieListNavigationController = UINavigationController(rootViewController: upcomingMovieListViewController)
 

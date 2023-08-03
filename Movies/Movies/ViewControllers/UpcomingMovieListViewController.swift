@@ -1,9 +1,9 @@
 import UIKit
 
 class UpcomingMovieListViewController: ListViewController {
-    private let viewModel: ListViewModel<Movie, UpcomingMovieListDataHandler>
+    private let viewModel: UpcomingMovieListViewModel
 
-    init(viewModel: ListViewModel<Movie, UpcomingMovieListDataHandler>) {
+    init(viewModel: UpcomingMovieListViewModel) {
         self.viewModel = viewModel
         super.init(navigationTitle: "Upcoming")
         setupViewModel()
@@ -74,26 +74,23 @@ extension UpcomingMovieListViewController: UICollectionViewDelegate {
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let movie = viewModel.items[indexPath.section][indexPath.row]
-        // TODO: - Inject singleton from parent
-        let viewModel = MovieDetailViewModel(movie: movie, api: DefaultMoviesAPI.shared, imageLoader: ImageLoader.shared)
-        let viewController = MovieDetailViewController(viewModel: viewModel)
-        navigationController?.pushViewController(viewController, animated: true)
+        let movie = viewModel.movies[indexPath.section][indexPath.row]
+        viewModel.showMovieDetailView(for: movie)
     }
 }
 
 extension UpcomingMovieListViewController: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        viewModel.items.count
+        viewModel.movies.count
     }
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        viewModel.items[section].count
+        viewModel.movies[section].count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieCell.reuseId, for: indexPath) as! MovieCell
-        let movie = viewModel.items[indexPath.section][indexPath.item]
+        let movie = viewModel.movies[indexPath.section][indexPath.item]
 
         cell.configureImage(.posterLoading)
 
@@ -124,7 +121,7 @@ extension UpcomingMovieListViewController: UICollectionViewDataSource {
         switch kind {
         case UICollectionView.elementKindSectionHeader:
             let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: SectionHeader.reuseId, for: indexPath) as! SectionHeader
-            let movie = viewModel.items[indexPath.section][indexPath.item]
+            let movie = viewModel.movies[indexPath.section][indexPath.item]
             let date = DateFormatter.ymd.date(from: movie.releaseDate)!
             let formattedDate = DateFormatter.header.string(from: date)
             header.configureText(formattedDate)

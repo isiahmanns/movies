@@ -1,7 +1,7 @@
-struct MovieListReponse: ListResponse {
+struct MovieListReponse {
     let page: Int
     let totalPages: Int
-    let items: [Movie]
+    let movies: [Movie]
 }
 
 extension MovieListReponse: Decodable {
@@ -15,6 +15,6 @@ extension MovieListReponse: Decodable {
         let container = try decoder.container(keyedBy: Keys.self)
         self.page = try container.decode(Int.self, forKey: .page)
         self.totalPages = try container.decode(Int.self, forKey: .totalPages)
-        self.items = try container.decode([Movie].self, forKey: .results)
+        self.movies = try container.decode([Movie].self, forKey: .results)
     }
 }

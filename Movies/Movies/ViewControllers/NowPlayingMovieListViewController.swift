@@ -1,9 +1,9 @@
 import UIKit
 
 class NowPlayingMovieListViewController: ListViewController {
-    private let viewModel: ListViewModel<Movie, NowPlayingMovieListDataHandler>
+    private let viewModel: NowPlayingMovieListViewModel
 
-    init(viewModel: ListViewModel<Movie, NowPlayingMovieListDataHandler>) {
+    init(viewModel: NowPlayingMovieListViewModel) {
         self.viewModel = viewModel
         super.init(navigationTitle: "Now Playing")
         setupViewModel()
@@ -72,26 +72,23 @@ extension NowPlayingMovieListViewController: UICollectionViewDelegate {
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let movie = viewModel.items[indexPath.section][indexPath.row]
-        // TODO: - Inject singleton from parent
-        let viewModel = MovieDetailViewModel(movie: movie, api: DefaultMoviesAPI.shared, imageLoader: ImageLoader.shared)
-        let viewController = MovieDetailViewController(viewModel: viewModel)
-        navigationController?.pushViewController(viewController, animated: true)
+        let movie = viewModel.movies[indexPath.row]
+        viewModel.showMovieDetailView(for: movie)
     }
 }
 
 extension NowPlayingMovieListViewController: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        viewModel.items.count
+        1
     }
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        viewModel.items[section].count
+        viewModel.movies.count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieCell.reuseId, for: indexPath) as! MovieCell
-        let movie = viewModel.items[0][indexPath.item]
+        let movie = viewModel.movies[indexPath.item]
 
         cell.configureImage(.posterLoading)
 
