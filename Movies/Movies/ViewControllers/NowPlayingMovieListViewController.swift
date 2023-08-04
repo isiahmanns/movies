@@ -23,7 +23,7 @@ class NowPlayingMovieListViewController: ListViewController {
     }
 
     private func setupTabBar() {
-        tabBarItem = .init(title: "", image: .init(systemName: "popcorn"), tag: 0)
+        tabBarItem = .init(title: "", image: .init(systemName: "popcorn")!.imageWithoutBaseline(), tag: 0)
     }
 
     required init?(coder: NSCoder) {

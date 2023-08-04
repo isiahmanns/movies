@@ -39,7 +39,7 @@ class SectionHeader: UICollectionReusableView {
             labelWrapper.heightAnchor.constraint(equalToConstant: Metrics.labelWrapperHeight),
             labelWrapper.widthAnchor.constraint(equalTo: label.widthAnchor, constant: Metrics.labelXPadding * 2)
         ])
-        labelWrapper.backgroundColor = .systemIndigo
+        labelWrapper.backgroundColor = .systemBlue
 
         labelWrapper.clipsToBounds = true
         labelWrapper.layer.cornerRadius = Metrics.labelWrapperHeight / 2

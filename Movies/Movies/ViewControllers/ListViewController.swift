@@ -16,10 +16,6 @@ class ListViewController: UIViewController {
 
     private func setupNavigation(title: String) {
         navigationItem.title = title
-        let scrollEdgeAppearance = UINavigationBarAppearance()
-        scrollEdgeAppearance.titleTextAttributes = [.foregroundColor: UIColor.systemGray6]
-        scrollEdgeAppearance.backgroundColor = .systemIndigo
-        navigationItem.scrollEdgeAppearance = scrollEdgeAppearance
     }
 
     required init?(coder: NSCoder) {

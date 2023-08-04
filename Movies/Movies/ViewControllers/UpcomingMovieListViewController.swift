@@ -26,7 +26,7 @@ class UpcomingMovieListViewController: ListViewController {
     }
 
     private func setupTabBar() {
-        tabBarItem = .init(title: "", image: .init(systemName: "calendar"), tag: 1)
+        tabBarItem = .init(title: "", image: .init(systemName: "calendar")!.imageWithoutBaseline(), tag: 1)
     }
 
     required init?(coder: NSCoder) {

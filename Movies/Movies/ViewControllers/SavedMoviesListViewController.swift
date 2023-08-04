@@ -16,12 +16,12 @@ class SavedMoviesListViewController: ListViewController {
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.register(MovieBackdropCell.self, forCellWithReuseIdentifier: CellReuseId.movieBackdropCell)
-        collectionViewFlowLayout.sectionInset = .init(top: 20, left: 40, bottom: 10, right: 40)
+        collectionViewFlowLayout.sectionInset = .init(top: 20, left: 40, bottom: 20, right: 40)
         collectionViewFlowLayout.minimumLineSpacing = 20
     }
 
     private func setupTabBar() {
-        tabBarItem = .init(title: "", image: .init(systemName: "eyeglasses"), tag: 2)
+        tabBarItem = .init(title: "", image: .init(systemName: "eyeglasses")!.imageWithoutBaseline(), tag: 2)
     }
 
     private func setupViewModel() {
