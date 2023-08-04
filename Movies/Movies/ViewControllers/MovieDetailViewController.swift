@@ -202,17 +202,13 @@ class MovieDetailViewController: UIViewController {
         }
     }
 
-    override func viewWillDisappear(_ animated: Bool) {
-        viewModel.saveCoreDataContext()
-    }
-
     @objc func saveMovie() {
-        viewModel.markMovieSaved()
+        viewModel.saveMovie()
         navigationItem.rightBarButtonItem = unsaveButton
     }
 
     @objc func unsaveMovie() {
-        viewModel.markMovieDeleted()
+        viewModel.deleteMovie()
         navigationItem.rightBarButtonItem = saveButton
      }
 }

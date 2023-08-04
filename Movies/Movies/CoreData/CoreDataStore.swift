@@ -33,7 +33,7 @@ struct CoreDataStore {
         context.delete(object)
     }
 
-    func save() {
+    func saveIfNeeded() {
         guard context.hasChanges else { return }
 
         do {
