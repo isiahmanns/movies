@@ -11,7 +11,7 @@ class SavedMoviesListViewModel {
     let coreDataStore: CoreDataStore
     let imageLoader: ImageLoader
 
-    var viewState: SavedMovieViewControllerState = .initial {
+    var viewState: SavedMovieViewControllerState = .empty {
         didSet {
             delegate?.toggleState(viewState)
         }
