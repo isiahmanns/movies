@@ -6,7 +6,7 @@ Features:
 - `UIKit`
 - Modern concurrency (asynchronous image fetching, async/await, task management, actors)
 - Image caching with `NSCache`
-- Asset loading and failed states for UI feedback during network requests
+- Asset loading states for UI feedback during and after network requests
 - Pagination + efficient table updates with `UICollectionView` 
 - JSON parsing with `Decodable`
 - MV* architecture, DI
