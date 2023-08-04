@@ -51,16 +51,13 @@ extension SavedMoviesListViewController {
     }
 
     override func viewWillAppear(_ animated: Bool) {
-        switch viewModel.viewState {
-        case .initial, .nonempty:
-            do {
-                try viewModel.fetchItems()
+        do {
+            try viewModel.fetchItems()
+            if viewModel.viewState == .nonempty {
                 collectionView.reloadData()
-            } catch {
-                print(error)
             }
-        default:
-            break
+        } catch {
+            print(error)
         }
     }
 }
@@ -124,7 +121,6 @@ extension SavedMoviesListViewController: UICollectionViewDataSource {
 }
 
 enum SavedMovieViewControllerState: ViewControllerState {
-    case initial
     case empty
     case nonempty
 }
@@ -135,7 +131,7 @@ extension SavedMoviesListViewController: StateTogglingViewController {
         case .empty:
             collectionView.isHidden = true
             emptyStateView.isHidden = false
-        case .nonempty, .initial:
+        case .nonempty:
             collectionView.isHidden = false
             emptyStateView.isHidden = true
         }
