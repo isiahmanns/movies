@@ -641,6 +641,7 @@
 		};
 		25E019842A51A5A2007BF235 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 25ACE6E12A6C55440043F22C /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
