@@ -19,7 +19,7 @@ class NowPlayingMovieListViewModel {
         self.imageLoader = imageLoader
     }
 
-    func fetchItems(page: Int? = nil) throws {
+    func fetchMovies(page: Int? = nil) throws {
         guard activeTask == nil
         else { throw APIError.existingTaskInProgress }
 
@@ -58,7 +58,7 @@ class NowPlayingMovieListViewModel {
     }
 
     func getNextPage() throws {
-        try fetchItems(page: currentPage + 1)
+        try fetchMovies(page: currentPage + 1)
     }
 
     func loadImage(filePath: String) async throws -> UIImage? {

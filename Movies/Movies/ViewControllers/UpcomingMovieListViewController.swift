@@ -39,7 +39,7 @@ extension UpcomingMovieListViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         do {
-            try viewModel.fetchItems()
+            try viewModel.fetchMovies()
         } catch {
             print(error)
         }

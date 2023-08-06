@@ -52,7 +52,7 @@ extension SavedMoviesListViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         do {
-            try viewModel.fetchItems()
+            try viewModel.fetchMovies()
             if viewModel.viewState == .nonempty {
                 collectionView.reloadData()
             }

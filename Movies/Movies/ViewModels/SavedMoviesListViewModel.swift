@@ -25,22 +25,20 @@ class SavedMoviesListViewModel {
         self.imageLoader = imageLoader
     }
 
-    func fetchItems() throws -> Void {
+    func fetchMovies() throws {
         let fetchRequest = MovieEntity.fetchRequest()
         fetchRequest.sortDescriptors = [
             .init(key: "dateAdded", ascending: false)
         ]
         let movieEntities = try coreDataStore.fetch(fetchRequest)
-        let movies = movieEntities.map { movieEntity in
-            let movie = Movie(id: Int(movieEntity.id),
-                              title: movieEntity.title!,
-                              releaseDate: movieEntity.releaseDate!,
-                              overview: movieEntity.overview!,
-                              posterPath: movieEntity.posterPath,
-                              backdropPath: movieEntity.backdropPath)
-            return movie
+        movies = movieEntities.map { movieEntity in
+            Movie(id: Int(movieEntity.id),
+                  title: movieEntity.title!,
+                  releaseDate: movieEntity.releaseDate!,
+                  overview: movieEntity.overview!,
+                  posterPath: movieEntity.posterPath,
+                  backdropPath: movieEntity.backdropPath)
         }
-        self.movies = movies
     }
 
     func loadImage(filePath: String) async throws -> UIImage? {
