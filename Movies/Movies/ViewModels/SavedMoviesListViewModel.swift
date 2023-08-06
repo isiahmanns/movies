@@ -1,6 +1,7 @@
 import Foundation
 import UIKit
 
+@MainActor
 class SavedMoviesListViewModel {
     var movies: [Movie] = [] {
         didSet {
