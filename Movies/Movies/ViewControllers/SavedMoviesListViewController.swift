@@ -54,11 +54,16 @@ extension SavedMoviesListViewController {
         do {
             try viewModel.fetchMovies()
             if viewModel.viewState == .nonempty {
-                collectionView.reloadData()
+                reloadData()
             }
         } catch {
             print(error)
         }
+    }
+
+    @MainActor
+    private func reloadData() {
+        collectionView.reloadData()
     }
 }
 
