@@ -54,15 +54,35 @@ extension SavedMoviesListViewController {
         do {
             try viewModel.fetchMovies()
             if viewModel.viewState == .nonempty {
+//                reloadData() //toggle nonisolated and see compiler warning about concurrent context
+//                Task {
+//                    await reloadData()
+//                }
+
+                // Option A (with @MainActor attr on method)
+                Task {
+                    reloadData()
+                }
+
+                // *Option B* (inline, without MainActor attr on method)
                 Task {
                     await MainActor.run {
-                        collectionView.reloadData()
+                        reloadData()
                     }
+                }
+
+                // *Option C* (option B, but shorter)
+                Task { @MainActor in
+                    reloadData()
                 }
             }
         } catch {
             print(error)
         }
+    }
+
+    private func reloadData() {
+        collectionView.reloadData()
     }
 }
 
