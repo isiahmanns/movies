@@ -8,7 +8,6 @@ class MovieDetailViewModel {
     private let imageLoader: ImageLoader
 
     private var movieEntity: MovieEntity?
-    private var dateAdded: Date?
 
     init(movie: Movie, api: MoviesAPI, coreDataStore: CoreDataStore, imageLoader: ImageLoader) {
         self.movie = movie
@@ -46,25 +45,17 @@ class MovieDetailViewModel {
     func saveMovie() {
         defer { coreDataStore.saveIfNeeded() }
 
-        dateAdded = .now
-
-        if let movieEntity {
-            movieEntity.dateAdded = dateAdded
-        } else {
-            let movieEntity = createMovieEntity()
-            movieEntity.dateAdded = dateAdded
-            coreDataStore.insert(movieEntity)
-            self.movieEntity = movieEntity
-        }
+        let movieEntity = createMovieEntity()
+        movieEntity.dateAdded = .now
+        coreDataStore.insert(movieEntity)
+        self.movieEntity = movieEntity
     }
 
     func deleteMovie() {
         defer { coreDataStore.saveIfNeeded() }
 
-        if let movieEntity {
-            coreDataStore.delete(movieEntity)
-            self.movieEntity = nil
-        }
+        coreDataStore.delete(movieEntity!)
+        movieEntity = nil
     }
 
     private func createMovieEntity() -> MovieEntity {
