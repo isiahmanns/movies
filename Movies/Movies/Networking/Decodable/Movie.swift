@@ -42,3 +42,9 @@ class Movie: Decodable {
         self.backdropPath = try container.decodeIfPresent(String.self, forKey: .backdropPath)
     }
 }
+
+extension Movie: Equatable {
+    static func == (lhs: Movie, rhs: Movie) -> Bool {
+        lhs.id == rhs.id
+    }
+}

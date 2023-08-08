@@ -53,7 +53,7 @@ extension SavedMoviesListViewController {
     override func viewDidAppear(_ animated: Bool) {
         do {
             try viewModel.fetchMovies()
-            if viewModel.viewState == .nonempty {
+            if viewModel.viewState == .nonempty && viewModel.needsReload {
                 Task {
                     await MainActor.run {
                         collectionView.performBatchUpdates {
@@ -61,6 +61,7 @@ extension SavedMoviesListViewController {
                         }
                     }
                 }
+                viewModel.cachedMovies = viewModel.movies
             }
         } catch {
             print(error)

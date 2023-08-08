@@ -3,14 +3,19 @@ import UIKit
 
 @MainActor
 class SavedMoviesListViewModel {
-    var movies: [Movie] = [] {
+    private(set) var movies: [Movie] = [] {
         didSet {
             viewState = movies.isEmpty ? .empty : .nonempty
         }
     }
-    let api: MoviesAPI
-    let coreDataStore: CoreDataStore
-    let imageLoader: ImageLoader
+    var cachedMovies: [Movie] = []
+    var needsReload: Bool {
+        movies != cachedMovies
+    }
+
+    private let api: MoviesAPI
+    private let coreDataStore: CoreDataStore
+    private let imageLoader: ImageLoader
 
     var viewState: SavedMovieViewControllerState = .empty {
         didSet {
