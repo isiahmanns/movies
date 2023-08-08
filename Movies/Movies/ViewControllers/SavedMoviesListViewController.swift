@@ -50,13 +50,15 @@ extension SavedMoviesListViewController {
         view = stack
     }
 
-    override func viewWillAppear(_ animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         do {
             try viewModel.fetchMovies()
             if viewModel.viewState == .nonempty {
                 Task {
                     await MainActor.run {
-                        collectionView.reloadData()
+                        collectionView.performBatchUpdates {
+                            collectionView.reloadSections(.init(integer: 0))
+                        }
                     }
                 }
             }
