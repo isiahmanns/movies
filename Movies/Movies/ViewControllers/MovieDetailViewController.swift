@@ -102,12 +102,9 @@ class MovieDetailViewController: UIViewController {
         revenue.attributedText = "Revenue: ".font(.boldLabelFont) + "..."
     }
 
-    override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
-        youtubeView.layer.cornerRadius = youtubeView.frame.height / 8
-    }
 
     override func viewWillAppear(_ animated: Bool) {
+        youtubeView.layer.cornerRadius = (view.frame.width - Metrics.insetX * 2) * 9 / 16 / 8
         navigationItem.rightBarButtonItem = viewModel.isMovieSaved()
         ? unsaveButton
         : saveButton

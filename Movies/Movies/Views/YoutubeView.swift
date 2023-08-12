@@ -7,6 +7,7 @@ class YoutubeView: UIStackView {
     private let youtubeLoading: UIImage = .youtubeLoading
     private let youtubeFailed: UIImage = .youtubeFailed
 
+    @MainActor
     var state: State = .loadInProgress {
         didSet {
             switch state {
@@ -47,6 +48,7 @@ class YoutubeView: UIStackView {
         addArrangedSubview(placeholderImage)
     }
 
+    @MainActor
     func load(withVideoId id: String) {
         youtubePlayer.load(withVideoId: id)
     }
