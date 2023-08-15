@@ -1,7 +1,4 @@
-import CoreData
-import SwiftUI
 import UIKit
-import YouTubeiOSPlayerHelper
 
 class MovieDetailViewController: UIViewController {
     private let viewModel: MovieDetailViewModel
@@ -102,11 +99,6 @@ class MovieDetailViewController: UIViewController {
         revenue.attributedText = "Revenue: ".font(.boldLabelFont) + "..."
     }
 
-    override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
-        youtubeView.layer.cornerRadius = youtubeView.frame.height / 8
-    }
-
     override func viewWillAppear(_ animated: Bool) {
         navigationItem.rightBarButtonItem = viewModel.isMovieSaved()
         ? unsaveButton
@@ -114,24 +106,29 @@ class MovieDetailViewController: UIViewController {
     }
 
     override func viewDidLoad() {
-        youtubeView.state = .loadInProgress
+        youtubeView.state = .loadInProgress(nil)
         Task {
             do {
                 // await Task { try! await Task.sleep(for: .seconds(2)) }.value
+                if let backdropPath = viewModel.movie.backdropPath,
+                   let image = try? await viewModel.loadImage(size: BackdropSizes.w780, filePath: backdropPath) {
+                    youtubeView.state = .loadInProgress(image)
+                }
+
                 let movieVideoResponse = try await viewModel.fetchMovieVideos()
-                let videos = movieVideoResponse.results
+                let videos = movieVideoResponse.movieVideos
                 let filteredVideos = videos
                     .filter { video in
-                        video.official && (video.type == "Trailer" || video.type == "Teaser")
+                        video.type == "Trailer" || video.type == "Teaser"
                     }
                     .sorted(by: { a, b in
-                        a.type == "Trailer"
+                        a.official && a.type == "Teaser"
                     })
 
                 guard let video = filteredVideos.first
                 else { throw APIError.videoLoadingError }
 
-                youtubeView.load(withVideoId: video.key)
+                await youtubeView.load(withVideoId: video.key)
                 youtubeView.state = .loadCompleted
             } catch {
                 print(error)
@@ -142,7 +139,7 @@ class MovieDetailViewController: UIViewController {
         Task {
             do {
                 // await Task { try! await Task.sleep(for: .seconds(2)) }.value
-                let movieDetailResponse = try await viewModel.fetchMovie()
+                let movieDetailResponse = try await viewModel.fetchMovieDetails()
 
                 scoreMeter.setValue(movieDetailResponse.voteAverage / 10)
 
@@ -181,7 +178,7 @@ class MovieDetailViewController: UIViewController {
                             // await Task { try! await Task.sleep(for: .seconds(2)) }.value
                             do {
                                 guard let profilePath = cast[idx].profilePath,
-                                      let image = try await viewModel.loadImage(filePath: profilePath)
+                                      let image = try await viewModel.loadImage(size: PosterSize.w185, filePath: profilePath)
                                 else { throw APIError.imageLoadingError }
 
                                 castCarousel.setCastImage(image, for: idx)

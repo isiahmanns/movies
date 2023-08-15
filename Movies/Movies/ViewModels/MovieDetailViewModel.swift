@@ -16,7 +16,7 @@ class MovieDetailViewModel {
         self.imageLoader = imageLoader
     }
 
-    func fetchMovie() async throws -> MovieDetailResponse {
+    func fetchMovieDetails() async throws -> MovieDetailResponse {
         return try await api.fetchMovie(movie.id)
     }
 
@@ -24,8 +24,8 @@ class MovieDetailViewModel {
         return try await api.fetchVideos(movie.id)
     }
 
-    func loadImage(filePath: String) async throws -> UIImage? {
-        let url = Endpoint.image(size: ProfileSizes.w185, filePath: filePath).url
+    func loadImage(size: ImageSize, filePath: String) async throws -> UIImage? {
+        let url = Endpoint.image(size: size, filePath: filePath).url
         return try await imageLoader.loadImage(url: url.absoluteString)
     }
 
