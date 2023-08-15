@@ -5,6 +5,7 @@ class YoutubeView: UIStackView {
     private let youtubePlayerView = YTPlayerView()
     private let youtubeLoadingView = YoutubeLoadingView()
 
+    @MainActor
     var state: State = .loadInProgress(nil) {
         didSet {
             switch state {
@@ -55,7 +56,7 @@ class YoutubeView: UIStackView {
     }
 }
 
-class YoutubeLoadingView: UIView {
+fileprivate class YoutubeLoadingView: UIView {
     private let activityIndicatorView = UIActivityIndicatorView()
     let imageView = UIImageView()
 
@@ -64,6 +65,7 @@ class YoutubeLoadingView: UIView {
         case loadFailed
     }
 
+    @MainActor
     var state: State = .loadInProgress(nil) {
         didSet {
             switch state {
