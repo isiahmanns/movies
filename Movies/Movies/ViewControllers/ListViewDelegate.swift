@@ -2,7 +2,9 @@ import Foundation
 
 @MainActor
 protocol ListViewDelegate: ListViewController {
-    func performBatchUpdates(instructions: [ListInstruction], updateData: () -> Void)
+    func performBatchUpdates(instructions: [ListInstruction],
+                             updateData: () -> Void,
+                             completion: (() -> Void)?)
 }
 
 enum ListInstruction {

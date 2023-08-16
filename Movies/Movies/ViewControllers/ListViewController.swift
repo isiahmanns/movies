@@ -28,7 +28,9 @@ class ListViewController: UIViewController {
 }
 
 extension ListViewController: ListViewDelegate {
-    func performBatchUpdates(instructions: [ListInstruction], updateData: () -> Void) {
+    func performBatchUpdates(instructions: [ListInstruction],
+                             updateData: () -> Void,
+                             completion: (() -> Void)? = nil) {
         collectionView.performBatchUpdates {
             updateData()
             instructions.forEach { instruction in
@@ -39,6 +41,8 @@ extension ListViewController: ListViewDelegate {
                     collectionView.insertSections(indexSet)
                 }
             }
+        } completion: { _ in
+            completion?()
         }
     }
 }

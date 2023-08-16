@@ -18,6 +18,8 @@ class UpcomingMovieListViewController: ListViewController {
     private func setupCollectionView() {
         collectionView.delegate = self
         collectionView.dataSource = self
+        collectionView.refreshControl = UIRefreshControl()
+        collectionView.refreshControl?.addTarget(self, action: #selector(refreshList), for: .valueChanged)
         collectionView.register(MoviePosterCell.self, forCellWithReuseIdentifier: CellReuseId.moviePosterCell)
         collectionView.register(SectionHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SectionHeader.reuseId)
         collectionViewFlowLayout.sectionHeadersPinToVisibleBounds = true
@@ -40,6 +42,24 @@ extension UpcomingMovieListViewController {
         // Do any additional setup after loading the view.
         do {
             try viewModel.fetchMovies()
+        } catch {
+            print(error)
+        }
+    }
+
+    @objc private func refreshList() {
+        collectionView.performBatchUpdates {
+            let sectionCount = viewModel.movies.count
+            viewModel.resetMovies()
+            collectionView.deleteSections(.init(integersIn: 0..<sectionCount))
+        }
+
+        do {
+            try viewModel.fetchMovies() {
+                Task { @MainActor in
+                    self.collectionView.refreshControl?.endRefreshing()
+                }
+            }
         } catch {
             print(error)
         }

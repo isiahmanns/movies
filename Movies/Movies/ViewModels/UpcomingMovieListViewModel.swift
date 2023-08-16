@@ -19,7 +19,7 @@ class UpcomingMovieListViewModel {
         self.imageLoader = imageLoader
     }
 
-    func fetchMovies(page: Int? = nil) throws {
+    func fetchMovies(page: Int? = nil, completionBlock: (() -> Void)? = nil) throws {
         guard activeTask == nil
         else { throw APIError.existingTaskInProgress }
 
@@ -59,25 +59,40 @@ class UpcomingMovieListViewModel {
                     let indexSet = IndexSet(integersIn: movies.count..<concatenatedMovies.count)
                     instructions.append(.insertSections(indexSet))
 
-                    await delegate?.performBatchUpdates(instructions: instructions) {
-                        movies = concatenatedMovies
-                    }
+                    await delegate?.performBatchUpdates(
+                        instructions: instructions,
+                        updateData: {
+                            movies = concatenatedMovies
+                        },
+                        completion: {
+                            completionBlock?()
+                        })
                 } else {
                     let concatenatedMovies = movies + pageMoviesGrouped
                     let indexSet = IndexSet(integersIn: movies.count..<concatenatedMovies.count)
 
-                    await delegate?.performBatchUpdates(instructions: [
-                        .insertSections(indexSet)
-                    ]) {
-                        movies = concatenatedMovies
-                    }
+                    await delegate?.performBatchUpdates(
+                        instructions: [
+                            .insertSections(indexSet)
+                        ],
+                        updateData: {
+                            movies = concatenatedMovies
+                        },
+                        completion: {
+                            completionBlock?()
+                        })
                 }
             } catch {
                 print(error)
+                completionBlock?()
                 throw error
             }
         }
         activeTask = task
+    }
+
+    func resetMovies() {
+        movies = []
     }
 
     func getNextPage() throws {

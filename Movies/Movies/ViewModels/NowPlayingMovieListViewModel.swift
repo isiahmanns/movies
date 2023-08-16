@@ -19,7 +19,7 @@ class NowPlayingMovieListViewModel {
         self.imageLoader = imageLoader
     }
 
-    func fetchMovies(page: Int? = nil) throws {
+    func fetchMovies(page: Int? = nil, completionBlock: (() -> Void)? = nil) throws {
         guard activeTask == nil
         else { throw APIError.existingTaskInProgress }
 
@@ -44,17 +44,27 @@ class NowPlayingMovieListViewModel {
                         IndexPath(item: idx, section: 0)
                     }
                 
-                await delegate?.performBatchUpdates(instructions: [
-                    .insertItems(at: newIndexPaths)
-                ], updateData: {
-                    movies = concatenatedMovies
-                })
+                await delegate?.performBatchUpdates(
+                    instructions: [
+                        .insertItems(at: newIndexPaths)
+                    ],
+                    updateData: {
+                        movies = concatenatedMovies
+                    },
+                    completion: {
+                        completionBlock?()
+                    })
             } catch {
                 print(error)
+                completionBlock?()
                 throw error
             }
         }
         activeTask = task
+    }
+
+    func resetMovies() {
+        movies = []
     }
 
     func getNextPage() throws {

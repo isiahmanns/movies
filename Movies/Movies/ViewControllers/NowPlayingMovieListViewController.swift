@@ -18,6 +18,8 @@ class NowPlayingMovieListViewController: ListViewController {
     private func setupCollectionView() {
         collectionView.delegate = self
         collectionView.dataSource = self
+        collectionView.refreshControl = UIRefreshControl()
+        collectionView.refreshControl?.addTarget(self, action: #selector(refreshList), for: .valueChanged)
         collectionView.register(MoviePosterCell.self, forCellWithReuseIdentifier: CellReuseId.moviePosterCell)
         collectionViewFlowLayout.sectionInset = .init(top: 10, left: 10, bottom: 10, right: 10)
     }
@@ -37,6 +39,23 @@ extension NowPlayingMovieListViewController {
         // Do any additional setup after loading the view.
         do {
             try viewModel.fetchMovies()
+        } catch {
+            print(error)
+        }
+    }
+
+    @objc private func refreshList() {
+        collectionView.performBatchUpdates {
+            viewModel.resetMovies()
+            collectionView.reloadSections(.init(integer: 0))
+        }
+
+        do {
+            try viewModel.fetchMovies() {
+                Task { @MainActor in
+                    self.collectionView.refreshControl?.endRefreshing()
+                }
+            }
         } catch {
             print(error)
         }
