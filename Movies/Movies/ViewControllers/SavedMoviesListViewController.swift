@@ -9,6 +9,7 @@ class SavedMoviesListViewController: ListViewController {
         super.init(navigationTitle: "Watchlist")
         setupCollectionView()
         setupTabBar()
+        setupNavigation()
         setupViewModel()
     }
 
@@ -24,16 +25,20 @@ class SavedMoviesListViewController: ListViewController {
         tabBarItem = .init(title: "", image: .init(systemName: "eyeglasses")!.imageWithoutBaseline(), tag: 2)
     }
 
+    private func setupNavigation() {
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: nil,
+                                                            image: .init(systemName: "clear"),
+                                                            target: self,
+                                                            action: #selector(clearList))
+        navigationItem.rightBarButtonItem?.isHidden = true
+    }
+
     private func setupViewModel() {
         viewModel.delegate = self
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-
-    override func viewDidLoad() {
-        emptyStateView.tabBarController = tabBarController!
     }
 }
 
@@ -48,6 +53,10 @@ extension SavedMoviesListViewController {
         }
 
         view = stack
+    }
+
+    override func viewDidLoad() {
+        emptyStateView.tabBarController = tabBarController!
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -66,6 +75,32 @@ extension SavedMoviesListViewController {
         } catch {
             print(error)
         }
+    }
+}
+
+extension SavedMoviesListViewController {
+    @objc private func clearList() {
+        let alert = UIAlertController(title: "Are you sure you want to clear your Watchlist?",
+                                      message: nil,
+                                      preferredStyle: .alert)
+
+        [UIAlertAction(
+            title: "Clear List",
+            style: .destructive,
+            handler: { [self] _ in
+                collectionView.performBatchUpdates {
+                    viewModel.resetMovies()
+                    collectionView.reloadSections(.init(integer: 0))
+                }
+            }),
+         UIAlertAction(
+            title: "Cancel",
+            style: .cancel)
+        ].forEach { alertAction in
+            alert.addAction(alertAction)
+        }
+
+        self.present(alert, animated: true, completion: nil)
     }
 }
 
@@ -138,9 +173,11 @@ extension SavedMoviesListViewController: StateTogglingViewController {
         case .empty:
             collectionView.isHidden = true
             emptyStateView.isHidden = false
+            navigationItem.rightBarButtonItem?.isHidden = true
         case .nonempty:
             collectionView.isHidden = false
             emptyStateView.isHidden = true
+            navigationItem.rightBarButtonItem?.isHidden = false
         }
     }
 }

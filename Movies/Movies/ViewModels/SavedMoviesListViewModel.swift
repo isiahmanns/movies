@@ -9,6 +9,7 @@ class SavedMoviesListViewModel {
         }
     }
     var cachedMovies: [Movie] = []
+    private var movieEntities: [MovieEntity] = []
     var needsReload: Bool {
         movies != cachedMovies
     }
@@ -36,7 +37,7 @@ class SavedMoviesListViewModel {
         fetchRequest.sortDescriptors = [
             .init(key: "dateAdded", ascending: false)
         ]
-        let movieEntities = try coreDataStore.fetch(fetchRequest)
+        movieEntities = try coreDataStore.fetch(fetchRequest)
         movies = movieEntities.map { movieEntity in
             Movie(id: Int(movieEntity.id),
                   title: movieEntity.title!,
@@ -45,6 +46,16 @@ class SavedMoviesListViewModel {
                   posterPath: movieEntity.posterPath,
                   backdropPath: movieEntity.backdropPath)
         }
+    }
+
+    func resetMovies() {
+        movies = []
+        cachedMovies = []
+        movieEntities.forEach { movieEntity in
+            coreDataStore.delete(movieEntity)
+        }
+        coreDataStore.saveIfNeeded()
+        movieEntities = []
     }
 
     func loadImage(filePath: String) async throws -> UIImage? {
