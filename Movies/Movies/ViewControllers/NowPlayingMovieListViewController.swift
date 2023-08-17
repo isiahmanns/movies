@@ -111,7 +111,13 @@ extension NowPlayingMovieListViewController: UICollectionViewDataSource {
 
         cell.configure(with: movie, image: .posterLoading)
 
-        let imageTask = Task<Void, Error> {
+        let imageTask = Task<Void, Error>.detached(priority: .background) { [self] in
+//            print(Task.currentPriority)
+//            print(TaskPriority.background, "background")
+//            print(TaskPriority.low, "low")
+//            print(TaskPriority.medium, "medium")
+//            print(TaskPriority.high, "high")
+
             // await Task { try! await Task.sleep(for: .seconds(2)) }.value
             do {
                 guard let posterPath = movie.posterPath,
@@ -119,11 +125,11 @@ extension NowPlayingMovieListViewController: UICollectionViewDataSource {
                 else { throw APIError.imageLoadingError }
 
                 try Task.checkCancellation()
-                cell.configureImage(image)
+                await cell.configureImage(image)
             } catch {
                 print(error)
                 try Task.checkCancellation()
-                cell.configureImage(.posterFailed)
+                await cell.configureImage(.posterFailed)
                 throw error
             }
         }
