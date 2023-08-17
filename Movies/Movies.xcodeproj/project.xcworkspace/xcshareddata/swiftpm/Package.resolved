@@ -1,12 +1,12 @@
 {
   "pins" : [
     {
-      "identity" : "youtube-ios-player-helper",
+      "identity" : "youtubeplayerkit",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/youtube/youtube-ios-player-helper",
+      "location" : "https://github.com/SvenTiigi/YouTubePlayerKit",
       "state" : {
-        "revision" : "f57129cd4380ec0a74dd3a59da3270a1d653d59b",
-        "version" : "1.0.4"
+        "revision" : "6bbba75c8a8927e8073765849e22707d96b55205",
+        "version" : "1.5.2"
       }
     }
   ],

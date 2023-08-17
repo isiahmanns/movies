@@ -1,8 +1,8 @@
 import UIKit
-import YouTubeiOSPlayerHelper
+import YouTubePlayerKit
 
-class YoutubeView: UIStackView {
-    private let youtubePlayerView = YTPlayerView()
+class YoutubeView: UIView {
+    private let youtubePlayerView = YouTubePlayerHostingView()
     private let youtubeLoadingView = YoutubeLoadingView()
 
     @MainActor
@@ -18,8 +18,11 @@ class YoutubeView: UIStackView {
                 youtubeLoadingView.isHidden = false
                 youtubeLoadingView.state = .loadFailed
             case .loadCompleted:
-                youtubePlayerView.isHidden = false
-                youtubeLoadingView.isHidden = true
+                UIView.transition(
+                    from: youtubeLoadingView,
+                    to: youtubePlayerView,
+                    duration: 0.8,
+                    options: [.transitionCrossDissolve, .showHideTransitionViews])
             }
         }
     }
@@ -41,8 +44,13 @@ class YoutubeView: UIStackView {
 
     private func setupViews() {
         clipsToBounds = true
-        addArrangedSubview(youtubePlayerView)
-        addArrangedSubview(youtubeLoadingView)
+
+        [youtubePlayerView,
+         youtubeLoadingView
+        ].forEach { view in
+            addSubview(view)
+            view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        }
     }
 
     override func layoutSubviews() {
@@ -51,8 +59,11 @@ class YoutubeView: UIStackView {
     }
 
     func load(withVideoId id: String) async {
-        youtubePlayerView.load(withVideoId: id, playerVars: ["autoplay": true])
-        while (try? await youtubePlayerView.playerState()) != .playing {}
+        youtubePlayerView.player.load(source: .video(id: id))
+        youtubePlayerView.player.mute()
+        await Task.detached {
+            while await self.youtubePlayerView.player.playbackState != .playing {}
+        }.value
     }
 }
 
@@ -98,13 +109,7 @@ fileprivate class YoutubeLoadingView: UIView {
 
     private func setupViews() {
         addSubview(imageView)
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            imageView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            imageView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            imageView.topAnchor.constraint(equalTo: topAnchor),
-            imageView.bottomAnchor.constraint(equalTo: bottomAnchor)
-        ])
+        imageView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         imageView.contentMode = .scaleAspectFit
 
         addSubview(activityIndicatorView)
