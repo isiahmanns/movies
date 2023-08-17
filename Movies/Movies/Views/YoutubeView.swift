@@ -51,8 +51,19 @@ class YoutubeView: UIStackView {
     }
 
     func load(withVideoId id: String) async {
-        youtubePlayerView.load(withVideoId: id, playerVars: ["autoplay": true])
+        youtubePlayerView.load(withVideoId: id)
+        while (try? await youtubePlayerView.playerState()) != .cued {}
+
+        youtubePlayerView.mute()
+        youtubePlayerView.seek(toSeconds: 0, allowSeekAhead: true)
+        youtubePlayerView.playVideo()
         while (try? await youtubePlayerView.playerState()) != .playing {}
+    }
+}
+
+fileprivate extension YTPlayerView {
+    func mute() {
+        webView?.evaluateJavaScript("player.mute();")
     }
 }
 
