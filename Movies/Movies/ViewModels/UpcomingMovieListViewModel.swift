@@ -100,7 +100,7 @@ class UpcomingMovieListViewModel {
     }
 
     func loadImage(filePath: String) async throws -> UIImage? {
-        let url = Endpoint.image(size: PosterSize.w154, filePath: filePath).url
+        let url = Endpoint.image(size: PosterSize.w500, filePath: filePath).url
         return try await imageLoader.loadImage(url: url.absoluteString)
     }
 
