@@ -107,12 +107,14 @@ class MovieDetailViewController: UIViewController {
 
     override func viewDidLoad() {
         youtubeView.state = .loadInProgress(nil)
-        Task {
+        Task.detached { [self] in
             do {
                 // await Task { try! await Task.sleep(for: .seconds(2)) }.value
                 if let backdropPath = viewModel.movie.backdropPath,
                    let image = try? await viewModel.loadImage(size: BackdropSizes.w780, filePath: backdropPath) {
-                    youtubeView.state = .loadInProgress(image)
+                    await Task { @MainActor in
+                        youtubeView.state = .loadInProgress(image)
+                    }.value
                 }
 
                 let movieVideoResponse = try await viewModel.fetchMovieVideos()
@@ -129,70 +131,78 @@ class MovieDetailViewController: UIViewController {
                 else { throw APIError.videoLoadingError }
 
                 await youtubeView.load(withVideoId: video.key)
-                youtubeView.state = .loadCompleted
+                Task { @MainActor in
+                    youtubeView.state = .loadCompleted
+                }
             } catch {
                 print(error)
-                youtubeView.state = .loadFailed
+                Task { @MainActor in
+                    youtubeView.state = .loadFailed
+                }
             }
         }
 
-        Task {
+        Task.detached { [self] in
             do {
                 // await Task { try! await Task.sleep(for: .seconds(2)) }.value
                 let movieDetailResponse = try await viewModel.fetchMovieDetails()
 
-                scoreMeter.setValue(movieDetailResponse.voteAverage / 10)
+                Task { @MainActor in
+                    scoreMeter.setValue(movieDetailResponse.voteAverage / 10)
 
-                movieDetailResponse.tagline.isEmpty
-                ? tagline.isHidden = true
-                : (tagline.attributedText = "\(movieDetailResponse.tagline)".font(.italicLabelFont))
+                    movieDetailResponse.tagline.isEmpty
+                    ? tagline.isHidden = true
+                    : (tagline.attributedText = "\(movieDetailResponse.tagline)".font(.italicLabelFont))
 
-                movieDetailResponse.runtime == 0
-                ? runtime.isHidden = true
-                : (runtime.attributedText = "Length: ".font(.boldLabelFont) + "\(movieDetailResponse.runtime) minutes")
+                    movieDetailResponse.runtime == 0
+                    ? runtime.isHidden = true
+                    : (runtime.attributedText = "Length: ".font(.boldLabelFont) + "\(movieDetailResponse.runtime) minutes")
 
-                movieDetailResponse.budget == 0
-                ? budget.isHidden = true
-                : (budget.attributedText = "Budget: ".font(.boldLabelFont) + NumberFormatter.currency.string(from: movieDetailResponse.budget as NSNumber)!)
+                    movieDetailResponse.budget == 0
+                    ? budget.isHidden = true
+                    : (budget.attributedText = "Budget: ".font(.boldLabelFont) + NumberFormatter.currency.string(from: movieDetailResponse.budget as NSNumber)!)
 
-                movieDetailResponse.revenue == 0
-                ? revenue.isHidden = true
-                : (revenue.attributedText = "Revenue: ".font(.boldLabelFont) + NumberFormatter.currency.string(from: movieDetailResponse.revenue as NSNumber)!)
+                    movieDetailResponse.revenue == 0
+                    ? revenue.isHidden = true
+                    : (revenue.attributedText = "Revenue: ".font(.boldLabelFont) + NumberFormatter.currency.string(from: movieDetailResponse.revenue as NSNumber)!)
 
-                let genres = movieDetailResponse.genres
-                    .map { genreObject in
-                        MovieGenre(rawValue: genreObject.id)!
-                    }
-                genres.isEmpty
-                ? genreCarousel.isHidden = true
-                : genreCarousel.setGenres(genres)
+                    let genres = movieDetailResponse.genres
+                        .map { genreObject in
+                            MovieGenre(rawValue: genreObject.id)!
+                        }
+                    genres.isEmpty
+                    ? genreCarousel.isHidden = true
+                    : genreCarousel.setGenres(genres)
+                }
 
                 let cast = Array(movieDetailResponse.credits.cast.prefix(10))
                 if !cast.isEmpty {
-                    castCarousel.setCast(cast)
+                    await castCarousel.setCast(cast)
 
-                    (0..<cast.count).forEach { idx in
-                        castCarousel.setCastImage(.posterLoading, for: idx)
+                    for idx in (0..<cast.count) {
+                        await castCarousel.setCastImage(.posterLoading, for: idx)
 
-                        Task {
+                        Task.detached { [self] in
                             // await Task { try! await Task.sleep(for: .seconds(2)) }.value
                             do {
                                 guard let profilePath = cast[idx].profilePath,
                                       let image = try await viewModel.loadImage(size: PosterSize.w185, filePath: profilePath)
                                 else { throw APIError.imageLoadingError }
 
-                                castCarousel.setCastImage(image, for: idx)
+                                await castCarousel.setCastImage(image, for: idx)
                             } catch {
                                 print(error)
-                                castCarousel.setCastImage(.posterFailed, for: idx)
+                                await castCarousel.setCastImage(.posterFailed, for: idx)
                             }
                         }
                     }
                 } else {
-                    castCarousel.isHidden = true
+                    Task { @MainActor in
+                        castCarousel.isHidden = true
+                    }
                 }
 
-                movieLinkPillButton.configureURL(movieDetailResponse.homepage)
+                await movieLinkPillButton.configureURL(movieDetailResponse.homepage)
             } catch {
                 print(error)
             }

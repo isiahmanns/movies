@@ -1,7 +1,7 @@
 import UIKit
 
 actor ImageLoader {
-    static let shared = ImageLoader(networkRequester: .shared, cacheSize: 45)
+    static let shared = ImageLoader(networkRequester: .shared, cacheSize: 200)
     private let networkRequester: NetworkRequester
     private let cache = NSCache<NSString, UIImage>()
     private var activeTasks = [String: Task<UIImage?, Error>]()

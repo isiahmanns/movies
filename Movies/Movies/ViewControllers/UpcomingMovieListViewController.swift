@@ -114,7 +114,7 @@ extension UpcomingMovieListViewController: UICollectionViewDataSource {
 
         cell.configure(with: movie, image: .posterLoading)
 
-        let imageTask = Task<Void, Error> {
+        let imageTask = Task<Void, Error>.detached { [self] in
             // await Task { try! await Task.sleep(for: .seconds(2)) }.value
             do {
                 guard let posterPath = movie.posterPath,
@@ -122,11 +122,11 @@ extension UpcomingMovieListViewController: UICollectionViewDataSource {
                 else { throw APIError.imageLoadingError }
 
                 try Task.checkCancellation()
-                cell.configureImage(image)
+                await cell.configureImage(image)
             } catch {
                 print(error)
                 try Task.checkCancellation()
-                cell.configureImage(.posterFailed)
+                await cell.configureImage(.posterFailed)
                 throw error
             }
         }

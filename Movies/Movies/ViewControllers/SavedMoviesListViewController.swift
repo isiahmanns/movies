@@ -151,7 +151,7 @@ extension SavedMoviesListViewController: UICollectionViewDataSource {
 
         cell.configure(with: movie, image: .youtubeLoading)
 
-        let imageTask = Task<Void, Error> {
+        let imageTask = Task<Void, Error>.detached { [self] in
             // await Task { try! await Task.sleep(for: .seconds(2)) }.value
             do {
                 guard let backdropPath = movie.backdropPath,
@@ -159,11 +159,11 @@ extension SavedMoviesListViewController: UICollectionViewDataSource {
                 else { throw APIError.imageLoadingError }
 
                 try Task.checkCancellation()
-                cell.configureImage(image)
+                await cell.configureImage(image)
             } catch {
                 print(error)
                 try Task.checkCancellation()
-                cell.configureImage(.youtubeFailed)
+                await cell.configureImage(.youtubeFailed)
                 throw error
             }
         }

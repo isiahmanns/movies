@@ -5,7 +5,7 @@ class YoutubeView: UIView {
     private let youtubePlayerView = YouTubePlayerHostingView()
     private let youtubeLoadingView = YoutubeLoadingView()
 
-    @MainActor
+    //@MainActor
     var state: State = .loadInProgress(nil) {
         didSet {
             switch state {
@@ -76,7 +76,7 @@ fileprivate class YoutubeLoadingView: UIView {
         case loadFailed
     }
 
-    @MainActor
+    //@MainActor
     var state: State = .loadInProgress(nil) {
         didSet {
             switch state {
