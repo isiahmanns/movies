@@ -2,7 +2,7 @@ import UIKit
 
 class GenreCarousel: Carousel {
     init() {
-        super.init(title: "Genre")
+        super.init(title: "Genre(s)")
     }
 
     required init(coder: NSCoder) {
