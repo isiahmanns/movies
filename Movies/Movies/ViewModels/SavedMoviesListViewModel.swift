@@ -3,12 +3,8 @@ import UIKit
 
 @MainActor
 class SavedMoviesListViewModel {
-    private(set) var movies: [Movie] = [] {
-        didSet {
-            viewState = movies.isEmpty ? .empty : .nonempty
-        }
-    }
-    var cachedMovies: [Movie] = []
+    private(set) var movies: [Movie] = []
+    var cachedMovies: [Movie]? = nil
     private var movieEntities: [MovieEntity] = []
     var needsReload: Bool {
         movies != cachedMovies

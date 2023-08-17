@@ -44,15 +44,18 @@ class SavedMoviesListViewController: ListViewController {
 
 extension SavedMoviesListViewController {
     override func loadView() {
-        let stack = UIStackView(frame: .zero)
+        let view = UIView()
+        view.backgroundColor = .white
 
         [collectionView,
          emptyStateView
-        ].forEach { view in
-            stack.addArrangedSubview(view)
+        ].forEach { subview in
+            view.addSubview(subview)
+            subview.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+            subview.isHidden = true
         }
 
-        view = stack
+        self.view = view
     }
 
     override func viewDidLoad() {
@@ -62,14 +65,21 @@ extension SavedMoviesListViewController {
     override func viewDidAppear(_ animated: Bool) {
         do {
             try viewModel.fetchMovies()
-            if viewModel.viewState == .nonempty && viewModel.needsReload {
-                Task {
-                    await MainActor.run {
-                        collectionView.performBatchUpdates {
-                            collectionView.reloadSections(.init(integer: 0))
-                        }
+
+            if viewModel.needsReload {
+                if viewModel.movies.isEmpty {
+                    collectionView.performBatchUpdates {
+                        collectionView.reloadSections(.init(integer: 0))
+                    } completion: { [self] _ in
+                        viewModel.viewState = .empty
+                    }
+                } else {
+                    viewModel.viewState = .nonempty
+                    collectionView.performBatchUpdates {
+                        collectionView.reloadSections(.init(integer: 0))
                     }
                 }
+
                 viewModel.cachedMovies = viewModel.movies
             }
         } catch {
@@ -91,6 +101,8 @@ extension SavedMoviesListViewController {
                 collectionView.performBatchUpdates {
                     viewModel.resetMovies()
                     collectionView.reloadSections(.init(integer: 0))
+                } completion: { [self] _ in
+                    viewModel.viewState = .empty
                 }
             }),
          UIAlertAction(
@@ -171,12 +183,21 @@ extension SavedMoviesListViewController: StateTogglingViewController {
     func toggleState(_ state: SavedMovieViewControllerState) {
         switch state {
         case .empty:
-            collectionView.isHidden = true
-            emptyStateView.isHidden = false
+            UIView.transition(
+                from: collectionView,
+                to: emptyStateView,
+                duration: 0.5,
+                options: [.transitionCrossDissolve, .showHideTransitionViews])
+
             navigationItem.rightBarButtonItem?.isHidden = true
+
         case .nonempty:
-            collectionView.isHidden = false
-            emptyStateView.isHidden = true
+            UIView.transition(
+                from: emptyStateView,
+                to: collectionView,
+                duration: 0.5,
+                options: [.transitionCrossDissolve, .showHideTransitionViews])
+
             navigationItem.rightBarButtonItem?.isHidden = false
         }
     }
