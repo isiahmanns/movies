@@ -110,6 +110,14 @@ extension NowPlayingMovieListViewController: UICollectionViewDataSource {
         let movie = viewModel.movies[indexPath.item]
 
         cell.configure(with: movie, image: .posterLoading)
+        // start off with a limitless cache
+        // figure out a way to synchronously get the movie poster, a separate cache
+        // cache miss = image was evicted and needs to be re-fetched, fetch entire page/batch
+        // cache hit = movie poster, posterFailed, or posterLoading
+        //
+        // OR if cache miss && viewModel.isPageLoading, posterLoading
+        // if cache miss && !viewModel.isPageLoading, image was evicted, re-fetch page
+        // cache hit = movie poster, or posterFailed
 
         let imageTask = Task<Void, Error> {
             // await Task { try! await Task.sleep(for: .seconds(2)) }.value

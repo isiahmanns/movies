@@ -54,6 +54,9 @@ class NowPlayingMovieListViewModel {
                     completion: {
                         completionBlock?()
                     })
+
+                // for loop, fetch images, or cache
+                // update list for each cell
             } catch {
                 print(error)
                 completionBlock?()

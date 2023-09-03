@@ -11,6 +11,11 @@ actor ImageLoader {
         cache.countLimit = cacheSize
     }
 
+    // use this in view controller, if cache miss, load page again
+    func loadImage(url: String) -> UIImage? {
+        return cache[url]
+    }
+
     func loadImage(url: String) async throws -> UIImage? {
         if let existingTask = activeTasks[url] {
             return try await existingTask.value
