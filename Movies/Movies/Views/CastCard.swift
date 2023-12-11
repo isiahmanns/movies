@@ -1,15 +1,21 @@
 import UIKit
 
-class CastCard: UIStackView {
-    private let height: CGFloat
+class CastCard: UICollectionViewCell {
+    static let reuseId = "CastCard"
+    enum Metrics {
+        static var imageHeight: CGFloat = 200
+        static var imageWidth: CGFloat { imageHeight * 2 / 3 }
+        static var cellSpacing: CGFloat = 8
+        static var labelSpacing: CGFloat = 4
+        static var labelHeight: CGFloat = 42
+    }
+
     private let characterLabel = UILabel()
     private let actorLabel = UILabel()
     private let imageView = UIImageView()
+    var imageTask: Task<Void, Never>?
 
-    init(height: CGFloat = 200, movieActor: MovieActor) {
-        self.height = height
-        characterLabel.text = movieActor.character.isEmpty ? "TBA" : movieActor.character
-        actorLabel.text = movieActor.name.isEmpty ? "-" : movieActor.name
+    override init(frame: CGRect) {
         super.init(frame: .zero)
         setupViews()
     }
@@ -18,13 +24,20 @@ class CastCard: UIStackView {
         fatalError("init(coder:) has not been implemented")
     }
 
+    override func prepareForReuse() {
+        imageView.image = nil
+        characterLabel.text = "-"
+        actorLabel.text = "-"
+    }
+
     private func setupViews() {
-        axis = .vertical
-        spacing = 8
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = Metrics.cellSpacing
 
         let labelStack = UIStackView()
         labelStack.axis = .vertical
-        labelStack.spacing = 4
+        labelStack.spacing = Metrics.labelSpacing
 
         [characterLabel,
          actorLabel].forEach { label in
@@ -33,21 +46,34 @@ class CastCard: UIStackView {
 
         [imageView,
          labelStack].forEach { view in
-            addArrangedSubview(view)
+            stackView.addArrangedSubview(view)
         }
 
         NSLayoutConstraint.activate([
-            imageView.widthAnchor.constraint(equalTo: imageView.heightAnchor, multiplier: 2 / 3),
-            imageView.heightAnchor.constraint(equalToConstant: height)
+            imageView.widthAnchor.constraint(equalToConstant: Metrics.imageWidth),
+            imageView.heightAnchor.constraint(equalToConstant: Metrics.imageHeight)
         ])
-
         imageView.contentMode = .scaleAspectFit
         imageView.clipsToBounds = true
-        let width = height * (2 / 3)
-        imageView.layer.cornerRadius = (width / 8)
+        imageView.layer.cornerRadius = (Metrics.imageWidth / 8)
+
+        contentView.addSubview(stackView)
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            stackView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+        ])
     }
 
     func setImage(_ image: UIImage) {
         imageView.image = image
+    }
+
+    func setActor(_ movieActor: MovieActor) {
+        characterLabel.text = movieActor.character.isEmpty ? "TBA" : movieActor.character
+        actorLabel.text = movieActor.name.isEmpty ? "-" : movieActor.name
+
     }
 }

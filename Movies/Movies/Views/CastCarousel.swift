@@ -1,42 +1,94 @@
 import UIKit
 
 class CastCarousel: Carousel {
-    private var castCards: [CastCard] = []
-    private var movieId: Int
+    private let viewModel: CastCarouselViewModel
 
-    init(movieId: Int) {
-        self.movieId = movieId
-        super.init(title: "Cast")
+    init(title: String, viewModel: CastCarouselViewModel) {
+        self.viewModel = viewModel
+        super.init(title: title)
+        setupCollectionView()
     }
 
     required init(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func setLoadingState() {
-        addItems([Button.createPlaceholderPill()])
+    private func setupCollectionView() {
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        collectionView.register(CastCard.self, forCellWithReuseIdentifier: CastCard.reuseId)
+    }
+}
+
+extension CastCarousel: UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        viewModel.cast.count + 1
     }
 
-    func setCast(_ cast: [MovieActor]) {
-        removeItems()
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 
-        let castCards = cast.map { movieActor in
-            CastCard(movieActor: movieActor)
-        }
+        switch indexPath.item {
+        case viewModel.cast.count:
+            // TODO: - dequeue "more button" cell
+            fallthrough
+        default:
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CastCard.reuseId,
+                                                          for: indexPath) as! CastCard
+            let actor = viewModel.cast[indexPath.item]
+            cell.setActor(actor)
 
-        let viewMoreButton = Button.createPill(title: "View more", color: .systemGray6)
-            .action {
-                let endpoint = Endpoint.cast(movieId: self.movieId)
-                UIApplication.shared.open(endpoint.url)
+            if let imageUrl = actor.profilePath {
+                cell.setImage(.posterLoading)
+
+                let imageTask = Task {
+                    if let image = try? await viewModel.fetchImage(from: imageUrl) {
+                        cell.setImage(image)
+                    } else {
+                        cell.setImage(.posterFailed)
+                    }
+                }
+
+                cell.imageTask = imageTask
+
+            } else {
+                cell.setImage(.posterFailed)
             }
 
-        addItems(castCards + [viewMoreButton])
+            return cell
+        }
+    }
+}
 
-        self.castCards = castCards
+extension CastCarousel: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, 
+                        didEndDisplaying cell: UICollectionViewCell,
+                        forItemAt indexPath: IndexPath) {
+        let cell = cell as! CastCard
+        cell.imageTask?.cancel()
+    }
+}
+
+extension CastCarousel: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, 
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: CastCard.Metrics.imageWidth, 
+                      height: CastCard.Metrics.imageHeight +
+                            CastCard.Metrics.cellSpacing +
+                            CastCard.Metrics.labelHeight)
+    }
+}
+
+class CastCarouselViewModel {
+    let cast: [MovieActor]
+    private let imageLoader: ImageLoader
+
+    init(cast: [MovieActor], imageLoader: ImageLoader) {
+        self.cast = cast
+        self.imageLoader = imageLoader
     }
 
-    func setCastImage(_ castImage: UIImage, for idx: Int) {
-        precondition((0..<castCards.count).contains(idx))
-        castCards[idx].setImage(castImage)
+    func fetchImage(from urlString: String) async throws -> UIImage? {
+        return try await imageLoader.loadImage(url: urlString)
     }
 }

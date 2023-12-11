@@ -1,12 +1,16 @@
 import UIKit
 
 class Carousel: UIStackView {
-    private let title: String
-    private var label = UILabel()
-    private let horizontalStackScrollView = HorizontalStackScrollView(spacing: 10)
+    let title: String
+    let collectionView: UICollectionView
 
     init(title: String) {
         self.title = "\(title):"
+
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        self.collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+
         super.init(frame: .zero)
         setupViews()
     }
@@ -16,7 +20,7 @@ class Carousel: UIStackView {
     }
 
     private func setupViews() {
-        label = UILabel()
+        let label = UILabel()
         label.attributedText = "\(title)".font(.boldLabelFont)
 
         axis = .vertical
@@ -24,17 +28,9 @@ class Carousel: UIStackView {
         spacing = 10
 
         [label,
-         horizontalStackScrollView
+         collectionView
         ].forEach { view in
             addArrangedSubview(view)
         }
-    }
-
-    func addItems(_ items: [UIView]) {
-        horizontalStackScrollView.addArrangedSubviews(items)
-    }
-
-    func removeItems() {
-        horizontalStackScrollView.removeArrangedSubviews()
     }
 }
