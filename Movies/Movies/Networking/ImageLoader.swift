@@ -21,12 +21,14 @@ actor ImageLoader {
                 activeTasks[url] = nil
             }
 
-            if let cachedImage = cache[url] {
+            if let cachedImage = cache.object(forKey: url) {
                 return cachedImage
             }
 
-            let fetchedImage = try await fetchImage(url: url)
-            cache[url] = fetchedImage
+            guard let fetchedImage = try await fetchImage(url: url)
+            else { return nil }
+
+            cache.setObject(fetchedImage, forKey: url)
             return fetchedImage
         }
 
@@ -41,15 +43,11 @@ actor ImageLoader {
 }
 
 private extension NSCache<NSString, UIImage> {
-    subscript(_ key: String) -> UIImage? {
-        get {
-            return object(forKey: key as NSString)
-        }
+    func setObject(_ image: UIImage, forKey key: String) {
+        setObject(image, forKey: key as NSString)
+    }
 
-        set {
-            if let image = newValue {
-                setObject(image, forKey: key as NSString)
-            }
-        }
+    func object(forKey key: String) -> UIImage? {
+        object(forKey: key as NSString)
     }
 }
