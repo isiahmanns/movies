@@ -3,7 +3,6 @@ import UIKit
 class MovieBackdropCell: MovieCell, ReusableView {
     enum Metrics {
         static let labelHeight: CGFloat = 21
-        static let stackViewSpacing: CGFloat = 8
     }
 
     override init(frame: CGRect) {
@@ -19,7 +18,7 @@ class MovieBackdropCell: MovieCell, ReusableView {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             imageView.heightAnchor.constraint(equalTo: stackView.heightAnchor,
-                                              constant: -(Metrics.labelHeight + Metrics.stackViewSpacing))
+                                              constant: -(Metrics.labelHeight + MovieCell.Metrics.stackViewSpacing))
         ])
 
         titleLabelWrapper.translatesAutoresizingMaskIntoConstraints = false

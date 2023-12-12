@@ -124,7 +124,7 @@ extension SavedMoviesListViewController: UICollectionViewDelegateFlowLayout{
         let itemWidth = (collectionView.frame.width
                          - layout.sectionInset.left
                          - layout.sectionInset.right)
-        let itemHeight = (9 * itemWidth) / 16 + (MovieBackdropCell.Metrics.labelHeight + MovieBackdropCell.Metrics.stackViewSpacing)
+        let itemHeight = (9 * itemWidth) / 16 + (MovieBackdropCell.Metrics.labelHeight + MovieCell.Metrics.stackViewSpacing)
         return .init(width: itemWidth, height: itemHeight)
     }
 }

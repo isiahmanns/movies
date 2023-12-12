@@ -76,7 +76,7 @@ extension UpcomingMovieListViewController: UICollectionViewDelegateFlowLayout{
                          - layout.minimumInteritemSpacing * (itemsPerRow - 1)
                          - layout.sectionInset.left
                          - layout.sectionInset.right) / itemsPerRow
-        let itemHeight = (3 * itemWidth) / 2 + (MoviePosterCell.Metrics.labelHeight + MoviePosterCell.Metrics.stackViewSpacing)
+        let itemHeight = (3 * itemWidth) / 2 + (MoviePosterCell.Metrics.labelHeight + MovieCell.Metrics.stackViewSpacing)
         return .init(width: itemWidth, height: itemHeight)
     }
 }
@@ -115,7 +115,7 @@ extension UpcomingMovieListViewController: UICollectionViewDataSource {
 
         if let posterPath = movie.posterPath {
             cell.configureImage(.posterLoading)
-            
+
             let imageTask = Task {
                 // await Task { try! await Task.sleep(for: .seconds(2)) }.value
                 do {
