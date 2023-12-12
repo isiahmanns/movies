@@ -15,7 +15,7 @@ class GenreCarousel: Carousel {
 
     private func setupCollectionView() {
         collectionView.dataSource = self
-        collectionView.register(GenrePill.self, forCellWithReuseIdentifier: GenrePill.reuseId)
+        collectionView.register(Pill.self, forCellWithReuseIdentifier: Pill.reuseId)
     }
 }
 
@@ -25,9 +25,9 @@ extension GenreCarousel: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: GenrePill.reuseId, for: indexPath) as! GenrePill
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Pill.reuseId, for: indexPath) as! Pill
         let genre = viewModel.genres[indexPath.item]
-        cell.setGenre(genre)
+        cell.setTitle(genre.displayName)
         return cell
     }
 }

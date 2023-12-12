@@ -17,6 +17,7 @@ class CastCarousel: Carousel {
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.register(CastCard.self, forCellWithReuseIdentifier: CastCard.reuseId)
+        collectionView.register(Pill.self, forCellWithReuseIdentifier: Pill.reuseId)
     }
 }
 
@@ -29,11 +30,11 @@ extension CastCarousel: UICollectionViewDataSource {
 
         switch indexPath.item {
         case viewModel.cast.count:
-            // TODO: - dequeue "more button" cell
-            fallthrough
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Pill.reuseId, for: indexPath) as! Pill
+            cell.setTitle("View more")
+            return cell
         default:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CastCard.reuseId,
-                                                          for: indexPath) as! CastCard
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CastCard.reuseId, for: indexPath) as! CastCard
             let actor = viewModel.cast[indexPath.item]
             cell.setActor(actor)
 

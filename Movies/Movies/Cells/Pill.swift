@@ -1,6 +1,6 @@
 import UIKit
 
-class GenrePill: UICollectionViewCell, ReusableView {
+class Pill: UICollectionViewCell, ReusableView {
     private let button: Button = .createPill()
 
     override init(frame: CGRect) {
@@ -14,12 +14,13 @@ class GenrePill: UICollectionViewCell, ReusableView {
 
     private func setupViews() {
         contentView.addSubview(button)
+        // TODO: - Check this
         contentView.translatesAutoresizingMaskIntoConstraints = false
         contentView.constrainTo(button)
     }
 
-    func setGenre(_ genre: MovieGenre) {
+    func setTitle(_ title: String) {
         button
-            .attributedTitle(genre.displayName)
+            .attributedTitle(title)
     }
 }
