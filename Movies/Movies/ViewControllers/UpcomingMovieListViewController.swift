@@ -111,27 +111,33 @@ extension UpcomingMovieListViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MoviePosterCell.reuseId, for: indexPath) as! MoviePosterCell
         let movie = viewModel.movies[indexPath.section][indexPath.item]
+        cell.configureMovie(movie)
 
-        cell.configure(with: movie, image: .posterLoading)
+        if let posterPath = movie.posterPath {
+            cell.configureImage(.posterLoading)
+            
+            let imageTask = Task {
+                // await Task { try! await Task.sleep(for: .seconds(2)) }.value
+                do {
+                    guard let image = try await viewModel.loadImage(filePath: posterPath)
+                    else { throw APIError.imageLoadingError }
 
-        let imageTask = Task<Void, Error> {
-            // await Task { try! await Task.sleep(for: .seconds(2)) }.value
-            do {
-                guard let posterPath = movie.posterPath,
-                      let image = try await viewModel.loadImage(filePath: posterPath)
-                else { throw APIError.imageLoadingError }
-
-                try Task.checkCancellation()
-                cell.configureImage(image)
-            } catch {
-                print(error)
-                try Task.checkCancellation()
-                cell.configureImage(.posterFailed)
-                throw error
+                    if !Task.isCancelled {
+                        cell.configureImage(image)
+                    }
+                } catch {
+                    print(error)
+                    if !Task.isCancelled {
+                        cell.configureImage(.posterFailed)
+                    }
+                }
             }
+
+            cell.imageTask = imageTask
+        } else {
+            cell.configureImage(.posterFailed)
         }
 
-        cell.configureImageTask(imageTask)
         return cell
     }
 

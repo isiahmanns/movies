@@ -41,30 +41,28 @@ extension CastCarousel: UICollectionViewDataSource {
                 cell.setImage(.posterLoading)
 
                 let imageTask = Task {
-                    if let image = try? await viewModel.fetchImage(from: imageUrl) {
-                        cell.setImage(image)
-                    } else {
-                        cell.setImage(.posterFailed)
+                    do {
+                        guard let image = try await viewModel.fetchImage(from: imageUrl)
+                        else { throw APIError.imageLoadingError }
+
+                        if !Task.isCancelled {
+                            cell.setImage(image)
+                        }
+                    } catch {
+                        print(error)
+                        if !Task.isCancelled {
+                            cell.setImage(.posterFailed)
+                        }
                     }
                 }
 
                 cell.imageTask = imageTask
-
             } else {
                 cell.setImage(.posterFailed)
             }
 
             return cell
         }
-    }
-}
-
-extension CastCarousel: UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, 
-                        didEndDisplaying cell: UICollectionViewCell,
-                        forItemAt indexPath: IndexPath) {
-        let cell = cell as! CastCard
-        cell.imageTask?.cancel()
     }
 }
 

@@ -23,11 +23,9 @@ class CastCard: UICollectionViewCell, ReusableView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    // TODO: - Cancel image task
     override func prepareForReuse() {
+        imageTask?.cancel()
         imageView.image = nil
-        characterLabel.text = "-"
-        actorLabel.text = "-"
     }
 
     private func setupViews() {

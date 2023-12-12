@@ -46,10 +46,6 @@ class SectionHeader: UICollectionReusableView, ReusableView {
         labelWrapper.layer.shadowOpacity = 0.5
         labelWrapper.layer.shadowOffset = .init(width: 0, height: 1)
     }
-
-    override func prepareForReuse() {
-        label.text = nil
-    }
 }
 
 extension SectionHeader {

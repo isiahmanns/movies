@@ -1,7 +1,7 @@
 import UIKit
 
 class MovieCell: UICollectionViewCell {
-    private var imageTask: Task<Void, Error>? = nil
+    var imageTask: Task<Void, Never>?
     let imageView = UIImageView()
     let titleLabel = UILabel()
     let titleLabelWrapper = UIView()
@@ -53,18 +53,12 @@ class MovieCell: UICollectionViewCell {
     override func prepareForReuse() {
         imageTask?.cancel()
         imageView.image = nil
-        titleLabel.text = nil
     }
 }
 
 extension MovieCell {
-    func configure(with movie: Movie, image: UIImage?) {
+    func configureMovie(_ movie: Movie) {
         titleLabel.text = movie.title
-        configureImage(image)
-    }
-
-    func configureImageTask(_ imageTask: Task<Void, Error>) {
-        self.imageTask = imageTask
     }
 
     func configureImage(_ image: UIImage?) {
