@@ -1,6 +1,6 @@
 import UIKit
 
-class MovieBackdropCell: MovieCell {
+class MovieBackdropCell: MovieCell, ReusableView {
     enum Metrics {
         static let labelHeight: CGFloat = 21
         static let stackViewSpacing: CGFloat = 8

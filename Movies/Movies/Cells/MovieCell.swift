@@ -29,12 +29,7 @@ class MovieCell: UICollectionViewCell {
 
         contentView.addSubview(stackView)
         stackView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            stackView.topAnchor.constraint(equalTo: contentView.topAnchor),
-            stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
-        ])
+        stackView.constrainTo(contentView)
 
         imageView.contentMode = .scaleAspectFit
         imageView.layer.cornerRadius = min(contentView.frame.height, contentView.frame.width) / 8

@@ -1,8 +1,6 @@
 import UIKit
 
-class SectionHeader: UICollectionReusableView {
-    static let reuseId = "SectionHeader"
-
+class SectionHeader: UICollectionReusableView, ReusableView {
     enum Metrics {
         static let height: CGFloat = 44
         static let labelXPadding: CGFloat = 12

@@ -20,12 +20,7 @@ class ScoreMeter: UIView {
         addSubview(scoreMeterControllerView)
         translatesAutoresizingMaskIntoConstraints = false
         scoreMeterControllerView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            leadingAnchor.constraint(equalTo: scoreMeterControllerView.leadingAnchor),
-            trailingAnchor.constraint(equalTo: scoreMeterControllerView.trailingAnchor),
-            topAnchor.constraint(equalTo: scoreMeterControllerView.topAnchor),
-            bottomAnchor.constraint(equalTo: scoreMeterControllerView.bottomAnchor),
-        ])
+        constrainTo(scoreMeterControllerView)
     }
 
     func setValue(_ value: Float) {

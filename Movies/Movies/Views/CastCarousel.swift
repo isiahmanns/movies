@@ -79,7 +79,7 @@ extension CastCarousel: UICollectionViewDelegateFlowLayout {
     }
 }
 
-class CastCarouselViewModel {
+struct CastCarouselViewModel {
     let cast: [MovieActor]
     private let imageLoader: ImageLoader
 

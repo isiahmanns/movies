@@ -16,7 +16,7 @@ class SavedMoviesListViewController: ListViewController {
     private func setupCollectionView() {
         collectionView.delegate = self
         collectionView.dataSource = self
-        collectionView.register(MovieBackdropCell.self, forCellWithReuseIdentifier: CellReuseId.movieBackdropCell)
+        collectionView.register(MovieBackdropCell.self, forCellWithReuseIdentifier: MovieBackdropCell.reuseId)
         collectionViewFlowLayout.sectionInset = .init(top: 20, left: 40, bottom: 20, right: 40)
         collectionViewFlowLayout.minimumLineSpacing = 20
     }
@@ -146,7 +146,7 @@ extension SavedMoviesListViewController: UICollectionViewDataSource {
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CellReuseId.movieBackdropCell, for: indexPath) as! MovieBackdropCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieBackdropCell.reuseId, for: indexPath) as! MovieBackdropCell
         let movie = viewModel.movies[indexPath.item]
 
         cell.configure(with: movie, image: .youtubeLoading)

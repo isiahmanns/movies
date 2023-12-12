@@ -20,7 +20,7 @@ class UpcomingMovieListViewController: ListViewController {
         collectionView.dataSource = self
         collectionView.refreshControl = UIRefreshControl()
         collectionView.refreshControl?.addTarget(self, action: #selector(refreshList), for: .valueChanged)
-        collectionView.register(MoviePosterCell.self, forCellWithReuseIdentifier: CellReuseId.moviePosterCell)
+        collectionView.register(MoviePosterCell.self, forCellWithReuseIdentifier: MoviePosterCell.reuseId)
         collectionView.register(SectionHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SectionHeader.reuseId)
         collectionViewFlowLayout.sectionHeadersPinToVisibleBounds = true
         collectionViewFlowLayout.headerReferenceSize = .init(width: collectionView.frame.width, height: SectionHeader.Metrics.height)
@@ -109,7 +109,7 @@ extension UpcomingMovieListViewController: UICollectionViewDataSource {
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CellReuseId.moviePosterCell, for: indexPath) as! MoviePosterCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MoviePosterCell.reuseId, for: indexPath) as! MoviePosterCell
         let movie = viewModel.movies[indexPath.section][indexPath.item]
 
         cell.configure(with: movie, image: .posterLoading)

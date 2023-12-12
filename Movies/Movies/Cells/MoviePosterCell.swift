@@ -1,6 +1,6 @@
 import UIKit
 
-class MoviePosterCell: MovieCell {
+class MoviePosterCell: MovieCell, ReusableView {
     enum Metrics {
         static let labelHeight: CGFloat = 42
         static let stackViewSpacing: CGFloat = 8

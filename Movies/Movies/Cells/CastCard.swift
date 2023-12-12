@@ -1,7 +1,6 @@
 import UIKit
 
-class CastCard: UICollectionViewCell {
-    static let reuseId = "CastCard"
+class CastCard: UICollectionViewCell, ReusableView {
     enum Metrics {
         static var imageHeight: CGFloat = 200
         static var imageWidth: CGFloat { imageHeight * 2 / 3 }
@@ -24,6 +23,7 @@ class CastCard: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
+    // TODO: - Cancel image task
     override func prepareForReuse() {
         imageView.image = nil
         characterLabel.text = "-"
@@ -59,12 +59,7 @@ class CastCard: UICollectionViewCell {
 
         contentView.addSubview(stackView)
         stackView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            stackView.topAnchor.constraint(equalTo: contentView.topAnchor),
-            stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-        ])
+        stackView.constrainTo(contentView)
     }
 
     func setImage(_ image: UIImage) {

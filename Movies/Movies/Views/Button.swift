@@ -9,16 +9,16 @@ class Button: UIButton {
         static let imagePadding: CGFloat = 8
     }
 
-    init(title: String, disabledTitle: String? = nil, image: UIImage? = nil) {
+    init(title: String?, image: UIImage? = nil) {
         super.init(frame: .zero)
-        setup(title: title, disabledTitle: disabledTitle, image: image)
+        setup(title: title, image: image)
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    private func setup(title: String, disabledTitle: String?, image: UIImage?) {
+    private func setup(title: String?, image: UIImage?) {
         configuration = .filled()
         configuration!.imagePadding = Metrics.imagePadding
         configuration!.contentInsets = NSDirectionalEdgeInsets(top: Metrics.insetY,
@@ -26,10 +26,8 @@ class Button: UIButton {
                                                                bottom: Metrics.insetY,
                                                                trailing: Metrics.insetX)
 
-        setTitle(title, for: .normal)
-        setTitle(disabledTitle, for: .disabled)
-        setImage(image, for: .normal)
-
+        configuration!.title = title
+        configuration!.image = image
         addTarget(self, action: #selector(didTapButton), for: .touchUpInside)
     }
 
@@ -39,26 +37,6 @@ class Button: UIButton {
 }
 
 extension Button {
-    func setCornerStyle(_ style: UIButton.Configuration.CornerStyle) {
-        cornerStyle(style)
-    }
-
-    func setBackgroundColor(_ color: UIColor) {
-        backgroundColor(color)
-    }
-
-    func setTitleColor(_ color: UIColor, forState state: UIControl.State = .normal) {
-        titleColor(color, forState: state)
-    }
-
-    func setTitleFont(_ font: UIFont) {
-        titleFont(font)
-    }
-
-    func setAction(_ actionHandler: @escaping () -> Void) {
-        action(actionHandler)
-    }
-
     @discardableResult
     func cornerStyle(_ style: UIButton.Configuration.CornerStyle) -> Self {
         configuration?.cornerStyle = style
@@ -72,14 +50,17 @@ extension Button {
     }
 
     @discardableResult
-    func titleColor(_ color: UIColor, forState state: UIControl.State = .normal) -> Self {
-        setTitleColor(color, for: state)
+    func foregroundColor(_ color: UIColor) -> Self {
+        configuration?.baseForegroundColor = color
         return self
     }
 
     @discardableResult
-    func titleFont(_ font: UIFont) -> Self {
-        titleLabel?.font = font
+    func attributedTitle(_ title: String, font: UIFont = .labelFont) -> Self {
+        var attributes = AttributeContainer()
+        attributes.font = font
+
+        configuration?.attributedTitle = AttributedString(title, attributes: attributes)
         return self
     }
 
@@ -89,29 +70,16 @@ extension Button {
         return self
     }
 
-    func image(_ image: UIImage, forState state: UIControl.State = .normal) -> Self {
-        setImage(image, for: state)
+    @discardableResult
+    func disabled(_ isDisabled: Bool) -> Self {
+        isEnabled = !isDisabled
         return self
     }
 }
 
 extension Button {
-    static func createPill(_ genre: MovieGenre) -> Button {
-        createPill(title: genre.displayName, color: genre.color)
-    }
-
-    static func createPill(title: String, color: UIColor) -> Button {
-        Button(title: title)
-            .backgroundColor(color)
-            .titleFont(.labelFont)
-            .titleColor(.black, forState: .normal)
-            .titleColor(.black, forState: .focused)
-            .titleColor(.black, forState: .selected)
-            .titleColor(.black, forState: .highlighted)
+    static func createPill(title: String? = nil, image: UIImage? = nil) -> Button {
+        Button(title: title, image: image)
             .cornerStyle(.capsule)
-    }
-
-    static func createPlaceholderPill() -> Button {
-        createPill(title: "...", color: .systemGray6)
     }
 }
