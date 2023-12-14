@@ -2,7 +2,7 @@ import UIKit
 import SwiftUI
 
 class ScoreMeter: UIView {
-    private var model = ScoreMeterModel()
+    private let model = ScoreMeterModel()
 
     init() {
         super.init(frame: .zero)

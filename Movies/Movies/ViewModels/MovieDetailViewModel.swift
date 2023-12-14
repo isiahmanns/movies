@@ -2,31 +2,21 @@ import CoreData
 import UIKit
 
 class MovieDetailViewModel {
-    let movie: Movie
-    private let api: MoviesAPI
+    private let movie: Movie
+    let presenterModel: MovieDetailPresenterModel
     private let coreDataStore: CoreDataStore
-    private let imageLoader: ImageLoader
+    let imageLoader: ImageLoader
 
     private var movieEntity: MovieEntity?
 
-    init(movie: Movie, api: MoviesAPI, coreDataStore: CoreDataStore, imageLoader: ImageLoader) {
+    init(movie: Movie,
+         presenterModel: MovieDetailPresenterModel,
+         coreDataStore: CoreDataStore,
+         imageLoader: ImageLoader) {
         self.movie = movie
-        self.api = api
+        self.presenterModel = presenterModel
         self.coreDataStore = coreDataStore
         self.imageLoader = imageLoader
-    }
-
-    func fetchMovieDetails() async throws -> MovieDetailResponse {
-        return try await api.fetchMovie(movie.id)
-    }
-
-    func fetchMovieVideos() async throws -> MovieVideosResponse {
-        return try await api.fetchVideos(movie.id)
-    }
-
-    func loadImage(size: ImageSize, filePath: String) async throws -> UIImage? {
-        let url = Endpoint.image(size: size, filePath: filePath).url
-        return try await imageLoader.loadImage(url: url.absoluteString)
     }
 
     func isMovieSaved() -> Bool {
@@ -71,4 +61,26 @@ class MovieDetailViewModel {
 
         return movieEntity
     }
+}
+
+struct MovieDetailPresenterModel {
+    /// From Movie
+    let id: Int
+    let title: String
+    let releaseDate: String
+    let overview: String
+    let backdropPath: String?
+
+    /// From MovieVideoResponse
+    let youtubeUrl: String?
+
+    /// From MovieDetailResponse
+    let score: Float
+    let tagline: String
+    let runtime: Int
+    let budget: Int
+    let revenue: Int
+    let genres: [MovieGenre]
+    let cast: [MovieActor]
+    let homepageUrl: String
 }

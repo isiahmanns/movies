@@ -17,6 +17,14 @@ class GenreCarousel: Carousel {
         collectionView.dataSource = self
         collectionView.register(Pill.self, forCellWithReuseIdentifier: Pill.reuseId)
     }
+
+    func configure(genres: [MovieGenre]) {
+        collectionView.performBatchUpdates {
+            viewModel.genres = genres
+            collectionView.reloadData()
+        }
+        isHidden = genres.isEmpty
+    }
 }
 
 extension GenreCarousel: UICollectionViewDataSource {
@@ -32,6 +40,10 @@ extension GenreCarousel: UICollectionViewDataSource {
     }
 }
 
-struct GenreCarouselViewModel {
-    let genres: [MovieGenre]
+class GenreCarouselViewModel {
+    var genres: [MovieGenre]
+
+    init(genres: [MovieGenre]) {
+        self.genres = genres
+    }
 }

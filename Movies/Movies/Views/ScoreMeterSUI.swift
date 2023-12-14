@@ -4,16 +4,12 @@ struct ScoreMeterSUI: View {
     @StateObject var model: ScoreMeterModel
     private let gradient = Gradient(colors: [.red, .orange, .yellow, .green])
     private var currentValueLabel: String {
-        guard let value = model.value
-        else { return "..."}
-
-        return value == 0
-        ? "NR"
-        : "\(Int(value * 100))"
+        let value = model.value
+        return value == 0 ? "NR" : "\(Int(value * 100))"
     }
 
     var body: some View {
-        Gauge(value: model.value ?? 0, in: 0...1) {
+        Gauge(value: model.value, in: 0...1) {
             Text("Score: \(currentValueLabel)")
         } currentValueLabel: {
             Text(currentValueLabel)
@@ -34,11 +30,9 @@ struct ScoreMeterSUI_Previews: PreviewProvider {
 }
 
 class ScoreMeterModel: ObservableObject {
-    @Published var value: Float? = nil {
+    @Published var value: Float = 0 {
         didSet {
-            if let value {
-                precondition((0...1).contains(value))
-            }
+            precondition((0...1).contains(value))
         }
     }
 }

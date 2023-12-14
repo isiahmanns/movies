@@ -3,6 +3,8 @@ import UIKit
 
 class NowPlayingMovieListViewModel {
     private(set) var movies: [Movie] = []
+    private(set) var movieDetails: [Int: MovieDetailPresenterModel] = [:]
+    private(set) var movieDetailViewController: MovieDetailViewController?
     weak var delegate: ListViewDelegate?
 
     private var totalPages: Int? = nil
@@ -77,11 +79,17 @@ class NowPlayingMovieListViewModel {
     }
 
     func showMovieDetailView(for movie: Movie) {
+        let movieDetailPresenterModel = movieDetails[movie.id]!
         let movieDetailViewModel = MovieDetailViewModel(movie: movie,
-                                                        api: api,
+                                                        presenterModel: movieDetailPresenterModel,
                                                         coreDataStore: coreDataStore,
                                                         imageLoader: imageLoader)
-        let movieDetailViewController = MovieDetailViewController(viewModel: movieDetailViewModel)
-        delegate?.navigationController?.pushViewController(movieDetailViewController, animated: true)
+
+        if let movieDetailViewController {
+            movieDetailViewController.configure(movieDetailViewModel)
+        } else {
+            self.movieDetailViewController = MovieDetailViewController(viewModel: movieDetailViewModel)
+        }
+        delegate?.navigationController?.pushViewController(movieDetailViewController!, animated: true)
     }
 }

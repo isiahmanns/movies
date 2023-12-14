@@ -235,9 +235,10 @@ extension SavedMoviesListViewController {
 
             let label = UILabel()
             label.text = "There are no movies in your Watchlist, yet."
-            let button = Button.createPill(title: "Browse movies", color: .systemIndigo)
-                .titleColor(.systemGray6)
-                .image(.init(systemName: "film.fill")!)
+
+            let button = Button.createPill(title: "Browse movies", image: .init(systemName: "film.fill"))
+                .foregroundColor(.systemGray6)
+                .backgroundColor(.systemIndigo)
                 .action {
                     self.tabBarController.selectedIndex = 0
                 }

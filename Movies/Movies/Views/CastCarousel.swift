@@ -19,6 +19,14 @@ class CastCarousel: Carousel {
         collectionView.register(CastCard.self, forCellWithReuseIdentifier: CastCard.reuseId)
         collectionView.register(Pill.self, forCellWithReuseIdentifier: Pill.reuseId)
     }
+
+    func configure(cast: [MovieActor]) {
+        collectionView.performBatchUpdates {
+            viewModel.cast = cast
+            collectionView.reloadData()
+        }
+        isHidden = cast.isEmpty
+    }
 }
 
 extension CastCarousel: UICollectionViewDataSource {
@@ -43,7 +51,8 @@ extension CastCarousel: UICollectionViewDataSource {
 
                 let imageTask = Task {
                     do {
-                        guard let image = try await viewModel.fetchImage(from: imageUrl)
+                        guard let image = try await viewModel.loadImage(from: imageUrl,
+                                                                        size: PosterSize.w185)
                         else { throw APIError.imageLoadingError }
 
                         if !Task.isCancelled {
@@ -78,8 +87,8 @@ extension CastCarousel: UICollectionViewDelegateFlowLayout {
     }
 }
 
-struct CastCarouselViewModel {
-    let cast: [MovieActor]
+class CastCarouselViewModel {
+    var cast: [MovieActor]
     private let imageLoader: ImageLoader
 
     init(cast: [MovieActor], imageLoader: ImageLoader) {
@@ -87,7 +96,8 @@ struct CastCarouselViewModel {
         self.imageLoader = imageLoader
     }
 
-    func fetchImage(from urlString: String) async throws -> UIImage? {
-        return try await imageLoader.loadImage(url: urlString)
+    func loadImage(from filePath: String, size: ImageSize) async throws -> UIImage? {
+        let url = Endpoint.image(size: size, filePath: filePath).url
+        return try await imageLoader.loadImage(url: url.absoluteString)
     }
 }

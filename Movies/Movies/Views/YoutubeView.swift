@@ -2,11 +2,12 @@ import UIKit
 import YouTubePlayerKit
 
 class YoutubeView: UIView {
+    private let viewModel: YoutubeViewViewModel
     private let youtubePlayerView = YouTubePlayerHostingView()
     private let youtubeLoadingView = YoutubeLoadingView()
 
     @MainActor
-    var state: State = .loadInProgress(nil) {
+    var state: State = .loadInProgress() {
         didSet {
             switch state {
             case let .loadInProgress(image):
@@ -28,12 +29,13 @@ class YoutubeView: UIView {
     }
 
     enum State {
-        case loadInProgress(UIImage?)
+        case loadInProgress(UIImage? = nil)
         case loadCompleted
         case loadFailed
     }
 
-    init() {
+    init(viewModel: YoutubeViewViewModel) {
+        self.viewModel = viewModel
         super.init(frame: .zero)
         setupViews()
     }
@@ -58,12 +60,43 @@ class YoutubeView: UIView {
         layer.cornerRadius = frame.height / 8
     }
 
-    func load(withVideoId id: String) async {
-        youtubePlayerView.player.load(source: .video(id: id))
-        youtubePlayerView.player.mute()
-        await Task.detached {
-            while await self.youtubePlayerView.player.playbackState != .playing {}
-        }.value
+    func configure(youtubeUrl: String?, backdropPath: String?) {
+        guard let youtubeUrl else {
+            state = .loadFailed
+            return
+        }
+
+        state = .loadInProgress()
+        Task {
+            let loadBackdrop = Task {
+                if let backdropPath = backdropPath,
+                   let image = try? await viewModel.loadImage(size: BackdropSizes.w780,
+                                                              filePath: backdropPath) {
+                    try Task.checkCancellation()
+                    state = .loadInProgress(image)
+                }
+            }
+
+            await cue(withVideoId: youtubeUrl)
+            loadBackdrop.cancel()
+            state = .loadCompleted
+        }
+    }
+
+    private func cue(withVideoId id: String) async {
+        youtubePlayerView.player.cue(source: .video(id: id))
+        while youtubePlayerView.player.playbackState != .cued {
+            print("waiting for video state to = cued")
+        }
+    }
+}
+
+struct YoutubeViewViewModel {
+    let imageLoader: ImageLoader
+
+    func loadImage(size: ImageSize, filePath: String) async throws -> UIImage? {
+        let url = Endpoint.image(size: size, filePath: filePath).url
+        return try await imageLoader.loadImage(url: url.absoluteString)
     }
 }
 
