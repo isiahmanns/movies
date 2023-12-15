@@ -1,3 +1,4 @@
+/*
 import Foundation
 import UIKit
 
@@ -60,11 +61,12 @@ class SavedMoviesListViewModel {
     }
 
     func showMovieDetailView(for movie: Movie) {
-//        let movieDetailViewModel = MovieDetailViewModel(movie: movie,
-//                                                        api: api,
-//                                                        coreDataStore: coreDataStore,
-//                                                        imageLoader: imageLoader)
-//        let movieDetailViewController = MovieDetailViewController(viewModel: movieDetailViewModel)
-//        delegate?.navigationController?.pushViewController(movieDetailViewController, animated: true)
+        let movieDetailViewModel = MovieDetailViewModel(movie: movie,
+                                                        api: api,
+                                                        coreDataStore: coreDataStore,
+                                                        imageLoader: imageLoader)
+        let movieDetailViewController = MovieDetailViewController(viewModel: movieDetailViewModel)
+        delegate?.navigationController?.pushViewController(movieDetailViewController, animated: true)
     }
 }
+*/

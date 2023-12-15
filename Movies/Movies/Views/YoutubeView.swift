@@ -85,9 +85,10 @@ class YoutubeView: UIView {
 
     private func cue(withVideoId id: String) async {
         youtubePlayerView.player.cue(source: .video(id: id))
-        while youtubePlayerView.player.playbackState != .cued {
-            print("waiting for video state to = cued")
-        }
+        
+        await Task.detached(priority: .background) {
+            while await self.youtubePlayerView.player.playbackState != .cued {}
+        }.value
     }
 }
 

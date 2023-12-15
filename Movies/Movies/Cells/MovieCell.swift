@@ -57,8 +57,8 @@ class MovieCell: UICollectionViewCell {
 }
 
 extension MovieCell {
-    func configureMovie(_ movie: Movie) {
-        titleLabel.text = movie.title
+    func configureMovie(_ moviePresenterModel: MoviePresenterModel) {
+        titleLabel.text = moviePresenterModel.title
     }
 
     func configureImage(_ image: UIImage?) {

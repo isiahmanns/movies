@@ -18,3 +18,9 @@ extension MovieListReponse: Decodable {
         self.movies = try container.decode([Movie].self, forKey: .results)
     }
 }
+
+struct FlattenedMovieListResponse {
+    let page: Int
+    let totalPages: Int
+    let movies: [MoviePresenterModel]
+}

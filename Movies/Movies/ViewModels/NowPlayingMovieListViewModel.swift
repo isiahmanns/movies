@@ -2,8 +2,7 @@ import Foundation
 import UIKit
 
 class NowPlayingMovieListViewModel {
-    private(set) var movies: [Movie] = []
-    private(set) var movieDetails: [Int: MovieDetailPresenterModel] = [:]
+    private(set) var movies: [MoviePresenterModel] = []
     private(set) var movieDetailViewController: MovieDetailViewController?
     weak var delegate: ListViewDelegate?
 
@@ -78,10 +77,8 @@ class NowPlayingMovieListViewModel {
         return try await imageLoader.loadImage(url: url.absoluteString)
     }
 
-    func showMovieDetailView(for movie: Movie) {
-        let movieDetailPresenterModel = movieDetails[movie.id]!
-        let movieDetailViewModel = MovieDetailViewModel(movie: movie,
-                                                        presenterModel: movieDetailPresenterModel,
+    func showMovieDetailView(for moviePresenterModel: MoviePresenterModel) {
+        let movieDetailViewModel = MovieDetailViewModel(presenterModel: moviePresenterModel,
                                                         coreDataStore: coreDataStore,
                                                         imageLoader: imageLoader)
 

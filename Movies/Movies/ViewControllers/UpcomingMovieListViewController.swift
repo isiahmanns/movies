@@ -94,8 +94,8 @@ extension UpcomingMovieListViewController: UICollectionViewDelegate {
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let movie = viewModel.movies[indexPath.section][indexPath.row]
-        viewModel.showMovieDetailView(for: movie)
+        let moviePresenterModel = viewModel.movies[indexPath.section][indexPath.row]
+        viewModel.showMovieDetailView(for: moviePresenterModel)
     }
 }
 

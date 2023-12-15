@@ -2,7 +2,8 @@ import Foundation
 import UIKit
 
 class UpcomingMovieListViewModel {
-    private(set) var movies: [[Movie]] = []
+    private(set) var movies: [[MoviePresenterModel]] = []
+    private(set) var movieDetailViewController: MovieDetailViewController?
     weak var delegate: ListViewDelegate?
 
     private var totalPages: Int? = nil
@@ -46,7 +47,7 @@ class UpcomingMovieListViewModel {
 
                 if movies.last?.first?.releaseDate == pageMoviesGrouped.first?.first?.releaseDate {
                     var instructions: [ListInstruction] = []
-                    var concatenatedMovies: [[Movie]] = movies
+                    var concatenatedMovies: [[MoviePresenterModel]] = movies
 
                     concatenatedMovies[concatenatedMovies.count - 1] += pageMoviesGrouped.first!
                     let indexPaths = (movies.last!.count..<concatenatedMovies.last!.count)
@@ -104,12 +105,16 @@ class UpcomingMovieListViewModel {
         return try await imageLoader.loadImage(url: url.absoluteString)
     }
 
-    func showMovieDetailView(for movie: Movie) {
-//        let movieDetailViewModel = MovieDetailViewModel(movie: movie,
-//                                                        api: api,
-//                                                        coreDataStore: coreDataStore,
-//                                                        imageLoader: imageLoader)
-//        let movieDetailViewController = MovieDetailViewController(viewModel: movieDetailViewModel)
-//        delegate?.navigationController?.pushViewController(movieDetailViewController, animated: true)
+    func showMovieDetailView(for moviePresenterModel: MoviePresenterModel) {
+        let movieDetailViewModel = MovieDetailViewModel(presenterModel: moviePresenterModel,
+                                                        coreDataStore: coreDataStore,
+                                                        imageLoader: imageLoader)
+
+        if let movieDetailViewController {
+            movieDetailViewController.configure(movieDetailViewModel)
+        } else {
+            self.movieDetailViewController = MovieDetailViewController(viewModel: movieDetailViewModel)
+        }
+        delegate?.navigationController?.pushViewController(movieDetailViewController!, animated: true)
     }
 }

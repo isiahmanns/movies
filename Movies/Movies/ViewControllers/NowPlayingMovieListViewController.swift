@@ -91,8 +91,8 @@ extension NowPlayingMovieListViewController: UICollectionViewDelegate {
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let movie = viewModel.movies[indexPath.row]
-        viewModel.showMovieDetailView(for: movie)
+        let moviePresenterModel = viewModel.movies[indexPath.row]
+        viewModel.showMovieDetailView(for: moviePresenterModel)
     }
 }
 
@@ -107,10 +107,10 @@ extension NowPlayingMovieListViewController: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MoviePosterCell.reuseId, for: indexPath) as! MoviePosterCell
-        let movie = viewModel.movies[indexPath.item]
-        cell.configureMovie(movie)
+        let moviePresenterModel = viewModel.movies[indexPath.item]
+        cell.configureMovie(moviePresenterModel)
         
-        if let posterPath = movie.posterPath {
+        if let posterPath = moviePresenterModel.posterPath {
             cell.configureImage(.posterLoading)
 
             let imageTask = Task {

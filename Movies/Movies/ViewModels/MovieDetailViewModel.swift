@@ -18,7 +18,7 @@ class MovieDetailViewModel {
 
     func isMovieSaved() -> Bool {
         let fetchRequest = MovieEntity.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "id == %i", movie.id)
+        fetchRequest.predicate = NSPredicate(format: "id == %i", presenterModel.id)
 
         if let matchingEntity = try? coreDataStore.fetch(fetchRequest).first {
             movieEntity = matchingEntity
@@ -49,12 +49,12 @@ class MovieDetailViewModel {
         let entity = NSEntityDescription.entity(forEntityName: CoreDataEntity.movieEntity.rawValue,
                                                 in: coreDataStore.context)!
         let movieEntity = NSManagedObject(entity: entity, insertInto: nil) as! MovieEntity
-        movieEntity.id = Int32(movie.id)
-        movieEntity.title = movie.title
-        movieEntity.releaseDate = movie.releaseDate
-        movieEntity.overview = movie.overview
-        movieEntity.posterPath = movie.posterPath
-        movieEntity.backdropPath = movie.backdropPath
+        movieEntity.id = Int32(presenterModel.id)
+        movieEntity.title = presenterModel.title
+        movieEntity.releaseDate = presenterModel.releaseDate
+        movieEntity.overview = presenterModel.overview
+        movieEntity.posterPath = presenterModel.posterPath
+        movieEntity.backdropPath = presenterModel.backdropPath
 
         return movieEntity
     }

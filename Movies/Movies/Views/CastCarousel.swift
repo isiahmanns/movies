@@ -23,7 +23,7 @@ class CastCarousel: Carousel {
     func configure(cast: [MovieActor]) {
         collectionView.performBatchUpdates {
             viewModel.cast = cast
-            collectionView.reloadData()
+            collectionView.reloadSections(.init(integer: 0))
         }
         isHidden = cast.isEmpty
     }
@@ -80,7 +80,7 @@ extension CastCarousel: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, 
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: CastCard.Metrics.imageWidth, 
+        return CGSize(width: CastCard.Metrics.imageWidth,
                       height: CastCard.Metrics.imageHeight +
                             CastCard.Metrics.cellSpacing +
                             CastCard.Metrics.labelHeight)

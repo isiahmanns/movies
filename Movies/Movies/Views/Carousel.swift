@@ -3,13 +3,14 @@ import UIKit
 class Carousel: UIStackView {
     let title: String
     let collectionView: UICollectionView
+    let collectionViewLayout: UICollectionViewFlowLayout
 
     init(title: String) {
         self.title = "\(title):"
 
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
-        self.collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        self.collectionViewLayout = UICollectionViewFlowLayout()
+        collectionViewLayout.scrollDirection = .horizontal
+        self.collectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout)
 
         super.init(frame: .zero)
         setupViews()

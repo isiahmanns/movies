@@ -21,7 +21,7 @@ class GenreCarousel: Carousel {
     func configure(genres: [MovieGenre]) {
         collectionView.performBatchUpdates {
             viewModel.genres = genres
-            collectionView.reloadData()
+            collectionView.reloadSections(.init(integer: 0))
         }
         isHidden = genres.isEmpty
     }

@@ -1,11 +1,7 @@
 import UIKit
 
 class MovieDetailViewController: UIViewController {
-    private var viewModel: MovieDetailViewModel {
-        didSet {
-            populateViews()
-        }
-    }
+    private var viewModel: MovieDetailViewModel
 
     enum Metrics {
         static let insetX: CGFloat = 20
@@ -39,13 +35,13 @@ class MovieDetailViewController: UIViewController {
     private lazy var genreCarousel: GenreCarousel = {
         let genres = viewModel.presenterModel.genres
         let viewModel = GenreCarouselViewModel(genres: genres)
-        return GenreCarousel(title: "Genre:", viewModel: viewModel)
+        return GenreCarousel(title: "Genre", viewModel: viewModel)
     }()
     private lazy var castCarousel: CastCarousel = {
         let cast = viewModel.presenterModel.cast
         let imageLoader = viewModel.imageLoader
         let viewModel = CastCarouselViewModel(cast: cast, imageLoader: imageLoader)
-        return CastCarousel(title: "Cast:", viewModel: viewModel)
+        return CastCarousel(title: "Cast", viewModel: viewModel)
     }()
     private let movieLinkButton: Button = .createPill(image: .init(systemName: "link"))
         .foregroundColor(.systemGray6)
@@ -105,9 +101,15 @@ class MovieDetailViewController: UIViewController {
         view = verticalStackScrollView
     }
 
+    override func viewDidLoad() {
+        populateViews()
+    }
+
     private func populateViews() {
         
         let presenterModel = viewModel.presenterModel
+
+        navigationItem.title = presenterModel.title
 
         youtubeView.configure(youtubeUrl: presenterModel.youtubeUrl,
                               backdropPath: presenterModel.backdropPath)
@@ -165,5 +167,6 @@ class MovieDetailViewController: UIViewController {
 
     func configure(_ viewModel: MovieDetailViewModel) {
         self.viewModel = viewModel
+        populateViews()
     }
 }
