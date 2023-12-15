@@ -2,18 +2,15 @@ import CoreData
 import UIKit
 
 class MovieDetailViewModel {
-    private let movie: Movie
-    let presenterModel: MovieDetailPresenterModel
+    let presenterModel: MoviePresenterModel
     private let coreDataStore: CoreDataStore
     let imageLoader: ImageLoader
 
     private var movieEntity: MovieEntity?
 
-    init(movie: Movie,
-         presenterModel: MovieDetailPresenterModel,
+    init(presenterModel: MoviePresenterModel,
          coreDataStore: CoreDataStore,
          imageLoader: ImageLoader) {
-        self.movie = movie
         self.presenterModel = presenterModel
         self.coreDataStore = coreDataStore
         self.imageLoader = imageLoader
@@ -61,26 +58,4 @@ class MovieDetailViewModel {
 
         return movieEntity
     }
-}
-
-struct MovieDetailPresenterModel {
-    /// From Movie
-    let id: Int
-    let title: String
-    let releaseDate: String
-    let overview: String
-    let backdropPath: String?
-
-    /// From MovieVideoResponse
-    let youtubeUrl: String?
-
-    /// From MovieDetailResponse
-    let score: Float
-    let tagline: String
-    let runtime: Int
-    let budget: Int
-    let revenue: Int
-    let genres: [MovieGenre]
-    let cast: [MovieActor]
-    let homepageUrl: String
 }
