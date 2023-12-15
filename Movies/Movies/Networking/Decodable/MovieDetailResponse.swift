@@ -4,12 +4,12 @@ struct MovieDetailResponse: Decodable {
     let runtime: Int
     let budget: Int
     let revenue: Int
-    let genres: [MovieGenreObject]
+    let genres: [MovieGenre]
     let credits: Credits
     let homepage: String
 }
 
-struct MovieGenreObject: Decodable {
+struct MovieGenre: Decodable {
     let id: Int
     let name: String
 }

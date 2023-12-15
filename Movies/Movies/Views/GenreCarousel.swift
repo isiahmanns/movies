@@ -35,7 +35,7 @@ extension GenreCarousel: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Pill.reuseId, for: indexPath) as! Pill
         let genre = viewModel.genres[indexPath.item]
-        cell.setTitle(genre.displayName)
+        cell.setTitle(genre.name)
         return cell
     }
 }
