@@ -6,7 +6,14 @@ class CastCard: UICollectionViewCell, ReusableView {
         static var imageWidth: CGFloat { imageHeight * 2 / 3 }
         static var cellSpacing: CGFloat = 8
         static var labelSpacing: CGFloat = 4
-        static var labelHeight: CGFloat = 42
+        static var labelHeight: CGFloat = "".size(withAttributes: [.font: UIFont.labelFont]).height
+        static var totalHeight: CGFloat = [
+            imageHeight,
+            cellSpacing,
+            labelHeight * 2,
+            labelSpacing,
+        ].reduce(0, +)
+        static var totalWidth: CGFloat = imageWidth
     }
 
     private let characterLabel = UILabel()
@@ -15,7 +22,7 @@ class CastCard: UICollectionViewCell, ReusableView {
     var imageTask: Task<Void, Never>?
 
     override init(frame: CGRect) {
-        super.init(frame: .zero)
+        super.init(frame: frame)
         setupViews()
     }
 
@@ -29,24 +36,22 @@ class CastCard: UICollectionViewCell, ReusableView {
     }
 
     private func setupViews() {
-        let stackView = UIStackView()
+        let labelStack = UIStackView(arrangedSubviews: [
+            characterLabel,
+            actorLabel
+        ])
+        labelStack.axis = .vertical
+        labelStack.spacing = Metrics.labelSpacing
+        labelStack.distribution = .fillEqually
+
+        let stackView = UIStackView(arrangedSubviews: [
+            imageView,
+            labelStack
+        ])
         stackView.axis = .vertical
         stackView.spacing = Metrics.cellSpacing
 
-        let labelStack = UIStackView()
-        labelStack.axis = .vertical
-        labelStack.spacing = Metrics.labelSpacing
-
-        [characterLabel,
-         actorLabel].forEach { label in
-            labelStack.addArrangedSubview(label)
-        }
-
-        [imageView,
-         labelStack].forEach { view in
-            stackView.addArrangedSubview(view)
-        }
-
+        imageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             imageView.widthAnchor.constraint(equalToConstant: Metrics.imageWidth),
             imageView.heightAnchor.constraint(equalToConstant: Metrics.imageHeight)
@@ -67,6 +72,5 @@ class CastCard: UICollectionViewCell, ReusableView {
     func setActor(_ movieActor: MovieActor) {
         characterLabel.text = movieActor.character.isEmpty ? "TBA" : movieActor.character
         actorLabel.text = movieActor.name.isEmpty ? "-" : movieActor.name
-
     }
 }

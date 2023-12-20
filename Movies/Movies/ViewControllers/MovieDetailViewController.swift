@@ -33,14 +33,12 @@ class MovieDetailViewController: UIViewController {
     private let budget = UILabel()
     private let revenue = UILabel()
     private lazy var genreCarousel: GenreCarousel = {
-        let genres = viewModel.presenterModel.genres
-        let viewModel = GenreCarouselViewModel(genres: genres)
-        return GenreCarousel(title: "Genre", viewModel: viewModel)
+        let viewModel = GenreCarouselViewModel()
+        return GenreCarousel(title: "Genre(s)", viewModel: viewModel)
     }()
     private lazy var castCarousel: CastCarousel = {
-        let cast = viewModel.presenterModel.cast
         let imageLoader = viewModel.imageLoader
-        let viewModel = CastCarouselViewModel(cast: cast, imageLoader: imageLoader)
+        let viewModel = CastCarouselViewModel(imageLoader: imageLoader)
         return CastCarousel(title: "Cast", viewModel: viewModel)
     }()
     private let movieLinkButton: Button = .createPill(image: .init(systemName: "link"))
@@ -58,7 +56,6 @@ class MovieDetailViewController: UIViewController {
     init(viewModel: MovieDetailViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
-        setupNavigation()
     }
 
     required init?(coder: NSCoder) {
@@ -66,11 +63,7 @@ class MovieDetailViewController: UIViewController {
     }
 
     deinit {
-        debugPrint("-asdfasfasfasdfasdfasfasfsafsafadsf")
-    }
-
-    private func setupNavigation() {
-        navigationItem.title = viewModel.presenterModel.title
+        debugPrint("-Releasing MovieDetailViewController")
     }
 
     override func loadView() {
@@ -95,19 +88,15 @@ class MovieDetailViewController: UIViewController {
         ])
 
         NSLayoutConstraint.activate([
-            genreCarousel.widthAnchor.constraint(equalTo: verticalStackScrollView.contentLayoutGuide.widthAnchor)
+            genreCarousel.widthAnchor.constraint(equalTo: verticalStackScrollView.contentLayoutGuide.widthAnchor),
+            castCarousel.widthAnchor.constraint(equalTo: verticalStackScrollView.contentLayoutGuide.widthAnchor)
         ])
 
         view = verticalStackScrollView
     }
 
-    override func viewDidLoad() {
-        populateViews()
-    }
-
     private func populateViews() {
-        
-        let presenterModel = viewModel.presenterModel
+        let presenterModel = viewModel.presenterModel!
 
         navigationItem.title = presenterModel.title
 
@@ -136,7 +125,7 @@ class MovieDetailViewController: UIViewController {
 
         genreCarousel.configure(genres: presenterModel.genres)
 
-        castCarousel.configure(cast: presenterModel.cast)
+        castCarousel.configure(cast: presenterModel.cast, movieId: presenterModel.id)
 
         let homePageUrl = URL(string: presenterModel.homepageUrl)
         movieLinkButton
@@ -165,8 +154,11 @@ class MovieDetailViewController: UIViewController {
         navigationItem.rightBarButtonItem = saveButton
      }
 
-    func configure(_ viewModel: MovieDetailViewModel) {
-        self.viewModel = viewModel
+    func configure(_ moviePresenterModel: MoviePresenterModel) {
+        viewModel.presenterModel = moviePresenterModel
         populateViews()
+
+        let top = CGPoint(x: 0, y: -verticalStackScrollView.safeAreaInsets.top)
+        verticalStackScrollView.setContentOffset(top, animated: false)
     }
 }

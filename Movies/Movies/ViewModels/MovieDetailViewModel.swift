@@ -2,16 +2,13 @@ import CoreData
 import UIKit
 
 class MovieDetailViewModel {
-    let presenterModel: MoviePresenterModel
+    var presenterModel: MoviePresenterModel!
     private let coreDataStore: CoreDataStore
     let imageLoader: ImageLoader
 
     private var movieEntity: MovieEntity?
 
-    init(presenterModel: MoviePresenterModel,
-         coreDataStore: CoreDataStore,
-         imageLoader: ImageLoader) {
-        self.presenterModel = presenterModel
+    init(coreDataStore: CoreDataStore, imageLoader: ImageLoader) {
         self.coreDataStore = coreDataStore
         self.imageLoader = imageLoader
     }

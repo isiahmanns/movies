@@ -3,7 +3,7 @@ import UIKit
 
 class UpcomingMovieListViewModel {
     private(set) var movies: [[MoviePresenterModel]] = []
-    private(set) var movieDetailViewController: MovieDetailViewController?
+    private(set) var movieDetailViewController: MovieDetailViewController
     weak var delegate: ListViewDelegate?
 
     private var totalPages: Int? = nil
@@ -18,6 +18,10 @@ class UpcomingMovieListViewModel {
         self.api = api
         self.coreDataStore = coreDataStore
         self.imageLoader = imageLoader
+
+        let movieDetailViewModel = MovieDetailViewModel(coreDataStore: coreDataStore, imageLoader: imageLoader)
+        movieDetailViewController = MovieDetailViewController(viewModel: movieDetailViewModel)
+        movieDetailViewController.loadViewIfNeeded()
     }
 
     func fetchMovies(page: Int? = nil, completionBlock: (() -> Void)? = nil) throws {
@@ -106,15 +110,7 @@ class UpcomingMovieListViewModel {
     }
 
     func showMovieDetailView(for moviePresenterModel: MoviePresenterModel) {
-        let movieDetailViewModel = MovieDetailViewModel(presenterModel: moviePresenterModel,
-                                                        coreDataStore: coreDataStore,
-                                                        imageLoader: imageLoader)
-
-        if let movieDetailViewController {
-            movieDetailViewController.configure(movieDetailViewModel)
-        } else {
-            self.movieDetailViewController = MovieDetailViewController(viewModel: movieDetailViewModel)
-        }
-        delegate?.navigationController?.pushViewController(movieDetailViewController!, animated: true)
+        movieDetailViewController.configure(moviePresenterModel)
+        delegate?.navigationController?.pushViewController(movieDetailViewController, animated: true)
     }
 }

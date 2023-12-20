@@ -33,5 +33,8 @@ class Carousel: UIStackView {
         ].forEach { view in
             addArrangedSubview(view)
         }
+
+        collectionView.widthAnchor.constraint(equalTo: widthAnchor).isActive = true
+        collectionView.showsHorizontalScrollIndicator = false
     }
 }

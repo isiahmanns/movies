@@ -15,14 +15,15 @@ class GenreCarousel: Carousel {
 
     private func setupCollectionView() {
         collectionView.dataSource = self
+        collectionView.delegate = self
         collectionView.register(Pill.self, forCellWithReuseIdentifier: Pill.reuseId)
+        collectionView.heightAnchor.constraint(equalToConstant: Pill.Metrics.totalHeight).isActive = true
     }
 
     func configure(genres: [MovieGenre]) {
-        collectionView.performBatchUpdates {
-            viewModel.genres = genres
-            collectionView.reloadSections(.init(integer: 0))
-        }
+        viewModel.genres = genres
+        collectionView.reloadData()
+        collectionView.scrollToItem(at: .init(item: 0, section: 0), at: .left, animated: false)
         isHidden = genres.isEmpty
     }
 }
@@ -40,10 +41,17 @@ extension GenreCarousel: UICollectionViewDataSource {
     }
 }
 
-class GenreCarouselViewModel {
-    var genres: [MovieGenre]
-
-    init(genres: [MovieGenre]) {
-        self.genres = genres
+extension GenreCarousel: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let genre = viewModel.genres[indexPath.item]
+        let labelWidth = genre.name.size(withAttributes: [.font: UIFont.labelFont]).width
+        return CGSize(width: labelWidth + Pill.Metrics.insetX * 2 + 1,
+                      height: Pill.Metrics.totalHeight)
     }
+}
+
+class GenreCarouselViewModel {
+    var genres: [MovieGenre] = []
 }

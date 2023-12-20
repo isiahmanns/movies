@@ -59,6 +59,7 @@ struct DefaultMoviesAPI: MoviesAPI {
         return zip(movies, zip(data.previewVideos, data.details))
             .map { (movie, data) in
                 let (video, detail) = data
+                let cast = detail.credits.cast
                 return MoviePresenterModel(id: movie.id,
                                            title: movie.title,
                                            releaseDate: movie.releaseDate,
@@ -72,7 +73,7 @@ struct DefaultMoviesAPI: MoviesAPI {
                                            budget: detail.budget,
                                            revenue: detail.revenue,
                                            genres: detail.genres,
-                                           cast: detail.credits.cast,
+                                           cast: Array(cast.prefix(10)),
                                            homepageUrl: detail.homepage)
             }
     }

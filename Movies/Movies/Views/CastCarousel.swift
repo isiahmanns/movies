@@ -18,13 +18,13 @@ class CastCarousel: Carousel {
         collectionView.delegate = self
         collectionView.register(CastCard.self, forCellWithReuseIdentifier: CastCard.reuseId)
         collectionView.register(Pill.self, forCellWithReuseIdentifier: Pill.reuseId)
+        collectionView.heightAnchor.constraint(equalToConstant: CastCard.Metrics.totalHeight).isActive = true
     }
 
-    func configure(cast: [MovieActor]) {
-        collectionView.performBatchUpdates {
-            viewModel.cast = cast
-            collectionView.reloadSections(.init(integer: 0))
-        }
+    func configure(cast: [MovieActor], movieId: Int) {
+        viewModel.configure(cast: cast, movieId: movieId)
+        collectionView.reloadData()
+        collectionView.scrollToItem(at: .init(item: 0, section: 0), at: .left, animated: false)
         isHidden = cast.isEmpty
     }
 }
@@ -39,7 +39,11 @@ extension CastCarousel: UICollectionViewDataSource {
         switch indexPath.item {
         case viewModel.cast.count:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Pill.reuseId, for: indexPath) as! Pill
-            cell.setTitle("View more")
+            cell.setTitle(Copy.viewMore)
+            cell.setAction {
+                let endpoint = Endpoint.cast(movieId: self.viewModel.movieId)
+                UIApplication.shared.open(endpoint.url)
+            }
             return cell
         default:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CastCard.reuseId, for: indexPath) as! CastCard
@@ -80,24 +84,40 @@ extension CastCarousel: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, 
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: CastCard.Metrics.imageWidth,
-                      height: CastCard.Metrics.imageHeight +
-                            CastCard.Metrics.cellSpacing +
-                            CastCard.Metrics.labelHeight)
+        switch indexPath.item {
+        case viewModel.cast.count:
+            let labelWidth = Copy.viewMore.size(withAttributes: [.font: UIFont.labelFont]).width
+            return CGSize(width: labelWidth + Pill.Metrics.insetX * 2,
+                          height: Pill.Metrics.totalHeight)
+        default:
+            return CGSize(width: CastCard.Metrics.totalWidth,
+                          height: CastCard.Metrics.totalHeight)
+        }
+    }
+}
+
+extension CastCarousel {
+    enum Copy {
+        static let viewMore = "View more"
     }
 }
 
 class CastCarouselViewModel {
-    var cast: [MovieActor]
+    private(set) var cast: [MovieActor] = []
+    private(set) var movieId: Int!
     private let imageLoader: ImageLoader
 
-    init(cast: [MovieActor], imageLoader: ImageLoader) {
-        self.cast = cast
+    init(imageLoader: ImageLoader) {
         self.imageLoader = imageLoader
     }
 
     func loadImage(from filePath: String, size: ImageSize) async throws -> UIImage? {
         let url = Endpoint.image(size: size, filePath: filePath).url
         return try await imageLoader.loadImage(url: url.absoluteString)
+    }
+
+    func configure(cast: [MovieActor], movieId: Int) {
+        self.cast = cast
+        self.movieId = movieId
     }
 }

@@ -1,7 +1,7 @@
 import UIKit
 
 class Button: UIButton {
-    var action: () -> Void = {}
+    var actionBlock: () -> Void = {}
 
     enum Metrics {
         static let insetX: CGFloat = 14
@@ -32,7 +32,7 @@ class Button: UIButton {
     }
 
     @objc private func didTapButton() {
-        action()
+        actionBlock()
     }
 }
 
@@ -65,8 +65,8 @@ extension Button {
     }
 
     @discardableResult
-    func action(_ actionHandler: @escaping () -> Void) -> Self {
-        self.action = actionHandler
+    func action(_ actionBlock: @escaping () -> Void) -> Self {
+        self.actionBlock = actionBlock
         return self
     }
 
