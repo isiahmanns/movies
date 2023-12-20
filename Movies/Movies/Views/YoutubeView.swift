@@ -61,25 +61,20 @@ class YoutubeView: UIView {
     }
 
     func configure(youtubeUrl: String?, backdropPath: String?) {
-        guard let youtubeUrl else {
-            state = .loadFailed
-            return
-        }
-
         state = .loadInProgress()
         Task {
-            let loadBackdrop = Task {
-                if let backdropPath = backdropPath,
-                   let image = try? await viewModel.loadImage(size: BackdropSizes.w780,
-                                                              filePath: backdropPath) {
-                    try Task.checkCancellation()
-                    state = .loadInProgress(image)
-                }
+            if let backdropPath = backdropPath,
+               let image = try? await viewModel.loadImage(size: BackdropSizes.w780,
+                                                          filePath: backdropPath) {
+                state = .loadInProgress(image)
             }
 
-            await cue(withVideoId: youtubeUrl)
-            loadBackdrop.cancel()
-            state = .loadCompleted
+            if let youtubeUrl {
+                await cue(withVideoId: youtubeUrl)
+                state = .loadCompleted
+            } else {
+                state = .loadFailed
+            }
         }
     }
 
