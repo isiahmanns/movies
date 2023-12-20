@@ -81,7 +81,7 @@ extension NowPlayingMovieListViewController: UICollectionViewDelegateFlowLayout 
 extension NowPlayingMovieListViewController: UICollectionViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let scrollDistance = scrollView.contentOffset.y + scrollView.bounds.height - scrollView.safeAreaInsets.bottom
-        if  scrollDistance >= scrollView.contentSize.height {
+        if  scrollDistance >= scrollView.contentSize.height * (3/4) {
             do {
                 try viewModel.getNextPage()
             } catch {
