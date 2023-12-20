@@ -24,7 +24,7 @@ class CastCarousel: Carousel {
     func configure(cast: [MovieActor], movieId: Int) {
         viewModel.configure(cast: cast, movieId: movieId)
         collectionView.reloadData()
-        collectionView.scrollToItem(at: .init(item: 0, section: 0), at: .left, animated: false)
+        collectionView.setContentOffset(.zero, animated: false)
         isHidden = cast.isEmpty
     }
 }

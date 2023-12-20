@@ -23,7 +23,7 @@ class GenreCarousel: Carousel {
     func configure(genres: [MovieGenre]) {
         viewModel.genres = genres
         collectionView.reloadData()
-        collectionView.scrollToItem(at: .init(item: 0, section: 0), at: .left, animated: false)
+        collectionView.setContentOffset(.zero, animated: false)
         isHidden = genres.isEmpty
     }
 }
