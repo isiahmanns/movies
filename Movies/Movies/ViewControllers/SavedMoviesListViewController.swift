@@ -1,4 +1,3 @@
-/*
 import UIKit
 
 class SavedMoviesListViewController: ListViewController {
@@ -16,10 +15,48 @@ class SavedMoviesListViewController: ListViewController {
 
     private func setupCollectionView() {
         collectionView.delegate = self
-        collectionView.dataSource = self
-        collectionView.register(MovieBackdropCell.self, forCellWithReuseIdentifier: MovieBackdropCell.reuseId)
+        setupCollectionViewDataSource()
         collectionViewFlowLayout.sectionInset = .init(top: 20, left: 40, bottom: 20, right: 40)
         collectionViewFlowLayout.minimumLineSpacing = 20
+    }
+
+    private func setupCollectionViewDataSource() {
+        let cellRegistration = UICollectionView.CellRegistration<MovieBackdropCell, MovieEntity.ID> {
+            [weak self] cell, indexPath, itemIdentifier in
+            guard let self else { return }
+            let moviePresenterModel = viewModel.listDataStore[itemIdentifier]!
+            cell.configureMovie(moviePresenterModel)
+
+            if let backdropPath = moviePresenterModel.backdropPath {
+                cell.configureImage(.youtubeLoading)
+
+                let imageTask = Task {
+                    do {
+                        guard let image = try await self.viewModel.loadImage(filePath: backdropPath)
+                        else { throw APIError.imageLoadingError }
+
+                        if !Task.isCancelled {
+                            cell.configureImage(image)
+                        }
+                    } catch {
+                        print(error)
+                        if !Task.isCancelled {
+                            cell.configureImage(.youtubeFailed)
+                        }
+                    }
+                }
+
+                cell.imageTask = imageTask
+            } else {
+                cell.configureImage(.youtubeFailed)
+            }
+        }
+
+        viewModel.listDataSource = UICollectionViewDiffableDataSource(collectionView: collectionView) {
+            collectionView, indexPath, itemIdentifier in
+            collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: itemIdentifier)
+        }
+        collectionView.dataSource = viewModel.listDataSource
     }
 
     private func setupTabBar() {
@@ -66,23 +103,6 @@ extension SavedMoviesListViewController {
     override func viewDidAppear(_ animated: Bool) {
         do {
             try viewModel.fetchMovies()
-
-            if viewModel.needsReload {
-                if viewModel.movies.isEmpty {
-                    collectionView.performBatchUpdates {
-                        collectionView.reloadSections(.init(integer: 0))
-                    } completion: { [self] _ in
-                        viewModel.viewState = .empty
-                    }
-                } else {
-                    viewModel.viewState = .nonempty
-                    collectionView.performBatchUpdates {
-                        collectionView.reloadSections(.init(integer: 0))
-                    }
-                }
-
-                viewModel.cachedMovies = viewModel.movies
-            }
         } catch {
             print(error)
         }
@@ -134,49 +154,6 @@ extension SavedMoviesListViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let movie = viewModel.movies[indexPath.row]
         viewModel.showMovieDetailView(for: movie)
-    }
-}
-
-extension SavedMoviesListViewController: UICollectionViewDataSource {
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        1
-    }
-
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        viewModel.movies.count
-    }
-
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieBackdropCell.reuseId, for: indexPath) as! MovieBackdropCell
-        let movie = viewModel.movies[indexPath.item]
-        cell.configureMovie(movie)
-
-        if let backdropPath = movie.backdropPath {
-            cell.configureImage(.youtubeLoading)
-
-            let imageTask = Task {
-                // await Task { try! await Task.sleep(for: .seconds(2)) }.value
-                do {
-                    guard let image = try await viewModel.loadImage(filePath: backdropPath)
-                    else { throw APIError.imageLoadingError }
-
-                    if !Task.isCancelled {
-                        cell.configureImage(image)
-                    }
-                } catch {
-                    print(error)
-                    if !Task.isCancelled {
-                        cell.configureImage(.youtubeFailed)
-                    }
-                }
-            }
-
-            cell.imageTask = imageTask
-        } else {
-            cell.configureImage(.youtubeFailed)
-        }
-
-        return cell
     }
 }
 
@@ -260,4 +237,3 @@ extension SavedMoviesListViewController {
         }
     }
 }
-*/

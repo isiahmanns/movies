@@ -1,15 +1,15 @@
-/*
 import Foundation
 import UIKit
 
 @MainActor
 class SavedMoviesListViewModel {
-    private(set) var movies: [Movie] = []
-    var cachedMovies: [Movie]? = nil
-    private var movieEntities: [MovieEntity] = []
-    var needsReload: Bool {
-        movies != cachedMovies
+    enum SavedMoviesSection {
+        case main
     }
+    var listDataSource: UICollectionViewDiffableDataSource<SavedMoviesSection, MovieEntity.ID>!
+    var listDataStore: [MovieEntity.ID: MoviePresenterModel] = [:]
+
+    private var movieEntities: [MovieEntity] = []
 
     private let api: MoviesAPI
     private let coreDataStore: CoreDataStore
@@ -21,6 +21,7 @@ class SavedMoviesListViewModel {
         }
     }
 
+    // TODO: Use abstraction
     weak var delegate: SavedMoviesListViewController?
 
     init(api: MoviesAPI, coreDataStore: CoreDataStore, imageLoader: ImageLoader) {
@@ -35,6 +36,8 @@ class SavedMoviesListViewModel {
             .init(key: "dateAdded", ascending: false)
         ]
         movieEntities = try coreDataStore.fetch(fetchRequest)
+        // TODO: Fetch details for new movies, remove old movies from store
+        // TODO: Create and apply snapshot, handle empty/non-empty cases
         movies = movieEntities.map { movieEntity in
             Movie(id: Int(movieEntity.id),
                   title: movieEntity.title!,
@@ -69,4 +72,3 @@ class SavedMoviesListViewModel {
         delegate?.navigationController?.pushViewController(movieDetailViewController, animated: true)
     }
 }
-*/
