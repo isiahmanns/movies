@@ -3,7 +3,7 @@ import UIKit
 
 class NowPlayingMovieListViewModel {
     private(set) var movies: [MoviePresenterModel] = []
-    private(set) var movieDetailViewController: MovieDetailViewController
+    private let movieDetailViewController: MovieDetailViewController
     weak var delegate: ListViewDelegate?
 
     private var totalPages: Int? = nil

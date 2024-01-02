@@ -9,6 +9,7 @@ class SavedMoviesListViewModel {
     var listDataSource: UICollectionViewDiffableDataSource<SavedMoviesSection, MovieEntity.ID>!
     var listDataStore: [MovieEntity.ID: MoviePresenterModel] = [:]
 
+    private let movieDetailViewController: MovieDetailViewController
     private var movieEntities: [MovieEntity] = []
 
     private let api: MoviesAPI
@@ -28,6 +29,10 @@ class SavedMoviesListViewModel {
         self.api = api
         self.coreDataStore = coreDataStore
         self.imageLoader = imageLoader
+
+        let movieDetailViewModel = MovieDetailViewModel(coreDataStore: coreDataStore, imageLoader: imageLoader)
+        movieDetailViewController = MovieDetailViewController(viewModel: movieDetailViewModel)
+        movieDetailViewController.loadViewIfNeeded()
     }
 
     func fetchMovies() throws {
@@ -36,26 +41,56 @@ class SavedMoviesListViewModel {
             .init(key: "dateAdded", ascending: false)
         ]
         movieEntities = try coreDataStore.fetch(fetchRequest)
-        // TODO: Fetch details for new movies, remove old movies from store
-        // TODO: Create and apply snapshot, handle empty/non-empty cases
-        movies = movieEntities.map { movieEntity in
-            Movie(id: Int(movieEntity.id),
-                  title: movieEntity.title!,
-                  releaseDate: movieEntity.releaseDate!,
-                  overview: movieEntity.overview!,
-                  posterPath: movieEntity.posterPath,
-                  backdropPath: movieEntity.backdropPath)
+        let savedMovieIds = movieEntities.map { $0.id }
+
+        Task {
+            /// Remove unsaved movies from store
+            let savedMovieIdsSet = Set(savedMovieIds)
+            listDataStore.keys
+                .filter { !savedMovieIdsSet.contains($0) }
+                .forEach { id in
+                    listDataStore[id] = nil
+                }
+
+            /// Fetch details for newly saved movies and add to store
+            let newMovieIds = savedMovieIds
+                .filter { listDataStore[$0] == nil }
+                .map { Int($0) }
+
+            try await api.fetchMovies(withIds: newMovieIds)
+                .forEach { moviePresenterModel in
+                    let id = Int32(moviePresenterModel.id)
+                    listDataStore[id] = moviePresenterModel
+                }
+
+            /// Update list
+            var snapshot = NSDiffableDataSourceSnapshot<SavedMoviesSection, MovieEntity.ID>()
+            snapshot.appendSections([.main])
+            snapshot.appendItems(savedMovieIds, toSection: .main)
+
+            if savedMovieIds.isEmpty {
+                await listDataSource.apply(snapshot, animatingDifferences: true)
+                viewState = .empty
+            } else {
+                viewState = .nonempty
+                await listDataSource.apply(snapshot, animatingDifferences: true)
+            }
         }
     }
 
     func resetMovies() {
-        movies = []
-        cachedMovies = []
         movieEntities.forEach { movieEntity in
             coreDataStore.delete(movieEntity)
         }
         coreDataStore.saveIfNeeded()
         movieEntities = []
+
+        var snapshot = listDataSource.snapshot()
+        snapshot.deleteAllItems()
+        Task {
+            await listDataSource.apply(snapshot, animatingDifferences: true)
+            viewState = .empty
+        }
     }
 
     func loadImage(filePath: String) async throws -> UIImage? {
@@ -63,12 +98,8 @@ class SavedMoviesListViewModel {
         return try await imageLoader.loadImage(url: url.absoluteString)
     }
 
-    func showMovieDetailView(for movie: Movie) {
-        let movieDetailViewModel = MovieDetailViewModel(movie: movie,
-                                                        api: api,
-                                                        coreDataStore: coreDataStore,
-                                                        imageLoader: imageLoader)
-        let movieDetailViewController = MovieDetailViewController(viewModel: movieDetailViewModel)
+    func showMovieDetailView(for moviePresenterModel: MoviePresenterModel) {
+        movieDetailViewController.configure(moviePresenterModel)
         delegate?.navigationController?.pushViewController(movieDetailViewController, animated: true)
     }
 }

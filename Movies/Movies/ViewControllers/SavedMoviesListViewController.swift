@@ -21,18 +21,16 @@ class SavedMoviesListViewController: ListViewController {
     }
 
     private func setupCollectionViewDataSource() {
-        let cellRegistration = UICollectionView.CellRegistration<MovieBackdropCell, MovieEntity.ID> {
-            [weak self] cell, indexPath, itemIdentifier in
-            guard let self else { return }
-            let moviePresenterModel = viewModel.listDataStore[itemIdentifier]!
-            cell.configureMovie(moviePresenterModel)
+        let cellRegistration = UICollectionView.CellRegistration<MovieBackdropCell, MoviePresenterModel> {
+            [unowned self] cell, indexPath, item in
+            cell.configureMovie(item)
 
-            if let backdropPath = moviePresenterModel.backdropPath {
+            if let backdropPath = item.backdropPath {
                 cell.configureImage(.youtubeLoading)
 
                 let imageTask = Task {
                     do {
-                        guard let image = try await self.viewModel.loadImage(filePath: backdropPath)
+                        guard let image = try await viewModel.loadImage(filePath: backdropPath)
                         else { throw APIError.imageLoadingError }
 
                         if !Task.isCancelled {
@@ -53,8 +51,9 @@ class SavedMoviesListViewController: ListViewController {
         }
 
         viewModel.listDataSource = UICollectionViewDiffableDataSource(collectionView: collectionView) {
-            collectionView, indexPath, itemIdentifier in
-            collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: itemIdentifier)
+            [unowned self] collectionView, indexPath, itemIdentifier in
+            let moviePresenterModel = viewModel.listDataStore[itemIdentifier]!
+            return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: moviePresenterModel)
         }
         collectionView.dataSource = viewModel.listDataSource
     }
@@ -119,12 +118,7 @@ extension SavedMoviesListViewController {
             title: "Clear List",
             style: .destructive,
             handler: { [self] _ in
-                collectionView.performBatchUpdates {
-                    viewModel.resetMovies()
-                    collectionView.reloadSections(.init(integer: 0))
-                } completion: { [self] _ in
-                    viewModel.viewState = .empty
-                }
+                viewModel.resetMovies()
             }),
          UIAlertAction(
             title: "Cancel",
@@ -152,8 +146,9 @@ extension SavedMoviesListViewController: UICollectionViewDelegateFlowLayout{
 
 extension SavedMoviesListViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let movie = viewModel.movies[indexPath.row]
-        viewModel.showMovieDetailView(for: movie)
+        let itemId = viewModel.listDataSource.itemIdentifier(for: indexPath)!
+        let moviePresenterModel = viewModel.listDataStore[itemId]!
+        viewModel.showMovieDetailView(for: moviePresenterModel)
     }
 }
 
