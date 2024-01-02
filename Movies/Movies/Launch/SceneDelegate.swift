@@ -30,18 +30,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let upcomingMovieListViewController = UpcomingMovieListViewController(viewModel: upcomingMovieListViewModel)
         let upcomingMovieListNavigationController = UINavigationController(rootViewController: upcomingMovieListViewController)
 
-        /*
         let savedMoviesListViewModel = SavedMoviesListViewModel(api: Dependencies.api,
                                                                 coreDataStore: Dependencies.coreDataStore,
                                                                 imageLoader: Dependencies.imageLoader)
         let savedMoviesListViewController = SavedMoviesListViewController(viewModel: savedMoviesListViewModel)
         let savedMoviesListNavigationController = UINavigationController(rootViewController: savedMoviesListViewController)
-         */
 
         tabViewController.viewControllers = [
             nowPlayingMovieListNavigationController,
             upcomingMovieListNavigationController,
-            //savedMoviesListNavigationController
+            savedMoviesListNavigationController
         ]
 
         let window = UIWindow(windowScene: windowScene)

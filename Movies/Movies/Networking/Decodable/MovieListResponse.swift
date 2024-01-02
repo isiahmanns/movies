@@ -2,6 +2,10 @@ struct MovieListReponse {
     let page: Int
     let totalPages: Int
     let movies: [Movie]
+
+    var movieIds: [Int] {
+        movies.map(\.id)
+    }
 }
 
 extension MovieListReponse: Decodable {

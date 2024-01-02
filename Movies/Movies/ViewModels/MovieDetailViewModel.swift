@@ -30,7 +30,6 @@ class MovieDetailViewModel {
         defer { coreDataStore.saveIfNeeded() }
 
         let movieEntity = createMovieEntity()
-        movieEntity.dateAdded = .now
         coreDataStore.insert(movieEntity)
         self.movieEntity = movieEntity
     }
@@ -47,12 +46,7 @@ class MovieDetailViewModel {
                                                 in: coreDataStore.context)!
         let movieEntity = NSManagedObject(entity: entity, insertInto: nil) as! MovieEntity
         movieEntity.id = Int32(presenterModel.id)
-        movieEntity.title = presenterModel.title
-        movieEntity.releaseDate = presenterModel.releaseDate
-        movieEntity.overview = presenterModel.overview
-        movieEntity.posterPath = presenterModel.posterPath
-        movieEntity.backdropPath = presenterModel.backdropPath
-
+        movieEntity.dateAdded = .now
         return movieEntity
     }
 }

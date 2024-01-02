@@ -3,7 +3,6 @@ import Foundation
 enum Endpoint {
     case discover(page: Int?, from: Date, to: Date, sortBy: SortCategory)
     case detail(movieId: Int)
-    case videos(movieId: Int)
     case image(size: ImageSize, filePath: String)
     case cast(movieId: Int)
 
@@ -52,7 +51,7 @@ enum Endpoint {
             queryItems.append(.init(name: "primary_release_date.lte", value: DateFormatter.ymd.string(from: primaryReleaseDateLTE)))
             queryItems.append(.init(name: "sort_by", value: sortBy.rawValue))
         case .detail:
-            queryItems.append(.init(name: "append_to_response", value: "credits"))
+            queryItems.append(.init(name: "append_to_response", value: "credits,videos"))
         default:
             break
         }
@@ -68,8 +67,6 @@ enum Endpoint {
             return "/3/movie/\(movieId)"
         case let .image(size, filePath):
             return "/t/p/\(size)/\(filePath)"
-        case let .videos(movieId):
-            return "/3/movie/\(movieId)/videos"
         case let .cast(movieId):
             return "/movie/\(movieId)/cast"
         }
