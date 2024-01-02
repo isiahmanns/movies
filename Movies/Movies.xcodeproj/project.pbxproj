@@ -17,8 +17,7 @@
 		257B41672A79E0D20054CB05 /* ScoreMeterSUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 257B41662A79E0D20054CB05 /* ScoreMeterSUI.swift */; };
 		257B41692A79F7A30054CB05 /* CastCarousel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 257B41682A79F7A30054CB05 /* CastCarousel.swift */; };
 		257B416D2A7A03D60054CB05 /* CastCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 257B416C2A7A03D60054CB05 /* CastCard.swift */; };
-		257B41712A7A11550054CB05 /* MovieDetailResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 257B41702A7A11550054CB05 /* MovieDetailResponse.swift */; };
-		257B41732A7A3E470054CB05 /* MovieVideosResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 257B41722A7A3E470054CB05 /* MovieVideosResponse.swift */; };
+		257B41712A7A11550054CB05 /* MovieDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 257B41702A7A11550054CB05 /* MovieDetail.swift */; };
 		257B41772A7A45970054CB05 /* NumberFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 257B41762A7A45970054CB05 /* NumberFormatter.swift */; };
 		257B41792A7A86840054CB05 /* UIImage+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 257B41782A7A86840054CB05 /* UIImage+Helpers.swift */; };
 		257B417B2A7A8DCF0054CB05 /* YoutubeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 257B417A2A7A8DCF0054CB05 /* YoutubeView.swift */; };
@@ -92,8 +91,7 @@
 		257B41662A79E0D20054CB05 /* ScoreMeterSUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreMeterSUI.swift; sourceTree = "<group>"; };
 		257B41682A79F7A30054CB05 /* CastCarousel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CastCarousel.swift; sourceTree = "<group>"; };
 		257B416C2A7A03D60054CB05 /* CastCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CastCard.swift; sourceTree = "<group>"; };
-		257B41702A7A11550054CB05 /* MovieDetailResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetailResponse.swift; sourceTree = "<group>"; };
-		257B41722A7A3E470054CB05 /* MovieVideosResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieVideosResponse.swift; sourceTree = "<group>"; };
+		257B41702A7A11550054CB05 /* MovieDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetail.swift; sourceTree = "<group>"; };
 		257B41762A7A45970054CB05 /* NumberFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberFormatter.swift; sourceTree = "<group>"; };
 		257B41782A7A86840054CB05 /* UIImage+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Helpers.swift"; sourceTree = "<group>"; };
 		257B417A2A7A8DCF0054CB05 /* YoutubeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YoutubeView.swift; sourceTree = "<group>"; };
@@ -219,8 +217,7 @@
 			children = (
 				25ACE6E82A6C795E0043F22C /* MovieListResponse.swift */,
 				25ACE6E62A6C74970043F22C /* Movie.swift */,
-				257B41702A7A11550054CB05 /* MovieDetailResponse.swift */,
-				257B41722A7A3E470054CB05 /* MovieVideosResponse.swift */,
+				257B41702A7A11550054CB05 /* MovieDetail.swift */,
 			);
 			path = Decodable;
 			sourceTree = "<group>";
@@ -498,9 +495,8 @@
 				257B417D2A7AD1AC0054CB05 /* SavedMoviesListViewController.swift in Sources */,
 				25C2743E2A73371A008BCA8E /* ListViewDelegate.swift in Sources */,
 				2542CC2F2B27FBF1003E82ED /* Pill.swift in Sources */,
-				257B41712A7A11550054CB05 /* MovieDetailResponse.swift in Sources */,
+				257B41712A7A11550054CB05 /* MovieDetail.swift in Sources */,
 				25ACE6F32A6D697C0043F22C /* ImageLoader.swift in Sources */,
-				257B41732A7A3E470054CB05 /* MovieVideosResponse.swift in Sources */,
 				25ACE6F92A6D8FA70043F22C /* Endpoint.swift in Sources */,
 				25C2743A2A725225008BCA8E /* UpcomingMovieListViewController.swift in Sources */,
 				256157872A7C29AA008D707C /* NowPlayingMovieListViewModel.swift in Sources */,
